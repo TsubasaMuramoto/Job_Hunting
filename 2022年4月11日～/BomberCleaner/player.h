@@ -76,6 +76,7 @@ public:
 	void Gravity(D3DXVECTOR3& pos, float& fGravity, const float& fGravitySpeed, bool & bJump);		// d—Í
 	void Jump(float &fGravity, bool& bJump);														// ƒWƒƒƒ“ƒv
 	bool InputDirection(const MOVE_DIRECTION &moveDir);												// ˆÚ“®•ûŒü“ü—ÍŠÖ”
+	bool Carry(void);
 
 	//---------------------------------------------------
 	// Getter & Setter

@@ -77,7 +77,7 @@ public:
 
 	bool CModel::CalcParticlePlaneCollision(FLOAT r, D3DXVECTOR3 *pPre_pos, D3DXVECTOR3 *pPos, D3DXVECTOR3 *pNormal, D3DXVECTOR3 *pPlane_pos, FLOAT *t, D3DXVECTOR3 *pOut_colli);
 	bool SurfaceCollisionSphere(CScene *pScene);															// 面と球の当たり判定
-	bool SphereCollisionSphere(float fRadius,CScene::OBJTYPE objtype,CScene::MODTYPE modtype);				// 球と球の当たり判定
+	bool SphereCollisionSphere(float fRadius,CScene *pScene);				// 球と球の当たり判定
 	bool DotCollisionCube(CScene *pScene, const HIT_TYPE &hit_type);										// 点と直方体の当たり判定
 	bool LineCollisionCube(CScene *pScene, const HIT_TYPE &hit_type);										// 線と直方体の当たり判定
 	bool HitFrom(const HIT_FROM &hitFrom, const float *fDot, const float *fDotOld, const float &ObjRad);	// 範囲内に当たっているか(引数：タイプ,内積,1フレーム前の内積)

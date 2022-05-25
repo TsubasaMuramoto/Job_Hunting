@@ -39,6 +39,7 @@ public:
 	void Draw(void);									// 描画
 
 	static CBlast *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col, int nLine, int nVertical);	// オブジェクト生成
+	void Spread(void);																					// 爆風広がり
 
 private:
 	CMeshSphere		*m_pSphere;			// メッシュ球クラス(爆発エフェクト用)

@@ -10,6 +10,7 @@
 #include "manager.h"
 #include "player.h"
 #include "LoadX.h"
+#include "shadow.h"
 #include <assert.h>
 
 //=============================================================================
@@ -71,12 +72,12 @@ void CModel::Init(int nXType)
 
 	// Xファイルデータ取得
 	CLoadX::XData pXData = CManager::GetInstance()->GetLoadX()->GetXData(nXType);
-	m_pBuffMat = pXData.m_pBuffMat;
-	m_pMesh = pXData.m_pMesh;
-	m_nNumMat = pXData.m_nNumMat;
-	m_pMat = pXData.m_pMat;
-	m_pTexture = pXData.m_pTex;
-	m_SaveEmissive = pXData.m_pMat->MatD3D.Emissive;
+	m_pBuffMat		= pXData.m_pBuffMat;
+	m_pMesh			= pXData.m_pMesh;
+	m_nNumMat		= pXData.m_nNumMat;
+	m_pMat			= pXData.m_pMat;
+	m_pTexture		= pXData.m_pTex;
+	m_SaveEmissive	= pXData.m_pMat->MatD3D.Emissive;
 
 	// 頂点数を取得
 	m_nNumVtx = m_pMesh->GetNumVertices();
@@ -187,25 +188,41 @@ void CModel::Uninit(void)
 //=============================================================================
 void CModel::Update(void)
 {
-	// プレイヤーとの当たり判定を取るか
+	// オブジェクトとの当たり判定を取るか
 	if (m_bCollision)
 	{
-		// プレイヤーのシーン取得
-		CScene *pScene = CScene::GetScene(CScene::OBJTYPE_PLAYER);
-
 		if (m_bDoOnce)
 		{
-			// シーンがnullになるまで通る
-			while (pScene)
+			CScene *pScene = nullptr;
+			HIT_TYPE hitType;
+			for (int nCnt = 0; nCnt < 2; nCnt++)
 			{
-				// 次のシーンを取得
-				CScene *pSceneNext = CScene::GetSceneNext(pScene);
+				// プレイヤーのシーン取得
+				switch (nCnt)
+				{
+				case 0:
+					pScene = CScene::GetScene(CScene::OBJTYPE_PLAYER);
+					hitType = TYPE_SPHERE;
+					break;
+				case 1:
+					pScene = CScene::GetScene(CScene::OBJTYPE_SHADOW);
+					hitType = TYPE_LINE;
+					break;
+				}
 
-				// 当たり判定
-				m_bHit = LineCollisionCube(pScene, TYPE_SPHERE);
+				// シーンがnullになるまで通る
+				while (pScene)
+				{
+					// 次のシーンを取得
+					CScene *pSceneNext = CScene::GetSceneNext(pScene);
 
-				// 次のシーンを現在のシーンにする
-				pScene = pSceneNext;
+					// 当たり判定
+					m_bHit = LineCollisionCube(pScene, hitType);
+
+					// 次のシーンを現在のシーンにする
+					pScene = pSceneNext;
+				}
+
 			}
 		}
 
@@ -439,44 +456,23 @@ bool CModel::SurfaceCollisionSphere(CScene *pScene)
 //=============================================================================
 // モデルの当たり判定(球と球)
 //=============================================================================
-bool CModel::SphereCollisionSphere(float fRadius, CScene::OBJTYPE objtype, CScene::MODTYPE modtype)
+bool CModel::SphereCollisionSphere(float fRadius, CScene *pScene)
 {
-	CScene *pScene = CScene::GetScene(objtype);
-	bool bHit = false;
+	D3DXVECTOR3 pos1 = pScene->GetPos();
+	D3DXVECTOR3 pos2;
+	pos2.x = m_mtxWorld._41;
+	pos2.y = m_mtxWorld._42;
+	pos2.z = m_mtxWorld._43;
 
-	// シーンがnullになるまで通る
-	while (pScene)
+	float fRadius1 = pScene->GetSize().x;
+	float fRadius2 = fRadius;
+
+	if (powf(fRadius1 + fRadius2, 2) >= powf(pos1.x - pos2.x, 2) + powf(pos1.y - pos2.y, 2) + powf(pos1.z - pos2.z, 2))
 	{
-		// 次のシーンを取得
-		CScene *pSceneNext = CScene::GetSceneNext(pScene);
-
-		if (pScene->GetModelType() == modtype)
-		{
-			D3DXVECTOR3 pos1 = pScene->GetPos();
-			D3DXVECTOR3 pos2;
-			pos2.x = m_mtxWorld._41;
-			pos2.y = m_mtxWorld._42;
-			pos2.z = m_mtxWorld._43;
-
-			float fRadius1 = pScene->GetSize().x;
-			float fRadius2 = fRadius;
-
-			if (powf(fRadius1 + fRadius2, 2) >= powf(pos1.x - pos2.x, 2) + powf(pos1.y - pos2.y, 2) + powf(pos1.z - pos2.z, 2))
-			{
-				if (!bHit)
-				{
-					bHit = true;
-				}
-
-				pScene->Uninit();	// 終了
-			}
-		}
-
-		// 次のシーンを現在のシーンにする
-		pScene = pSceneNext;
+		return true;
 	}
 
-	return bHit;
+	return false;
 }
 
 //=============================================================================
@@ -626,7 +622,6 @@ bool CModel::LineCollisionCube(CScene *pScene,const HIT_TYPE &hit_type)
 	}
 
 	float Radius = 0.0f;
-
 	switch (hit_type)
 	{
 	case TYPE_DOT:
@@ -636,11 +631,11 @@ bool CModel::LineCollisionCube(CScene *pScene,const HIT_TYPE &hit_type)
 		break;
 
 	case TYPE_SPHERE:
-		Radius = pScene->GetSize().x / 2;
+		Radius = pScene->GetSize().y / 2;
 		break;
 
 	case TYPE_CUBE:
-		Radius = pScene->GetSize().x / 2;
+		Radius = pScene->GetSize().y / 2;
 		break;
 
 	default:
@@ -659,10 +654,23 @@ bool CModel::LineCollisionCube(CScene *pScene,const HIT_TYPE &hit_type)
 		pos.y = m_vtx[0].vtxWorld.y - (1 / normalVec[0].y * (normalVec[0].x * (pos.x - m_vtx[0].vtxWorld.x) + normalVec[0].z * (pos.z - m_vtx[0].vtxWorld.z)));
 		pos.y += Radius;
 
-		CPlayer *pPlayer = (CPlayer*)pScene;
-		pPlayer->SetGravity(0.0f, false);
-		pScene->SetPos(pos);
+		CScene::OBJTYPE objtype = pScene->GetObjType();
+		CPlayer *pPlayer = nullptr;
+		CShadow *pShadow = nullptr;
+		switch (objtype)
+		{
+		case CScene::OBJTYPE_PLAYER:
+			pPlayer = (CPlayer*)pScene;
+			pPlayer->SetGravity(0.0f, false);
+			break;
 
+		case CScene::OBJTYPE_SHADOW:
+			pShadow = (CShadow*)pScene;
+			pShadow->SetHeight(pos.y);
+			break;
+		}
+
+		pScene->SetPos(pos);	// SetPosをすることで、最初に当たったオブジェクトのみを判定とする
 		return true;
 	}
 

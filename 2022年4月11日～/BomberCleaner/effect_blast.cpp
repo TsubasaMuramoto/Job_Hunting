@@ -11,6 +11,7 @@
 #include "meshsphere.h"
 #include "score.h"
 #include "game.h"
+#include "Bomb.h"
 
 //===========================================
 // マクロ定義
@@ -82,7 +83,6 @@ void CBlast::Update(void)
 	// 爆発中の処理
 	if (m_pSphere)
 	{
-		float Nextsub = m_fScalingSpeed;
 		CScene *pScene = CScene::GetScene(OBJTYPE_MODEL);
 
 		// シーンがnullになるまで通る
@@ -91,40 +91,33 @@ void CBlast::Update(void)
 			// 次のシーンを取得
 			CScene *pSceneNext = CScene::GetSceneNext(pScene);
 
-			if (pScene->GetModelType() == MODTYPE_TARGET)
+			CScene::MODTYPE modtype = pScene->GetModelType();
+			switch(modtype)
 			{
-				if (m_pSphere->SphereCollisionSphere((m_pSphere->GetSize().x * m_scale) / 2,pScene))
+			case MODTYPE_TARGET:
+				if (m_pSphere->SphereCollisionSphere((m_pSphere->GetSize().x * m_scale) / 2, pScene))
 				{
 					CScore *pScore = CGame::GetScore();
 					pScore->AddScore(EXPLOSION_SCORE);
 					pScene->Uninit();
 				}
+				break;
+				
+			case MODTYPE_BOMB:
+				if (m_pSphere->SphereCollisionSphere((m_pSphere->GetSize().y * m_scale) / 2, pScene))
+				{
+					CBomb *pBomb = (CBomb*)pScene;
+					pBomb->Explosion();
+				}
+				break;
 			}
+			
 
 			// 次のシーンを現在のシーンにする
 			pScene = pSceneNext;
 		}
 
-		m_nFrame++;
-		if (m_nFrame >= START_TRANSPARENT_FRAME)
-		{
-			m_col.a -= ALPHA_SUB;
-		}
-		else
-		{
-			m_scale += m_fScalingSpeed;
-			m_fScalingSpeed -= Nextsub * 0.1f;
-		}
-
-		m_rot.y += BLAST_ROLLING_SPEED;
-		m_pSphere->SetRot(m_rot);
-		m_pSphere->SetScale({m_scale,m_scale ,m_scale });
-		m_pSphere->SetCol(m_col);
-
-		if (m_col.a <= 0.0f)	// 完全に透明になるまで終了しない
-		{
-			Uninit();
-		}
+		Spread();	// 爆風広がり
 	}
 }
 
@@ -134,6 +127,35 @@ void CBlast::Update(void)
 void CBlast::Draw(void)
 {
 
+}
+
+//=============================================================================
+// 爆風の広がり方の処理
+//=============================================================================
+void CBlast::Spread(void)
+{
+	float Nextsub = m_fScalingSpeed;
+
+	m_nFrame++;
+	if (m_nFrame >= START_TRANSPARENT_FRAME)
+	{
+		m_col.a -= ALPHA_SUB;
+	}
+	else
+	{
+		m_scale += m_fScalingSpeed;
+		m_fScalingSpeed -= Nextsub * 0.1f;
+	}
+
+	m_rot.y += BLAST_ROLLING_SPEED;
+	m_pSphere->SetRot(m_rot);
+	m_pSphere->SetScale({ m_scale,m_scale ,m_scale });
+	m_pSphere->SetCol(m_col);
+
+	if (m_col.a <= 0.0f)	// 完全に透明になるまで終了しない
+	{
+		Uninit();
+	}
 }
 
 //=============================================================================
@@ -155,7 +177,6 @@ CBlast *CBlast::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col, int nLi
 			{
 				// 爆弾モデルの生成
 				pBlast->m_pSphere = CMeshSphere::Create(pos, size, {0.0f,0.0f,0.0f}, nLine, nVertical, false, CScene::OBJTYPE_EFFECTMESH);
-				//pBlast->m_pSphere->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_EFFECT_MOVE"));
 			}
 		}
 	}

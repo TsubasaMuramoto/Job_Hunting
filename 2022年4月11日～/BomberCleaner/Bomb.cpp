@@ -125,19 +125,6 @@ void CBomb::Update(void)
 			// 発火のエフェクト
 			CEffect::Create({ m_pos.x,m_pos.y + (m_pModel->GetSize().y * m_scale.y),m_pos.z }, IGNITION_SIZE, IGNITION_COL, IGNITION_SUB, 2);
 			Ignition();
-
-			m_nBombTime--;
-			if (m_nBombTime <= 0)	// 0で爆発する
-			{
-				m_bThrow = false;
-
-				// 爆発球の生成
-				float fRad = m_pModel->GetSize().x;
-				CBlast::Create(m_pos, { fRad, fRad ,fRad }, { 1.0f,0.0f,0.0f,1.0f }, 10, 10);
-
-				// 終了
-				Uninit();
-			}
 		}
 		else
 		{
@@ -148,6 +135,7 @@ void CBomb::Update(void)
 			}
 		}
 
+		// 投げている状態の処理
 		if (m_bThrow)
 		{
 			if (m_pControl)
@@ -172,11 +160,6 @@ void CBomb::Update(void)
 				{
 					m_bThrow = false;
 				}
-
-				//if (m_pModel->SurfaceCollisionSphere)
-				//{
-
-				//}
 
 				// 次のシーンを現在のシーンにする
 				pScene = pSceneNext;
@@ -205,10 +188,6 @@ void CBomb::Draw(void)
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
-
-	// 大きさを反映
-	//D3DXMatrixScaling(&mtxScale, m_scale.x, m_scale.y, m_scale.z);
-	//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScale);
 
 	// 向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
@@ -274,10 +253,27 @@ CBomb *CBomb::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, int nX
 }
 
 //=============================================================================
+// 爆発状態処理
+//=============================================================================
+void CBomb::Explosion(void)
+{
+	m_bThrow = false;
+
+	// 爆発球の生成
+	float fRad = m_pModel->GetSize().x;
+	CBlast::Create(m_pos, { 30.0f ,30.0f,30.0f}/*{ fRad, fRad ,fRad }*/, { 1.0f,0.0f,0.0f,1.0f }, 10, 10);
+
+	// 終了
+	Uninit();
+}
+
+//=============================================================================
 // 発火状態処理
 //=============================================================================
 void CBomb::Ignition(void)
 {
+	m_nBombTime--;
+
 	// 爆弾サイズ変更処理
 	if (!m_bShrink)		// 爆弾が膨らむ
 	{
@@ -320,6 +316,11 @@ void CBomb::Ignition(void)
 
 	m_pModel->SetEmissive(m_Emissive);
 	m_pModel->SetScale(m_scale);
+
+	if (m_nBombTime <= 0)	// 0で爆発する
+	{
+		Explosion();
+	}
 }
 
 //=============================================================================

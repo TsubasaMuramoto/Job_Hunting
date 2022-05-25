@@ -17,6 +17,11 @@
 #include <assert.h>
 
 //=============================================================================
+// マクロ定義
+//=============================================================================
+#define PLAYER_SHADOWSIZE (D3DXVECTOR3(m_size.x * 1.5f,0.0f,m_size.z * 1.5f))
+
+//=============================================================================
 // コンストラクタ
 //=============================================================================
 CPlayer::CPlayer(OBJTYPE nPriority) : CScene(nPriority)
@@ -92,7 +97,7 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	// 影の設定
 	if (!m_pShadow)
 	{
-		m_pShadow = CShadow::Create({m_pos.x , m_pos.y - (m_size.y / 2),m_pos.z}, { m_size.x * 1.5f,0.0f,m_size.z  * 1.5f }, { 0.0f,0.0f,0.0f });
+		m_pShadow = CShadow::Create({m_pos.x , m_pos.y - (m_size.y / 2),m_pos.z}, PLAYER_SHADOWSIZE, { 0.0f,0.0f,0.0f });
 	}
 
 	// プレイヤー情報設定
@@ -153,15 +158,18 @@ void CPlayer::Update()
 	Jump(m_fGravity, m_bJump);									// ジャンプ
 	Gravity(m_pos, m_fGravity, m_fGravitySpeed, m_bJump);		// 重力
 
-//#ifdef _DEBUG
 	switch (m_state)
 	{
 
 	case STATE_NORMAL:
 		if (CInput::PressAnyAction(CInput::ACTION_ATTACK))
 		{
-			m_pBomb = CBomb::Create({ m_pos.x,m_pos.y + m_size.y,m_pos.z }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, CManager::GetInstance()->GetLoadX()->GetNum("MODTYPE_BOMB"));
-			m_state = STATE_HOLD;
+			//m_pBomb = CBomb::Create({ m_pos.x,m_pos.y + m_size.y,m_pos.z }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, CManager::GetInstance()->GetLoadX()->GetNum("MODTYPE_BOMB"));
+
+			if (Carry())
+			{
+				m_state = STATE_HOLD;
+			}
 		}
 
 		break;
@@ -180,7 +188,6 @@ void CPlayer::Update()
 		}
 		break;
 	}
-//#endif
 
 	// シーンに位置を設定する
 	CScene::SetPos(m_pos);
@@ -193,7 +200,6 @@ void CPlayer::Update()
 	if (m_pShadow)	// シャドウの位置設定
 	{
 		m_pShadow->CScene::SetPosOld({ m_pos.x ,m_pos.y,m_pos.z });
-		m_pShadow->SetGround(m_pos.x, m_pos.z);
 	}
 }
 
@@ -423,6 +429,40 @@ void CPlayer::SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot,const float 
 	{
 		speed.z = -fMaxSpeed;
 	}
+}
+
+//-----------------------------------------------------------------------------------------------
+// 持ち運ぶ処理
+//-----------------------------------------------------------------------------------------------
+bool CPlayer::Carry(void)
+{
+	CScene *pSaveScene = nullptr;
+	CScene *pScene = CScene::GetScene(OBJTYPE_MODEL);
+
+	// シーンがnullになるまで通る
+	while (pScene)
+	{
+		// 次のシーンを取得
+		CScene *pSceneNext = CScene::GetSceneNext(pScene);
+
+		if (pScene->GetModelType() == MODTYPE_BOMB)
+		{
+			if (m_pModel->SphereCollisionSphere(200.0f, pScene))
+			{
+				pSaveScene = pScene;
+			}
+		}
+
+		// 次のシーンを現在のシーンにする
+		pScene = pSceneNext;
+	}
+
+	if (pSaveScene)
+	{
+		m_pBomb = (CBomb*)pSaveScene;
+		return true;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------------------------

@@ -17,6 +17,7 @@
 #include "XInput.h"
 #include "DirectInput.h"
 #include "Bomb.h"
+#include "BombSpawner.h"
 #include "LoadX.h"
 #include "Ui.h"
 
@@ -51,6 +52,7 @@ CGame::~CGame()
 //=========================================================
 HRESULT CGame::Init(void)
 {
+	CBombSpawner::Create({ 800.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }, 5);
 	//CBomb::Create(D3DXVECTOR3(0.0f, 10.0f, -200.0f), D3DXVECTOR3(0.0f,0.0f,0.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f), "data/MODEL/Bomb001.x");
 	CBomb::Create({ 0.0f,	10.0f, -300.0f	},	{ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, CManager::GetInstance()->GetLoadX()->GetNum("MODTYPE_BOMB"));
 	CBomb::Create({ 100.0f, 10.0f, -300.0f	},	{ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, CManager::GetInstance()->GetLoadX()->GetNum("MODTYPE_BOMB"));
@@ -59,11 +61,9 @@ HRESULT CGame::Init(void)
 	CBomb::Create({ 100.0f, 10.0f, -400.0f	},	{ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, CManager::GetInstance()->GetLoadX()->GetNum("MODTYPE_BOMB"));
 	CBomb::Create({ -100.0f,10.0f, -400.0f	},	{ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, CManager::GetInstance()->GetLoadX()->GetNum("MODTYPE_BOMB"));
 
-
-	CMeshField::Create({ 600.0f,50.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 0.0f,0.0f,0.0f }, 1, 1);
+	/*CMeshField::Create({ 600.0f,50.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 0.0f,0.0f,0.0f }, 1, 1);
 	CMeshField::Create({ 700.0f,120.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 0.0f,0.0f,0.0f }, 1, 1);
-	CMeshField::Create({ 900.0f,100.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 0.0f,0.0f,0.0f }, 1, 1);
-
+	CMeshField::Create({ 900.0f,100.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 0.0f,0.0f,0.0f }, 1, 1);*/
 
 	// ステージ生成
 	if (!m_pStage)
@@ -76,12 +76,10 @@ HRESULT CGame::Init(void)
 		}
 	}
 
-	CMeshField::Create({ 100.0f,50.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 0.0f,0.0f,0.0f }, 1, 1);
+	/*CMeshField::Create({ 100.0f,50.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 0.0f,0.0f,0.0f }, 1, 1);
 	CMeshField::Create({ 100.0f,120.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 0.0f,0.0f,0.0f }, 1, 1);
 	CMeshField::Create({ 100.0f,180.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 0.0f,0.0f,0.0f }, 6, 6);
-
-	CMeshField::Create({ -200.0f,100.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 0.0f,0.0f,0.0f }, 1, 1);
-
+	CMeshField::Create({ -200.0f,100.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 0.0f,0.0f,0.0f }, 1, 1);*/
 
 	// タイマーカウント生成
 	CTimerCount::Create(D3DXVECTOR3(SCREEN_WIDTH - 250.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 30.0f, 0.0f), 10, true);

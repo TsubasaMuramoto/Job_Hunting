@@ -80,7 +80,10 @@ void CShadow::Uninit(void)
 //=============================================================================
 void CShadow::Update(void)
 {
+	m_pos.x = CScene::GetPosOld().x;
+	m_pos.z = CScene::GetPosOld().z;
 	float Y = CScene::GetPosOld().y;
+
 	CScene::SetPosOld({ m_pos.x, Y, m_pos.z });
 	CScene3D::Update();
 

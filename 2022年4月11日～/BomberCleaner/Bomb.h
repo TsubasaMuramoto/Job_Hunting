@@ -41,6 +41,7 @@ public:
 
 	static CBomb *Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, int nXType);	// オブジェクト生成
 	void Ignition(void);					// 発火状態の処理
+	void Explosion(void);					// 爆発状態の処理
 	void Throw(D3DXVECTOR3 ThrowDir);		// 投げた時の処理
 
 	// 設定・取得処理
