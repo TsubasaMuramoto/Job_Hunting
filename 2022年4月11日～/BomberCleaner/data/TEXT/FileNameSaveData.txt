@@ -1,0 +1,6 @@
+//セーブファイルのパス(３つまで)
+SAVE_FILENAME = data/SAVE/StageData000.txt
+SAVE_FILENAME = data/SAVE/StageData001.txt
+SAVE_FILENAME = data/SAVE/StageData002.txt
+
+END_SCRIPT !!絶対消さないで!!

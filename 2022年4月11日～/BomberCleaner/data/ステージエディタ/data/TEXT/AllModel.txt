@@ -1,0 +1,21 @@
+#------------------------------------------------------------------------------
+# モデルファイル名
+#------------------------------------------------------------------------------
+//プレイヤーのパーツ
+PLAYERMODEL_FILENAME = data/MODEL/Player000.x				# [00]体
+//ステージに配置するモデル
+OBJECTMODEL_FILENAME = data/MODEL/Player000.x				# [00]体
+OBJECTMODEL_FILENAME = data/MODEL/Belt_Conveyor001.x		# [1]ベルトコンベア
+OBJECTMODEL_FILENAME = data/MODEL/Belt001.x					# [2]ベルト
+OBJECTMODEL_FILENAME = data/MODEL/Belt002.x					# [3]ベルト2
+OBJECTMODEL_FILENAME = data/MODEL/Bomb001.x					# [4]爆弾
+OBJECTMODEL_FILENAME = data/MODEL/Bomb_Spawner.x			# [5]爆弾スポナー
+OBJECTMODEL_FILENAME = data/MODEL/Conveyor.x				# [6]コンベア
+OBJECTMODEL_FILENAME = data/MODEL/Conveyor_Spawner.x		# [7]コンベアスポナー
+OBJECTMODEL_FILENAME = data/MODEL/Garbage_Bag.x				# [8]ゴミ袋
+OBJECTMODEL_FILENAME = data/MODEL/Wood_Box.x				# [9]木箱
+OBJECTMODEL_FILENAME = data/MODEL/Field.x					# [10]床
+OBJECTMODEL_FILENAME = data/MODEL/Move_Floor.x				# [11]移動床
+
+
+END_SCRIPT

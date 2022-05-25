@@ -1,0 +1,39 @@
+//==================================================
+//テクスチャのパス読み込み用ファイル
+//Author加藤瑞葵
+//==================================================
+
+// テクスチャ最大数
+TEX_NUM = 11
+
+// 空
+PAS = data/TEXTURE/sky.jpg
+NAME = TEX_TYPE_SKY
+
+// 床
+PAS = data/TEXTURE/floor_000.jpg
+NAME = TEX_TYPE_FLOOR
+
+// 文字
+PAS = data/TEXTURE/Title.png
+NAME = TEX_TYPE_TITLE
+PAS = data/TEXTURE/START.png
+NAME = TEX_TYPE_PRESS_START
+PAS = data/TEXTURE/number000.png
+NAME = TEX_TYPE_NUMBER
+
+// エフェクト
+PAS = data/TEXTURE/effect000.jpg
+NAME = TEX_TYPE_EFFECT_MOVE
+
+// ランキング
+PAS = data/TEXTURE/1st.png
+NAME = TEX_TYPE_1ST
+PAS = data/TEXTURE/2nd.png
+NAME = TEX_TYPE_2ND
+PAS = data/TEXTURE/3rd.png
+NAME = TEX_TYPE_3RD
+PAS = data/TEXTURE/4th.png
+NAME = TEX_TYPE_4TH
+PAS = data/TEXTURE/5th.png
+NAME = TEX_TYPE_5TH
