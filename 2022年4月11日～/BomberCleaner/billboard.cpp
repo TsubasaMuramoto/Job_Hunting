@@ -14,7 +14,7 @@
 CBillboard::CBillboard(OBJTYPE nPriority) : CScene(nPriority)
 {
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_scale = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_colval = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
@@ -34,9 +34,9 @@ HRESULT CBillboard::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
 	m_pos = pos;
-	m_scale = size;
+	m_size = size;
 	CScene::SetPos(m_pos);
-	CScene::SetSize(m_scale);
+	CScene::SetSize(m_size);
 
 	//頂点バッファの生成
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4,
@@ -51,10 +51,10 @@ HRESULT CBillboard::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	// 頂点バッファをロックし、頂点データへのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	pVtx[0].pos = D3DXVECTOR3(-m_scale.x, +m_scale.y, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(+m_scale.x, +m_scale.y, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(-m_scale.x, -m_scale.y, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(+m_scale.x, -m_scale.y, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(-m_size.x, +m_size.y, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(+m_size.x, +m_size.y, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(-m_size.x, -m_size.y, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(+m_size.x, -m_size.y, 0.0f);
 
 	// 法線ベクトルの設定
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
@@ -99,8 +99,13 @@ void CBillboard::Uninit(void)
 //*****************************************************************************
 void CBillboard::Update(void)
 {
-	SetPos(m_pos, m_scale);
-	SetColVal(m_colval);
+	m_pos = CScene::GetPos();
+
+	if (m_pVtxBuff)
+	{
+		SetPos(m_pos, m_size);
+		SetColVal(m_colval);
+	}
 }
 
 //*****************************************************************************
@@ -159,7 +164,7 @@ void CBillboard::Draw(void)
 //*****************************************************************************
 // 生成処理
 //*****************************************************************************
-CBillboard *CBillboard::Create(D3DXVECTOR3 pos, D3DXVECTOR3 scale, D3DXCOLOR col)
+CBillboard *CBillboard::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col)
 {
 	CBillboard *pBillboard = nullptr;
 	if (!pBillboard)
@@ -168,7 +173,7 @@ CBillboard *CBillboard::Create(D3DXVECTOR3 pos, D3DXVECTOR3 scale, D3DXCOLOR col
 		if (pBillboard)
 		{
 			pBillboard->m_colval = col;
-			pBillboard->Init(pos, scale);																		// 初期化
+			pBillboard->Init(pos, size);																		// 初期化
 			pBillboard->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_EFFECT_MOVE"));	// テクスチャ取得
 		}
 	}
@@ -181,19 +186,19 @@ CBillboard *CBillboard::Create(D3DXVECTOR3 pos, D3DXVECTOR3 scale, D3DXCOLOR col
 void CBillboard::SetPos(D3DXVECTOR3 pos, D3DXVECTOR3 scale)
 {
 	m_pos = pos;
-	m_scale = scale;
+	m_size = scale;
 	CScene::SetPos(m_pos);
-	CScene::SetSize(m_scale);
+	CScene::SetSize(m_size);
 
 	VERTEX_3D *pVtx; //頂点バッファへのポインタ
 
 	// 頂点バッファをロックし、頂点データへのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	pVtx[0].pos = D3DXVECTOR3(-m_scale.x, +m_scale.y, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(+m_scale.x, +m_scale.y, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(-m_scale.x, -m_scale.y, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(+m_scale.x, -m_scale.y, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(-m_size.x, +m_size.y, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(+m_size.x, +m_size.y, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(-m_size.x, -m_size.y, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(+m_size.x, -m_size.y, 0.0f);
 
 	//頂点バッファのアンロック
 	m_pVtxBuff->Unlock();

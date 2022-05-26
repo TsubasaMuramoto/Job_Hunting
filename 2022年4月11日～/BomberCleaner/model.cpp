@@ -193,6 +193,7 @@ void CModel::Update(void)
 	{
 		if (m_bDoOnce)
 		{
+			CScene::OBJTYPE objtype;
 			CScene *pScene = nullptr;
 			HIT_TYPE hitType;
 			for (int nCnt = 0; nCnt < 2; nCnt++)
@@ -201,23 +202,33 @@ void CModel::Update(void)
 				switch (nCnt)
 				{
 				case 0:
-					pScene = CScene::GetScene(CScene::OBJTYPE_PLAYER);
+					objtype = CScene::OBJTYPE_PLAYER;
 					hitType = TYPE_SPHERE;
 					break;
 				case 1:
-					pScene = CScene::GetScene(CScene::OBJTYPE_SHADOW);
+					objtype = CScene::OBJTYPE_SHADOW;
 					hitType = TYPE_LINE;
 					break;
 				}
 
+				pScene = CScene::GetScene(objtype);
 				// シーンがnullになるまで通る
 				while (pScene)
 				{
 					// 次のシーンを取得
 					CScene *pSceneNext = CScene::GetSceneNext(pScene);
+					
+					float fDist;								// プレイヤーと爆弾の距離を取る変数
+					D3DXVECTOR3 ObjectPos = pScene->GetPos();	// オブジェクトの位置取得
 
-					// 当たり判定
-					m_bHit = LineCollisionCube(pScene, hitType);
+					// 三平方の定理を使い距離を測る
+					fDist = ((ObjectPos.x - m_mtxWorld._41) * (ObjectPos.x - m_mtxWorld._41)) + ((ObjectPos.y - m_mtxWorld._42) * (ObjectPos.y - m_mtxWorld._42)) + ((ObjectPos.z - m_mtxWorld._43) * (ObjectPos.z - m_mtxWorld._43));
+
+					if (fDist < 100000.0f)
+					{
+						// 当たり判定
+						m_bHit = LineCollisionCube(pScene, hitType);
+					}
 
 					// 次のシーンを現在のシーンにする
 					pScene = pSceneNext;

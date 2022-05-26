@@ -37,7 +37,6 @@ CBomb::CBomb(OBJTYPE nPriority) : CScene(nPriority)
 	m_fSphereRot	= 0.0f;
 	m_fSphereSize	= 1.0f;
 	m_fSphereAlpha	= 1.0f;
-	m_bBomb			= false;
 	m_bIgnition		= false;
 	m_bShrink		= false;
 	m_bBlink		= false;
@@ -85,6 +84,13 @@ void CBomb::Uninit(void)
 		m_pControl = nullptr;
 	}
 
+	// 影の破棄
+	if (m_pShadow)
+	{
+		m_pShadow->Uninit();
+		m_pShadow = nullptr;
+	}
+
 	// オブジェクトの破棄
 	Release();
 }
@@ -96,6 +102,7 @@ void CBomb::Update(void)
 {
 	CScene::SetPosOld(m_pos);	// 移動前の位置設定
 	m_pos = CScene::GetPos();	// 移動後の位置取得
+
 	// 爆弾がある状態の処理
 	if (m_pModel)
 	{
@@ -125,14 +132,6 @@ void CBomb::Update(void)
 			// 発火のエフェクト
 			CEffect::Create({ m_pos.x,m_pos.y + (m_pModel->GetSize().y * m_scale.y),m_pos.z }, IGNITION_SIZE, IGNITION_COL, IGNITION_SUB, 2);
 			Ignition();
-		}
-		else
-		{
-			// 爆弾に触れる
-			if (m_pModel->GetHitBool())
-			{
-				m_bIgnition = true;
-			}
 		}
 
 		// 投げている状態の処理
@@ -166,9 +165,9 @@ void CBomb::Update(void)
 			}
 		}
 
-		if (m_pShadow)
+		if (m_pShadow)	// シャドウの位置設定
 		{
-			m_pShadow->CScene::SetPos({ m_pos.x , m_pos.y - (GetSize().y / 2) + 1.0f,m_pos.z });
+			m_pShadow->CScene::SetPosOld({ m_pos.x ,m_pos.y, m_pos.z });
 		}
 	}
 
@@ -241,10 +240,10 @@ CBomb *CBomb::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, int nX
 				// 爆弾サイズの設定
 				pBomb->SetSize(pBomb->m_pModel->GetSize());
 
-				// 影の設定
+				//// 影の設定
 				//if (!pBomb->m_pShadow)
 				//{
-				//	pBomb->m_pShadow = CShadow::Create({ pos.x , pos.y - (pBomb->GetSize().y / 2),pos.z }, { pBomb->GetSize().x,0.0f,pBomb->GetSize().z }, rot);
+				//	pBomb->m_pShadow = CShadow::Create({ pos.x , pos.y ,pos.z }, { pBomb->GetSize().x,0.0f,pBomb->GetSize().z }, rot);
 				//}
 			}
 		}
@@ -260,8 +259,11 @@ void CBomb::Explosion(void)
 	m_bThrow = false;
 
 	// 爆発球の生成
-	float fRad = m_pModel->GetSize().x;
-	CBlast::Create(m_pos, { 30.0f ,30.0f,30.0f}/*{ fRad, fRad ,fRad }*/, { 1.0f,0.0f,0.0f,1.0f }, 10, 10);
+	if (m_pModel)
+	{
+		float fRad = m_pModel->GetSize().x;
+		CBlast::Create(m_pos, { 30.0f ,30.0f,30.0f }/*{ fRad, fRad ,fRad }*/, { 1.0f,0.0f,0.0f,1.0f }, 10, 10);
+	}
 
 	// 終了
 	Uninit();

@@ -332,21 +332,31 @@ void  CMeshField::AllCollision(void)
 		}
 
 		// シーンがnullになるまで通る
+		CScene *pScenePlayer = CScene::GetScene(OBJTYPE_PLAYER);
 		while (pScene && !m_vtxWorld.empty())
 		{
 			// 次のシーンを取得
 			CScene *pSceneNext = CScene::GetSceneNext(pScene);
 
-			// 4頂点の番号割り当て
-			int nID[4];
-			for (int nCnt = 0; nCnt < m_nVertical; nCnt++)
+			float fDist;								// プレイヤーと爆弾の距離を取る変数
+			D3DXVECTOR3 ObjectPos = pScene->GetPos();	// オブジェクトの位置取得
+			D3DXVECTOR3 PlayerPos = pScenePlayer->GetPos();
+
+			// 三平方の定理を使い距離を測る
+			fDist = ((ObjectPos.x - PlayerPos.x) * (ObjectPos.x - PlayerPos.x)) + ((ObjectPos.y - PlayerPos.y) * (ObjectPos.y - PlayerPos.y)) + ((ObjectPos.z - PlayerPos.z) * (ObjectPos.z - PlayerPos.z));
+
+			if (fDist < 10000000.0f)
 			{
-				for (int nCnt2 = 0; nCnt2 < m_nLine; nCnt2++)
+				// 4頂点の番号割り当て
+				int nID[4];
+				for (int nCnt = 0; nCnt < m_nVertical; nCnt++)
 				{
-					nID[0] = (0 + nCnt2) + (nCnt * (m_nLine + 1));
-					nID[1] = (1 + nCnt2) + (nCnt * (m_nLine + 1));
-					nID[2] = ((2 + (m_nLine - 1)) + nCnt2) + (nCnt * (m_nLine + 1));
-					nID[3] = ((3 + (m_nLine - 1)) + nCnt2) + (nCnt * (m_nLine + 1));
+					for (int nCnt2 = 0; nCnt2 < m_nLine; nCnt2++)
+					{
+						nID[0] = (0 + nCnt2) + (nCnt * (m_nLine + 1));
+						nID[1] = (1 + nCnt2) + (nCnt * (m_nLine + 1));
+						nID[2] = ((2 + (m_nLine - 1)) + nCnt2) + (nCnt * (m_nLine + 1));
+						nID[3] = ((3 + (m_nLine - 1)) + nCnt2) + (nCnt * (m_nLine + 1));
 
 						if (LineCollisionMesh(pScene, &nID[0]))
 						{
@@ -356,22 +366,22 @@ void  CMeshField::AllCollision(void)
 							break;
 						}
 
-					//// 影当たり判定
-					//else if (pScene->GetObjType() == OBJTYPE_SHADOW)
-					//{
-					//	if (ShadowCollisionMesh(pScene, &nID[0]))
-					//	{
-					//		float FieldHeight = GetMatrix()._42;
-					//		CShadow *pShadow = (CShadow*)pScene;
-					//		pShadow->SetHeight(FieldHeight);
+						//// 影当たり判定
+						//else if (pScene->GetObjType() == OBJTYPE_SHADOW)
+						//{
+						//	if (ShadowCollisionMesh(pScene, &nID[0]))
+						//	{
+						//		float FieldHeight = GetMatrix()._42;
+						//		CShadow *pShadow = (CShadow*)pScene;
+						//		pShadow->SetHeight(FieldHeight);
 
-					//	}
-					//}
+						//	}
+						//}
+					}
 				}
 			}
-
-			// 次のシーンを現在のシーンにする
-			pScene = pSceneNext;
+				// 次のシーンを現在のシーンにする
+				pScene = pSceneNext;
 		}
 	}
 }

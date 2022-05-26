@@ -27,6 +27,7 @@
 class CModel;
 class CBomb;
 class CShadow;
+class CBillboard;
 
 //=============================================================
 // クラス定義
@@ -74,6 +75,7 @@ public:
 	void Move(void);																				// 移動
 	void Inertia(D3DXVECTOR3 &speed);																// 慣性
 	void Gravity(D3DXVECTOR3& pos, float& fGravity, const float& fGravitySpeed, bool & bJump);		// 重力
+	void Action(void);																				// アクション
 	void Jump(float &fGravity, bool& bJump);														// ジャンプ
 	bool InputDirection(const MOVE_DIRECTION &moveDir);												// 移動方向入力関数
 	bool Carry(void);
@@ -90,7 +92,8 @@ public:
 	void SetGravity(float fGravity,bool bJump)	{ m_fGravity = fGravity , m_bJump = bJump; }
 
 private:
-	CShadow			*m_pShadow;						// プレイヤーの影
+	CBillboard		*m_pBillboard;					// ビルボードクラス
+	CShadow			*m_pShadow;						// シャドウクラス
 	CBomb			*m_pBomb;						// 爆弾クラス
 	CModel			*m_pModel;						// モデルクラス
 	D3DXVECTOR3		m_pos,m_Oldpos;					// 位置・最後の位置

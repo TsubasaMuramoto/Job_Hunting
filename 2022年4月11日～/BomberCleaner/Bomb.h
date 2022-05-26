@@ -45,8 +45,9 @@ public:
 	void Throw(D3DXVECTOR3 ThrowDir);		// 投げた時の処理
 
 	// 設定・取得処理
-	void SetThrow(bool bThrow) { m_bThrow = bThrow; }
-	D3DXVECTOR3 GetThrowDir() { return m_ThrowDir; }
+	void SetThrow(bool bThrow)	{ m_bThrow = bThrow; }
+	bool GetThrow()				{ return m_bThrow; }
+	D3DXVECTOR3 GetThrowDir()	{ return m_ThrowDir; }
 
 private:
 	CShadow			*m_pShadow;			// シャドウクラス
@@ -59,7 +60,6 @@ private:
 	D3DXCOLOR		m_Emissive;			// 発光色
 	D3DXMATRIX		m_mtxWorld;			// ワールドマトリックス
 	int				m_nBombTime;		// 爆発までのタイム
-	bool			m_bBomb;			// 爆発するか
 	bool			m_bIgnition;		// 着火したか
 	bool			m_bShrink;			// 縮むか
 	bool			m_bBlink;			// 点滅するか

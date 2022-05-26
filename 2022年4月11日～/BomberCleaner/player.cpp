@@ -14,12 +14,16 @@
 #include "model_spawner.h"
 #include "meshfield.h"
 #include "shadow.h"
+#include "billboard.h"
 #include <assert.h>
 
 //=============================================================================
 // マクロ定義
 //=============================================================================
-#define PLAYER_SHADOWSIZE (D3DXVECTOR3(m_size.x * 1.5f,0.0f,m_size.z * 1.5f))
+#define PLAYER_SHADOWSIZE	(D3DXVECTOR3(m_size.x * 1.5f,0.0f,m_size.z * 1.5f))
+#define CARRY_RANGE			(600.0f)
+#define CARRY_RANGE_DIST	(10000.0f)
+#define MARK_SIZE			(D3DXVECTOR3(50.0f,50.0f,0.0f))
 
 //=============================================================================
 // コンストラクタ
@@ -27,8 +31,10 @@
 CPlayer::CPlayer(OBJTYPE nPriority) : CScene(nPriority)
 {
 	// memset(m_pMotion, NULL, sizeof(m_pMotion));
-	// memset(m_pBomb, NULL, sizeof(m_pBomb));
-
+	
+	m_pBomb = nullptr;
+	m_pModel = nullptr;
+	m_pBillboard = nullptr;
 	m_Direction		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_pos			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Oldpos		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -152,42 +158,12 @@ void CPlayer::Update()
 	CManager::GetInstance()->GetCamera(0)->SetPlayerCamera(this);
 
 	//------------------------------------------
-	// 移動系関数
+	// プレイヤー制御系関数
 	//------------------------------------------
 	Move();														// 移動
-	Jump(m_fGravity, m_bJump);									// ジャンプ
+	//Jump(m_fGravity, m_bJump);								// ジャンプ
+	Action();													// アクション
 	Gravity(m_pos, m_fGravity, m_fGravitySpeed, m_bJump);		// 重力
-
-	switch (m_state)
-	{
-
-	case STATE_NORMAL:
-		if (CInput::PressAnyAction(CInput::ACTION_ATTACK))
-		{
-			//m_pBomb = CBomb::Create({ m_pos.x,m_pos.y + m_size.y,m_pos.z }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, CManager::GetInstance()->GetLoadX()->GetNum("MODTYPE_BOMB"));
-
-			if (Carry())
-			{
-				m_state = STATE_HOLD;
-			}
-		}
-
-		break;
-
-	case STATE_HOLD:
-		if (m_pBomb)
-		{
-			m_pBomb->SetPos({ m_pos.x,m_pos.y + m_size.y,m_pos.z });
-
-			if (CInput::PressAnyAction(CInput::ACTION_ATTACK))
-			{
-				D3DXVECTOR3 moveVec = m_pos - m_Oldpos;
-				m_pBomb->Throw(moveVec);
-				m_state = STATE_NORMAL;
-			}
-		}
-		break;
-	}
 
 	// シーンに位置を設定する
 	CScene::SetPos(m_pos);
@@ -199,7 +175,7 @@ void CPlayer::Update()
 
 	if (m_pShadow)	// シャドウの位置設定
 	{
-		m_pShadow->CScene::SetPosOld({ m_pos.x ,m_pos.y,m_pos.z });
+		m_pShadow->CScene::SetPosOld({ m_pos.x ,m_pos.y, m_pos.z });
 	}
 }
 
@@ -436,10 +412,13 @@ void CPlayer::SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot,const float 
 //-----------------------------------------------------------------------------------------------
 bool CPlayer::Carry(void)
 {
+	//--------------------------------------------------------------
+	// プレイヤーから一番近い爆弾を取得する
+	//--------------------------------------------------------------
 	CScene *pSaveScene = nullptr;
 	CScene *pScene = CScene::GetScene(OBJTYPE_MODEL);
 
-	// シーンがnullになるまで通る
+	float fSaveDist;		// プレイヤーと爆弾の距離を保存する変数
 	while (pScene)
 	{
 		// 次のシーンを取得
@@ -447,9 +426,24 @@ bool CPlayer::Carry(void)
 
 		if (pScene->GetModelType() == MODTYPE_BOMB)
 		{
-			if (m_pModel->SphereCollisionSphere(200.0f, pScene))
+			float fDist;							// プレイヤーと爆弾の距離を取る変数
+			D3DXVECTOR3 BombPos = pScene->GetPos();	// オブジェクトの位置取得
+
+			// 三平方の定理を使い距離を測る
+			fDist = ((BombPos.x - m_pos.x) * (BombPos.x - m_pos.x)) + ((BombPos.y - m_pos.y) * (BombPos.y - m_pos.y)) + ((BombPos.z - m_pos.z) * (BombPos.z - m_pos.z));
+
+			if (fDist < CARRY_RANGE_DIST)
 			{
-				pSaveScene = pScene;
+				CBomb *pBomb = (CBomb*)pScene;
+				//if (m_pModel->SphereCollisionSphere(CARRY_RANGE, pScene))
+				//{
+					// 取得したオブジェクトの距離と現在保存されている距離を測る
+				if ((!pSaveScene || fDist < fSaveDist) && !pBomb->GetThrow())
+				{
+					fSaveDist = fDist;
+					pSaveScene = pScene;
+				}
+				//}
 			}
 		}
 
@@ -459,10 +453,78 @@ bool CPlayer::Carry(void)
 
 	if (pSaveScene)
 	{
-		m_pBomb = (CBomb*)pSaveScene;
-		return true;
+		D3DXVECTOR3 pos = pSaveScene->GetPos();
+		float fHeight = pSaveScene->GetSize().y;
+
+		if (!m_pBillboard)
+		{
+			m_pBillboard = CBillboard::Create({ pos.x,pos.y + fHeight ,pos.z }, MARK_SIZE, { 1.0f,1.0f,1.0f,1.0f });
+			m_pBillboard->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_EFFECT_MOVE"));
+		}
+		else
+		{
+			m_pBillboard->CScene::SetPos({ pos.x,pos.y + fHeight ,pos.z });
+		}
+
+		if (CInput::PressAnyAction(CInput::ACTION_ATTACK))
+		{
+			m_pBomb = (CBomb*)pSaveScene;
+			if (m_pBillboard)
+			{
+				m_pBillboard->Uninit();
+				m_pBillboard = nullptr;
+			}
+			return true;
+		}
+	}
+	else
+	{
+		if (m_pBillboard)
+		{
+			m_pBillboard->Uninit();
+			m_pBillboard = nullptr;
+		}
 	}
 	return false;
+}
+
+//-----------------------------------------------------------------------------------------------
+// プレイヤーアクション
+//-----------------------------------------------------------------------------------------------
+void CPlayer::Action(void)
+{
+	switch (m_state)
+	{
+	case STATE_NORMAL:
+		if (Carry())
+		{
+			m_state = STATE_HOLD;
+		}
+
+		break;
+
+	case STATE_HOLD:
+		if (m_pBomb)
+		{
+			m_pBomb->SetPos({ m_pos.x,m_pos.y + m_size.y,m_pos.z });
+
+			if (CInput::PressAnyAction(CInput::ACTION_ATTACK))
+			{
+				D3DXVECTOR3 moveVec = m_pos - m_Oldpos;
+				m_pBomb->Throw(moveVec);					// プレイヤーの移動方向に投げる
+				m_pBomb = nullptr;							// 爆弾を破棄(メモリ自体は破棄しない)
+				m_state = STATE_NORMAL;						// プレイヤーの状態を通常に戻す
+			}
+		}
+		break;
+	}
+
+	// ジャンプ
+	if (CInput::PressAnyAction(CInput::ACTION_SPACE) && !m_bJump)	// Aボタン
+	{
+		m_fGravity = JUMP;
+		m_bJump = true;
+	}
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -470,12 +532,7 @@ bool CPlayer::Carry(void)
 //-----------------------------------------------------------------------------------------------
 void CPlayer::Jump(float &fGravity, bool& bJump)
 {
-	// ジャンプの移動量に加算
-	if (CInput::PressAnyAction(CInput::ACTION_SPACE) && !bJump)	// Aボタン
-	{
-		fGravity = JUMP;
-		bJump = true;
-	}
+
 }
 
 //-----------------------------------------------------------------------------------------------

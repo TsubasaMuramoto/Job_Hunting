@@ -38,7 +38,7 @@ public:
 	void Draw(void);									// 描画処理
 
 	// ビルボードの生成
-	static CBillboard *Create(D3DXVECTOR3 pos, D3DXVECTOR3 scale, D3DXCOLOR col);
+	static CBillboard *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col);
 
 	//---------------------------------------
 	// Setter & Getter
@@ -52,7 +52,7 @@ private:
 	LPDIRECT3DTEXTURE9		m_pTexture = nullptr;	// テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff = nullptr;	// 頂点バッファへのポインタ
 	D3DXVECTOR3				m_pos;					// 位置
-	D3DXVECTOR3				m_scale;				// サイズ
+	D3DXVECTOR3				m_size;					// サイズ
 	D3DXMATRIX				m_mtxWorld;				// ワールドマトリックス
 	D3DCOLORVALUE			m_colval;				// カラー
 };

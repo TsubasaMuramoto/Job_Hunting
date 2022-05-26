@@ -87,24 +87,8 @@ void CShadow::Update(void)
 	CScene::SetPosOld({ m_pos.x, Y, m_pos.z });
 	CScene3D::Update();
 
-
-	/*float OldY = CScene::GetPosOld().y;
-	float NewY = CScene::GetPos().y;
-	float fLength = abs(OldY - NewY);
-
-	if (fLength > 1.0f)
-	{
-		m_size.x *= fLength;
-		m_size.z *= fLength;
-		CScene3D::SetPos(m_pos, m_size);
-	}
-	else if (fLength <= 1.0f)
-	{
-		m_size.x = m_OriginSize.x;
-		m_size.z = m_OriginSize.z;
-	}*/
-
 	Y -= GRAVITY;
+	//CScene3D::SetPos({ m_pos.x, Y, m_pos.z }, m_size);
 	CScene::SetPos({ m_pos.x, Y, m_pos.z });
 	//SetGravity(GRAVITY);
 }
@@ -127,38 +111,3 @@ void CShadow::SetGravity(float GravitySpeed)
 {
 	m_pos.y -= GravitySpeed;
 }
-
-
-////================================================
-//// ワールドマトリックス設定処理
-////================================================
-//void CShadow::SetVtxMtxWorld(D3DXVECTOR3 vtxPos, int nCntVtx)
-//{
-//	//デバイスのポインタ
-//	LPDIRECT3DDEVICE9 pDevice;
-//	//デバイスの取得
-//	pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
-//
-//	// 計算用マトリックス
-//	D3DXMATRIX mtxRot, mtxTrans;
-//
-//	// ワールドマトリックスの初期化
-//	D3DXMatrixIdentity(&m_vtxMtxWorld[nCntVtx]);
-//
-//	//向きを反映
-//	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_vtxRot[nCntVtx].y, m_vtxRot[nCntVtx].x, m_vtxRot[nCntVtx].z);
-//	D3DXMatrixMultiply(&m_vtxMtxWorld[nCntVtx], &m_vtxMtxWorld[nCntVtx], &mtxRot);
-//
-//	//位置を反映
-//	D3DXMatrixTranslation(&mtxTrans, vtxPos.x, vtxPos.y, vtxPos.z);
-//	D3DXMatrixMultiply(&m_vtxMtxWorld[nCntVtx], &m_vtxMtxWorld[nCntVtx], &mtxTrans);
-//
-//	D3DXMATRIX mtxParent;		//親のマトリックス
-//	mtxParent = m_mtxWorld;
-//
-//	//算出した各パーツのワールドマトリックスと親のワールドマトリックスを掛け合わせる
-//	D3DXMatrixMultiply(&m_vtxMtxWorld[nCntVtx], &m_vtxMtxWorld[nCntVtx], &mtxParent);
-//
-//	//ワールドマトリックスの設定
-//	pDevice->SetTransform(D3DTS_WORLD, &m_vtxMtxWorld[nCntVtx]);
-//}
