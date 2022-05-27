@@ -48,7 +48,8 @@ public:
 
 private:
 	CRanking			*m_pRanking;
-	CUi					*m_pUi;
+	CUi					*m_pUi;							
+	CUi					*m_pReturnTitle;				// タイトルに戻るUI
 	CBg					*m_pBgResult;
 	int					m_nSelectType;					// 現在の選択
 	int					m_nFrame;						// フレーム数

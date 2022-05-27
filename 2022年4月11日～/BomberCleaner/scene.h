@@ -24,7 +24,6 @@ public:
 		OBJTYPE_NONE = 0,		// 無し
 		OBJTYPE_BG,				// 背景
 		OBJTYPE_NUMBER,			// ナンバー
-		OBJTYPE_UI,				// UI
 		OBJTYPE_POLYGON2D,		// 2Dポリゴン
 		OBJTYPE_POLYGON3D,		// 3Dポリゴン
 		OBJTYPE_MESH,			// メッシュ
@@ -34,6 +33,7 @@ public:
 		OBJTYPE_EFFECTMESH,		// エフェクトメッシュ
 		OBJTYPE_BILLBOARD,		// ビルボード
 		OBJTYPE_SHADOW,			// シャドウ
+		OBJTYPE_UI,				// UI
 		OBJTYPE_PAUSE,			// ポーズ
 		OBJTYPE_FADE,			// フェード
 		OBJTYPE_MAX				

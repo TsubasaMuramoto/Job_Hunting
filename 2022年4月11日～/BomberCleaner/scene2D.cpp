@@ -252,8 +252,8 @@ void CScene2D::SetTex(int nAnim, int nPartU)
 	pVtx[3].tex = D3DXVECTOR2(		 (1.0f / nPartU)*(nAnim + 1), 1.0f);
 
 	m_pVtxBuff->Unlock();
-
 }
+
 void CScene2D::SetTex(float nPatternX,float nPatternY, float fSizeX, float fSizeY)
 {
 	VERTEX_2D *pVtx;
@@ -301,7 +301,6 @@ void CScene2D::SetCol(D3DXCOLOR col)
 	pVtx[3].col = D3DXCOLOR(col.r, col.g, col.b, col.a);
 
 	m_pVtxBuff->Unlock();
-
 }
 
 //------------------------------------------------------------

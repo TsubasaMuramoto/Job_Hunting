@@ -43,6 +43,7 @@ public:
 	//---------------------------------------
 	// Setter & Getter
 	//---------------------------------------
+	void SetTex(int nAnim, int nPartU);
 	void SetPos(D3DXVECTOR3 pos, D3DXVECTOR3 scale);
 	void SetColVal(D3DCOLORVALUE colval);
 	D3DXVECTOR3 GetPos(void)						{ return m_pos; }

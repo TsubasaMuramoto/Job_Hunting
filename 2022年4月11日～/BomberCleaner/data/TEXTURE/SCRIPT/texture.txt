@@ -4,7 +4,7 @@
 //==================================================
 
 // テクスチャ最大数
-TEX_NUM = 11
+TEX_NUM = 21
 
 // 空
 PAS = data/TEXTURE/sky.jpg
@@ -15,12 +15,39 @@ PAS = data/TEXTURE/floor_000.jpg
 NAME = TEX_TYPE_FLOOR
 
 // 文字
-PAS = data/TEXTURE/Title.png
+PAS = data/TEXTURE/Title000.png
 NAME = TEX_TYPE_TITLE
 PAS = data/TEXTURE/START.png
 NAME = TEX_TYPE_PRESS_START
-PAS = data/TEXTURE/number000.png
+PAS = data/TEXTURE/Start000.png
+NAME = TEX_TYPE_GAMESTART
+
+// タイトルUI
+PAS = data/TEXTURE/TitleSelect000.png
+NAME = TEX_TYPE_TITLE_SELECT00
+PAS = data/TEXTURE/TitleSelect001.png
+NAME = TEX_TYPE_TITLE_SELECT01
+PAS = data/TEXTURE/TitleSelect002.png
+NAME = TEX_TYPE_TITLE_SELECT02
+
+PAS = data/TEXTURE/End000.png
+NAME = TEX_TYPE_END
+PAS = data/TEXTURE/ReturnTitle000.png
+NAME = TEX_TYPE_RETURN_TITLE
+
+// 数字
+PAS = data/TEXTURE/Number000.png
 NAME = TEX_TYPE_NUMBER
+PAS = data/TEXTURE/Number3.png
+NAME = TEX_TYPE_NUMBER_THREE
+PAS = data/TEXTURE/Number2.png
+NAME = TEX_TYPE_NUMBER_TWO
+PAS = data/TEXTURE/Number1.png
+NAME = TEX_TYPE_NUMBER_ONE
+
+// 目印
+PAS = data/TEXTURE/Allow000.png
+NAME = TEX_TYPE_ALLOW
 
 // エフェクト
 PAS = data/TEXTURE/effect000.jpg

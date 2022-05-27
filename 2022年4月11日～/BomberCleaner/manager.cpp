@@ -38,7 +38,7 @@ CPause*			CManager::m_pPause					= nullptr;		// ポーズ
 CFade*			CManager::m_pFade					= nullptr;		// フェード
 CPlayData*		CManager::m_pPlayData				= nullptr;		// プレイデータ
 CLoadX*			CManager::m_pLoadX					= nullptr;		// X読み込みクラス
-CManager::MODE	CManager::m_mode					= MODE::GAME;	// モード
+CManager::MODE	CManager::m_mode					= MODE::TITLE;	// モード
 bool			CManager::m_bOnlyOnce				= false;
 bool			CManager::m_bStop = false;
 bool			CManager::m_bPause = false;
@@ -150,6 +150,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, bool bReturn)
 	if (!m_pFade)
 	{
 		m_pFade = CFade::Create(m_mode);
+		//m_pFade->SetFade(m_mode);
 	}
 
 	// モードの設定
@@ -507,8 +508,7 @@ bool CManager::SetModeBool(MODE modeNext)
 	//=========================================================
 	// 画面遷移(ENTERまたはSTARTボタンを押す)
 	//=========================================================
-	if ((m_pInputKeyboard->GetTrigger(DIK_RETURN) || m_pXInput->GetButtonTrigger(XINPUT_GAMEPAD_START) ||
-		m_pDInput->GetTrigger(CDInput::BUTTON_START)) && !m_bOnlyOnce)
+	if (CInput::PressAnyAction(CInput::ACTION_ENTER) || CInput::PressAnyAction(CInput::ACTION_ATTACK) && !m_bOnlyOnce)
 	{
 		m_pFade->SetFade(modeNext);						// ゲームモードへ
 		m_bOnlyOnce = true;								// ENTER連打防止

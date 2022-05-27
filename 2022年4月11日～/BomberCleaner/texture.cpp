@@ -107,13 +107,13 @@ void CTexture::Init(void)
 //=============================================================================
 void CTexture::Uninit(void)
 {
-	for (int nCntTexture = 0; nCntTexture < m_nNumTex; nCntTexture++)
+	for (int nCnt = 0; nCnt < m_nNumTex; nCnt++)
 	{
-		//テクスチャの破棄
-		if (m_apTexture[nCntTexture])
+		// テクスチャの破棄
+		if (m_apTexture[nCnt])
 		{
-			m_apTexture[nCntTexture]->Release();
-			m_apTexture[nCntTexture] = nullptr;
+			m_apTexture[nCnt]->Release();
+			m_apTexture[nCnt] = nullptr;
 		}
 	}
 }

@@ -36,6 +36,7 @@ public:
 	//--------------------------------------------------
 	// GETTER & SETTER
 	//--------------------------------------------------
+	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }		// 回転セット
 	D3DXVECTOR3 GetPosV(void)	{ return m_posV; }		// 視点
 	D3DXVECTOR3 GetPosR(void)	{ return m_posR; }		// 注視点
 	D3DXVECTOR3 GetRot(void)	{ return m_rot; }		// 回転

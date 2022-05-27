@@ -240,7 +240,7 @@ CBomb *CBomb::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, int nX
 				// îöíeÉTÉCÉYÇÃê›íË
 				pBomb->SetSize(pBomb->m_pModel->GetSize());
 
-				//// âeÇÃê›íË
+				// âeÇÃê›íË
 				//if (!pBomb->m_pShadow)
 				//{
 				//	pBomb->m_pShadow = CShadow::Create({ pos.x , pos.y ,pos.z }, { pBomb->GetSize().x,0.0f,pBomb->GetSize().z }, rot);
@@ -262,7 +262,7 @@ void CBomb::Explosion(void)
 	if (m_pModel)
 	{
 		float fRad = m_pModel->GetSize().x;
-		CBlast::Create(m_pos, { 30.0f ,30.0f,30.0f }/*{ fRad, fRad ,fRad }*/, { 1.0f,0.0f,0.0f,1.0f }, 10, 10);
+		CBlast::Create(m_pos, { 30.0f ,30.0f,30.0f }/*{ fRad, fRad ,fRad }*/, { 1.0f,0.0f,0.0f,1.0f }, 20, 20);
 	}
 
 	// èIóπ

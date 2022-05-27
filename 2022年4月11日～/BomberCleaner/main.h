@@ -36,10 +36,11 @@ using namespace std;
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define SCREEN_WIDTH (1280)													// ウィンドウの幅(16:9)
-#define SCREEN_HEIGHT (720)													// ウィンドウの高さ(16:9)
-#define FULLSCREEN_WIDTH (1920)												// フルスクリーン幅
-#define FULLSCREEN_HEIGHT (1080)											// フルスクリーン高さ
+#define SCREEN_WIDTH		(1280)													// ウィンドウの幅(16:9)
+#define SCREEN_HEIGHT		(720)													// ウィンドウの高さ(16:9)
+#define FULLSCREEN_WIDTH	(1920)													// フルスクリーン幅
+#define FULLSCREEN_HEIGHT	(1080)													// フルスクリーン高さ
+#define SCREEN_CENTER		(D3DXVECTOR3(SCREEN_WIDTH / 2,SCREEN_HEIGHT / 2, 0.0f))	// スクリーンの真ん中
 
 //*****************************************************************************
 // プロトタイプ宣言

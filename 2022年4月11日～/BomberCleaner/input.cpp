@@ -100,6 +100,13 @@ bool CInput::PressAnyAction(const ACTION &action)
 	case ACTION_ATTACK:	// UŒ‚‚È‚Ç
 		return (pKey->GetTrigger(DIK_K) || pXPad->GetButtonTrigger(XINPUT_GAMEPAD_B) || pDPad->GetTrigger(CDInput::BUTTON_B));
 
+	case ACTION_LEFT:	// ¶s“®
+		return (pKey->GetTrigger(DIK_A) || pXPad->GetButtonTrigger(XINPUT_GAMEPAD_DPAD_LEFT) || pDPad->GetGamepad().lX <= -DINPUT_STICK_RANGE) ||
+				pKey->GetTrigger(DIK_LEFT) || pXPad->GetGamePad()->m_state.Gamepad.sThumbLX <= -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
+
+	case ACTION_RIGHT:	// ‰Es“®
+		return (pKey->GetTrigger(DIK_D) || pXPad->GetButtonTrigger(XINPUT_GAMEPAD_DPAD_RIGHT) || pDPad->GetGamepad().lX >= DINPUT_STICK_RANGE) ||
+				pKey->GetTrigger(DIK_RIGHT) || pXPad->GetGamePad()->m_state.Gamepad.sThumbLX >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
 	}
 
 	return false;

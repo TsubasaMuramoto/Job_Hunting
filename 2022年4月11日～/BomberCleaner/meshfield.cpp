@@ -115,25 +115,14 @@ HRESULT CMeshField::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 			// フィールド
 			if (m_size.y <= 0)
 			{
-				// 頂点位置
-				pVtx[nNum].pos = D3DXVECTOR3
-				(
-					-m_size.x / 2.0f + (m_size.x / m_nLine) * nLine,
-					0.0f,
-					m_size.z / 2.0f - (m_size.z / m_nVertical) * nVertical
-				);
+				pVtx[nNum].pos.x = -m_size.x / 2.0f + (m_size.x / m_nLine) * nLine;
+				pVtx[nNum].pos.y = 0.0f;
+				pVtx[nNum].pos.z = m_size.z / 2.0f - (m_size.z / m_nVertical) * nVertical;
 			}
 
 			// ウォール
 			else if (m_size.y > 0)
 			{
-				//// 頂点位置
-				//pVtx[nNum].pos = D3DXVECTOR3
-				//(
-				//	-m_size.x / 2.0f + (m_size.x / m_nLine) * nLine,
-				//	m_size.y - (m_size.y / m_nVertical) * nVertical,
-				//	0.0f
-				//);
 				pVtx[nNum].pos.x = -m_size.x / 2.0f + (m_size.x / m_nLine) * nLine;
 				pVtx[nNum].pos.y = m_size.y - (m_size.y / m_nVertical) * nVertical;
 				pVtx[nNum].pos.z = 0.0f;
@@ -394,9 +383,11 @@ bool CMeshField::LineCollisionMesh(CScene *pScene,const int *pnVtx)
 	// 板ポリゴンの0,1,2,3番目をそれぞれA,B,C,Dとし
 	// pSceneの位置をPとする
 	// pSceneの最後の位置をQとする
+	D3DXVECTOR3 pos = pScene->GetPos();
+	D3DXVECTOR3 posOld = pScene->GetPosOld();
 
 	// Oldposからposの位置を結ぶベクトル(これが線分になる(進行ベクトル))
-	const D3DXVECTOR3 vecQP = pScene->GetPos() - pScene->GetPosOld();
+	const D3DXVECTOR3 vecQP = pos - posOld;
 
 	// 各頂点の外周を沿うベクトル
 	const D3DXVECTOR3 vecAB = m_vtxWorld[pnVtx[1]] - m_vtxWorld[pnVtx[0]];
@@ -405,16 +396,16 @@ bool CMeshField::LineCollisionMesh(CScene *pScene,const int *pnVtx)
 	const D3DXVECTOR3 vecCA = m_vtxWorld[pnVtx[0]] - m_vtxWorld[pnVtx[2]];
 
 	// 各頂点とシーンの位置を結ぶベクトル
-	const D3DXVECTOR3 vecAP = pScene->GetPos() - m_vtxWorld[pnVtx[0]];
-	const D3DXVECTOR3 vecBP = pScene->GetPos() - m_vtxWorld[pnVtx[1]];
-	const D3DXVECTOR3 vecCP = pScene->GetPos() - m_vtxWorld[pnVtx[2]];
-	const D3DXVECTOR3 vecDP = pScene->GetPos() - m_vtxWorld[pnVtx[3]];
+	const D3DXVECTOR3 vecAP = pos - m_vtxWorld[pnVtx[0]];
+	const D3DXVECTOR3 vecBP = pos - m_vtxWorld[pnVtx[1]];
+	const D3DXVECTOR3 vecCP = pos - m_vtxWorld[pnVtx[2]];
+	const D3DXVECTOR3 vecDP = pos - m_vtxWorld[pnVtx[3]];
 
 	// 各頂点とシーンの最後の位置を結ぶベクトル
-	const D3DXVECTOR3 vecAQ = pScene->GetPosOld() - m_vtxWorld[pnVtx[0]];
-	const D3DXVECTOR3 vecBQ = pScene->GetPosOld() - m_vtxWorld[pnVtx[1]];
-	const D3DXVECTOR3 vecCQ = pScene->GetPosOld() - m_vtxWorld[pnVtx[2]];
-	const D3DXVECTOR3 vecDQ = pScene->GetPosOld() - m_vtxWorld[pnVtx[3]];
+	const D3DXVECTOR3 vecAQ = posOld - m_vtxWorld[pnVtx[0]];
+	const D3DXVECTOR3 vecBQ = posOld - m_vtxWorld[pnVtx[1]];
+	const D3DXVECTOR3 vecCQ = posOld - m_vtxWorld[pnVtx[2]];
+	const D3DXVECTOR3 vecDQ = posOld - m_vtxWorld[pnVtx[3]];
 
 	// オブジェクトとポリゴンの2D内積
 	float crossXY[MESH_VTX];		// XY範囲(X方向の壁)
@@ -465,7 +456,6 @@ bool CMeshField::LineCollisionMesh(CScene *pScene,const int *pnVtx)
 			if ((Dot <= Radius && DotOld >= -ALLOWABLE_ERROR + Radius))
 			{
 				m_pos.y;
-
 
 				// 板ポリゴンの高さを計算し、代入
 				D3DXVECTOR3 &pos = pScene->GetPos();

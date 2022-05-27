@@ -23,15 +23,13 @@
 #define PLAYER_SHADOWSIZE	(D3DXVECTOR3(m_size.x * 1.5f,0.0f,m_size.z * 1.5f))
 #define CARRY_RANGE			(600.0f)
 #define CARRY_RANGE_DIST	(10000.0f)
-#define MARK_SIZE			(D3DXVECTOR3(50.0f,50.0f,0.0f))
-
+#define MARK_SIZE			(D3DXVECTOR3(10.0f,40.0f,0.0f))
+#define MAX_PATTERN			(5)
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 CPlayer::CPlayer(OBJTYPE nPriority) : CScene(nPriority)
 {
-	// memset(m_pMotion, NULL, sizeof(m_pMotion));
-	
 	m_pBomb = nullptr;
 	m_pModel = nullptr;
 	m_pBillboard = nullptr;
@@ -40,6 +38,8 @@ CPlayer::CPlayer(OBJTYPE nPriority) : CScene(nPriority)
 	m_Oldpos		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Speed			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_fGravity		= 0.0f;
+	m_nFrame		= 0;
+	m_nPattern		= 0;
 	m_fGravitySpeed = GRAVITY_SPEED;
 	m_fMaxSpeed		= MAX_SPEED;
 	m_bJump			= false;
@@ -435,15 +435,12 @@ bool CPlayer::Carry(void)
 			if (fDist < CARRY_RANGE_DIST)
 			{
 				CBomb *pBomb = (CBomb*)pScene;
-				//if (m_pModel->SphereCollisionSphere(CARRY_RANGE, pScene))
-				//{
-					// 取得したオブジェクトの距離と現在保存されている距離を測る
+				// 取得したオブジェクトの距離と現在保存されている距離を測る
 				if ((!pSaveScene || fDist < fSaveDist) && !pBomb->GetThrow())
 				{
 					fSaveDist = fDist;
 					pSaveScene = pScene;
 				}
-				//}
 			}
 		}
 
@@ -451,21 +448,30 @@ bool CPlayer::Carry(void)
 		pScene = pSceneNext;
 	}
 
+
+	//--------------------------------------------------------------
+	// 範囲内にオブジェクト(爆弾)が存在している場合
+	//--------------------------------------------------------------
 	if (pSaveScene)
 	{
-		D3DXVECTOR3 pos = pSaveScene->GetPos();
-		float fHeight = pSaveScene->GetSize().y;
+		m_nFrame++;
 
+		D3DXVECTOR3 pos = pSaveScene->GetPos();
+		float fHeight = pSaveScene->GetSize().y * 1.5f;
+
+		// 現在選択されている爆弾に目印(ビルボード)をつける
 		if (!m_pBillboard)
 		{
 			m_pBillboard = CBillboard::Create({ pos.x,pos.y + fHeight ,pos.z }, MARK_SIZE, { 1.0f,1.0f,1.0f,1.0f });
-			m_pBillboard->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_EFFECT_MOVE"));
+			m_pBillboard->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_ALLOW"));
+			m_pBillboard->SetTex(0, MAX_PATTERN);
 		}
 		else
 		{
 			m_pBillboard->CScene::SetPos({ pos.x,pos.y + fHeight ,pos.z });
 		}
 
+		// 爆弾を持ちあげる
 		if (CInput::PressAnyAction(CInput::ACTION_ATTACK))
 		{
 			m_pBomb = (CBomb*)pSaveScene;

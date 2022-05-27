@@ -72,14 +72,14 @@ void CUi::Update(void)
 	m_size = GetSize();
 	m_col = GetCol();
 
-	if (m_pControl)
-	{
-		m_pControl->Update(this);
-	}
-
 	if (m_pVtxBuff)
 	{
 		CScene2D::SetPos(m_pos, m_size);
+	}
+
+	if (m_pControl)
+	{
+		m_pControl->Update(this);
 	}
 }
 

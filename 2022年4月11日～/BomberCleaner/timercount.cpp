@@ -59,7 +59,7 @@ void CTimerCount::Uninit(void)
 	// 2Dポリゴンの破棄
 	for (int nCntTime = 0; nCntTime < MAX_TIME; nCntTime++)
 	{
-		if (m_apNumber[nCntTime] != nullptr)
+		if (m_apNumber[nCntTime])
 		{
 			m_apNumber[nCntTime]->Uninit();
 			m_apNumber[nCntTime] = nullptr;
@@ -103,16 +103,16 @@ void CTimerCount::Update(void)
 		{
 			m_bLimit = true;
 
-			if (m_bFade == false)
+			if (!m_bFade)
 			{
 				// 画面遷移 / フェード処理
-				pFade->SetFade(CManager::MODE::RESULT);
+				//pFade->SetFade(CManager::MODE::RESULT);
 				m_bFade = true;
 			}
 
 		}
 
-		if (m_bLimit = true)
+		if (m_bLimit)
 		{
 
 		}

@@ -102,7 +102,9 @@ private:
 	D3DXVECTOR3		m_Speed, m_Direction;			// 速度・向き
 	float			m_fGravitySpeed, m_fGravity;	// 重力加速度・重力
 	float			m_fMaxSpeed;					// 最大速度
-	int				m_nType;
+	int				m_nType;						// タイプ
+	int				m_nFrame;						// フレーム
+	int				m_nPattern;						// パターン
 	bool			m_bJump;						// ジャンプ判定
 	D3DXMATRIX		m_mtxWorld;						// ワールドマトリックス
 	PLAYER_STATE	m_state;						// プレイヤーの状態

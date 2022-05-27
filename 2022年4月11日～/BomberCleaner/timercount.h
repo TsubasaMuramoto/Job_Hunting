@@ -45,6 +45,7 @@ public:
 
 	void AddTimerCount(int nValue);						// ŠÔ‚Ì‰ÁZ
 	int GetTimerCount(void);							// ŠÔ‚Ìæ“¾
+	bool GetLimit() { return m_bLimit; }				// I—¹ŠÔ‚Ìæ“¾
 
 	// ŠÔ‚Ì¶¬
 	static CTimerCount *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, int time, bool bStop);

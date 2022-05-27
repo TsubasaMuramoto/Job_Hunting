@@ -49,14 +49,14 @@ HRESULT CTitle::Init(void)
 	// press startUI‚Ì¶¬
 	if (!m_pPressEnter)
 	{
-		m_pPressEnter = CUi::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, 600.0f, 0.0f), D3DXVECTOR3(1000.0f, 1000.0f, 0.0f), CUi::UI_TYPE_BLINK);
+		m_pPressEnter = CUi::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, 600.0f, 0.0f), D3DXVECTOR3(1200.0f, 1000.0f, 0.0f), CUi::UI_TYPE_BLINK);
 		m_pPressEnter->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_PRESS_START"));
 	}
 	
 	// ƒ^ƒCƒgƒ‹UI‚Ì¶¬
 	if (!m_pTitleLogo)
 	{
-		m_pTitleLogo = CUi::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, 200.0f, 0.0f), D3DXVECTOR3(1000.0f, 600.0f, 0.0f), CUi::UI_TYPE_NONE);
+		m_pTitleLogo = CUi::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, 200.0f, 0.0f), D3DXVECTOR3(1200.0f, 500.0f, 0.0f), CUi::UI_TYPE_NONE);
 		m_pTitleLogo->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_TITLE"));
 	}
 
@@ -128,21 +128,21 @@ void CTitle::Update(void)
 				case TITLE_SELECT_01:
 					pos =	{ 300.0f,500.0f,0.0f };
 					size =	{ 300.0f,200.0f,0.0f };
-					Tex =	"TEX_TYPE_TITLE";
+					Tex =	"TEX_TYPE_TITLE_SELECT00";
 					UiType = CUi::UI_TYPE_NONE;
 					break;
 
 				case TITLE_SELECT_02:
 					pos =	{ SCREEN_WIDTH / 2,600.0f,0.0f };
 					size =	{ 300.0f,200.0f,0.0f };
-					Tex =	"TEX_TYPE_TITLE";
+					Tex =	"TEX_TYPE_TITLE_SELECT01";
 					UiType = CUi::UI_TYPE_NONE;
 					break;
 
 				case TITLE_SELECT_03:
 					pos =	{ 980.0f,500.0f,0.0f };
 					size =	{ 300.0f,200.0f,0.0f };
-					Tex =	"TEX_TYPE_TITLE";
+					Tex =	"TEX_TYPE_TITLE_SELECT02";
 					UiType = CUi::UI_TYPE_NONE;
 					break;
 				}
@@ -160,7 +160,7 @@ void CTitle::Update(void)
 
 	case PAGE_02:
 
-		if(CInput::PressAnyAction(CInput::ACTION_ENTER))
+		if(CInput::PressAnyAction(CInput::ACTION_ENTER) || CInput::PressAnyAction(CInput::ACTION_ATTACK))
 		{
 			switch (m_nSelect)
 			{
@@ -189,7 +189,7 @@ void CTitle::Update(void)
 			}
 		}
 
-		else if (CInput::PressAnyAction(CInput::ACTION_UP))
+		else if (CInput::PressAnyAction(CInput::ACTION_LEFT))
 		{
 			m_pSelectUi[m_nSelect]->SetCol(NOT_SELECT_COLOR);
 
@@ -203,7 +203,7 @@ void CTitle::Update(void)
 			}
 		}
 
-		else if (CInput::PressAnyAction(CInput::ACTION_DOWN))
+		else if (CInput::PressAnyAction(CInput::ACTION_RIGHT))
 		{
 			m_pSelectUi[m_nSelect]->SetCol(NOT_SELECT_COLOR);
 

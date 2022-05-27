@@ -117,8 +117,8 @@ void CBillboard::Draw(void)
 	D3DXMATRIX mtxView, mtxTrans;											// 計算用マトリックス
 
 	CManager::GetInstance()->GetRenderer()->SetZTest(true, pDevice);		// ビルボードがモデルの前に描画されないようにする
-	CManager::GetInstance()->GetRenderer()->SetAddSynthesis(true,pDevice);	// アルファブレンドによる加算合成
-	CManager::GetInstance()->GetRenderer()->SetAlphaTest(true, pDevice);	// アルファテスト
+	//CManager::GetInstance()->GetRenderer()->SetAddSynthesis(true,pDevice);// アルファブレンドによる加算合成
+	//CManager::GetInstance()->GetRenderer()->SetAlphaTest(true, pDevice);	// アルファテスト
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);							// ライトを無効化
 
 	//ワールドマトリックスの初期化
@@ -129,6 +129,14 @@ void CBillboard::Draw(void)
 
 	//ポリゴンをカメラに対して正面に向ける
 	D3DXMatrixInverse(&m_mtxWorld, NULL, &mtxView);  //逆行列を求める
+
+	// Y軸のみ回転させる
+	m_mtxWorld._12 = 0.0f;
+	m_mtxWorld._21 = 0.0f;
+	m_mtxWorld._23 = 0.0f;
+	m_mtxWorld._32 = 0.0f;
+
+	// 位置を固定させる
 	m_mtxWorld._41 = 0.0f;
 	m_mtxWorld._42 = 0.0f;
 	m_mtxWorld._43 = 0.0f;
@@ -157,8 +165,8 @@ void CBillboard::Draw(void)
 
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);							// ライティング有効
 	CManager::GetInstance()->GetRenderer()->SetZTest(false, pDevice);		// Zテスト無効
-	CManager::GetInstance()->GetRenderer()->SetAlphaTest(false, pDevice);	// αテスト無効
-	CManager::GetInstance()->GetRenderer()->SetAddSynthesis(false, pDevice);// 加算合成無効
+	//CManager::GetInstance()->GetRenderer()->SetAlphaTest(false, pDevice);	// αテスト無効
+	//CManager::GetInstance()->GetRenderer()->SetAddSynthesis(false, pDevice);// 加算合成無効
 }
 
 //*****************************************************************************
@@ -178,6 +186,23 @@ CBillboard *CBillboard::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXCOLOR col)
 		}
 	}
 	return pBillboard;
+}
+
+//*****************************************************************************
+// テクスチャの設定
+//*****************************************************************************
+void CBillboard::SetTex(int nAnim, int nPartU)
+{
+	VERTEX_3D *pVtx;
+
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	pVtx[0].tex = D3DXVECTOR2(0.0f + (1.0f / nPartU)* nAnim,	  0.0f);
+	pVtx[1].tex = D3DXVECTOR2(		 (1.0f / nPartU)*(nAnim + 1), 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(0.0f + (1.0f / nPartU)* nAnim,	  1.0f);
+	pVtx[3].tex = D3DXVECTOR2(		 (1.0f / nPartU)*(nAnim + 1), 1.0f);
+
+	m_pVtxBuff->Unlock();
 }
 
 //*****************************************************************************

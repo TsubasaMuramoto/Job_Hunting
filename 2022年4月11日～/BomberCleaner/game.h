@@ -26,6 +26,7 @@ class CMeshCylinder;
 class CMeshSphere;
 class CStage;
 class CUi;
+class CTimerCount;
 
 //============================================================
 // クラスの生成
@@ -42,19 +43,23 @@ public:
 	void Draw(void);		// 描画
 
 	static CScore *GetScore() { return m_pScore; }
+	void SetUiDelete(void);
 
 	bool GetStart(void);
 	bool GetEnd(void);
 
 private:
 	//メンバ変数
-	CUi					*m_pUI;
+	CTimerCount			*m_pTimer;			// タイマークラス
+	CUi					*m_pUI;				// UIクラス
 	CStage				*m_pStage;			// ステージクラス
 	CMeshField			*m_pMeshField;		// メッシュフィールドクラス
 	CMeshField			*m_pMeshWall;		// メッシュウォールクラス
 	CMeshCylinder		*m_pMeshCylinder;	// メッシュシリンダークラス
 	CMeshSphere			*m_pMeshSphere;		// メッシュスフィアクラス
 	static CScore		*m_pScore;			// スコアクラス
+	D3DXVECTOR3			m_CameraRot;		// カメラ回転
+	bool				m_bOnce;			// 一度のみ通る処理
 
 	int m_nFrame;
 	bool m_bStart;
