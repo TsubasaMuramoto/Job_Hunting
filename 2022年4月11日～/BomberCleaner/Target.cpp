@@ -62,13 +62,6 @@ void CTarget::Update(void)
 	if (m_pModel)
 	{
 		m_pModel->Update();
-
-		if (m_pModel->GetHitBool())
-		{
-			//CScore *pScore = CGame::GetScore();
-			//pScore->AddScore(TARGET_SCORE);
-			//Uninit();
-		}
 	}
 }
 
@@ -85,10 +78,6 @@ void CTarget::Draw(void)
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
-
-	// 大きさを反映
-	//D3DXMatrixScaling(&mtxScale, m_scale.x, m_scale.y, m_scale.z);
-	//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScale);
 
 	// 向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);

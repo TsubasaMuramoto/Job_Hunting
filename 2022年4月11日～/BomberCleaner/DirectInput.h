@@ -14,8 +14,8 @@
 //===============================================
 // マクロ定義
 //===============================================
-#define MAX_GAMEPAD (1)
-#define DINPUT_STICK_RANGE (1000)
+#define MAX_GAMEPAD (1)				// ゲームパッドの数
+#define DINPUT_STICK_RANGE (1000)	// スティックの傾き範囲
 
 //===============================================
 // 前方宣言
@@ -27,7 +27,9 @@
 class CDInput : public CInput
 {
 public:
-
+	//------------------------------
+	// ボタン列挙
+	//------------------------------
 	typedef enum
 	{
 		BUTTON_A = 0,			// Aボタン
@@ -48,12 +50,12 @@ public:
 
 	}DINPUT_BUTTON;
 
-	CDInput();																	// コンストラクタ
-	~CDInput();																	// デストラクタ
+	CDInput();												// コンストラクタ
+	~CDInput();												// デストラクタ
 
-	HRESULT Init(HINSTANCE hInstance, HWND hWnd);								// 初期化
-	void Uninit(void);															// 終了
-	void Update(void);															// 更新
+	HRESULT Init(HINSTANCE hInstance, HWND hWnd);			// 初期化
+	void Uninit(void);										// 終了
+	void Update(void);										// 更新
 
 	DIJOYSTATE GetGamepad(void)		{ return m_aState; }	// ジョイパッド状態の取得
 	bool GetPress(int nButton);								// 長押し入力情報の取得

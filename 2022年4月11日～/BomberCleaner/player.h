@@ -19,7 +19,6 @@
 #define GRAVITY_SPEED		(0.8f)	// 重力の強さ
 #define ROTATING_VELOCITY	(0.05f)	// プレイヤーの回転速度
 #define JUMP				(13.0f)	// 重力
-#define BOMB_NAME ("data/MODEL/Bomb001.x")
 
 //=============================================================
 // 前方宣言
@@ -40,10 +39,10 @@ public:
 	//------------------------------------
 	typedef enum
 	{
-		DIRECTION_FORWARD = 0,
-		DIRECTION_BACK,
-		DIRECTION_RIGHT,
-		DIRECTION_LEFT,
+		DIRECTION_FORWARD = 0,	// 前
+		DIRECTION_BACK,			// 後
+		DIRECTION_RIGHT,		// 右
+		DIRECTION_LEFT,			// 左
 		DIRECTION_MAX
 
 	}MOVE_DIRECTION;
@@ -69,7 +68,6 @@ public:
 
 	// 生成
 	static CPlayer *Create(D3DXVECTOR3 pos,D3DXVECTOR3 rot, int nType);
-	void SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot,const float fMaxSpeed);
 
 	// 移動系関数
 	void Move(void);																				// 移動
@@ -78,10 +76,11 @@ public:
 	void Action(void);																				// アクション
 	void Jump(float &fGravity, bool& bJump);														// ジャンプ
 	bool InputDirection(const MOVE_DIRECTION &moveDir);												// 移動方向入力関数
-	bool Carry(void);
+	void SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot, const float fMaxSpeed);				// 移動・回転限界
+	bool Carry(void);																				// 爆弾持ち上げ関数
 
 	//---------------------------------------------------
-	// Getter & Setter
+	// 設定・取得関数
 	//---------------------------------------------------
 	D3DXVECTOR3 GetPos(void)					{ return m_pos; }
 	D3DXVECTOR3 GetRot(void)					{ return m_rot; }
@@ -109,6 +108,4 @@ private:
 	D3DXMATRIX		m_mtxWorld;						// ワールドマトリックス
 	PLAYER_STATE	m_state;						// プレイヤーの状態
 };
-
-
-#endif // !_PLAYER_H_
+#endif 

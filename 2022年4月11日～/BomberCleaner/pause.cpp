@@ -74,15 +74,15 @@ HRESULT CPause::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 			switch (nCnt)
 			{
 			case SELECT_RETURNGAME:
-				m_pPolygon[nCnt]->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_FLOOR"));
+				m_pPolygon[nCnt]->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_KOUZI"));
 				break;
 
 			case SELECT_RETRY:
-				m_pPolygon[nCnt]->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_FLOOR"));
+				m_pPolygon[nCnt]->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_KOUZI"));
 				break;
 
 			case SELECT_RETURNTITLE:
-				m_pPolygon[nCnt]->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_FLOOR"));
+				m_pPolygon[nCnt]->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_KOUZI"));
 				break;
 			}
 
@@ -93,7 +93,7 @@ HRESULT CPause::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	if (!m_pCursor)
 	{
 		m_pCursor = CScene2D::Create(m_pos, CURSOR_SIZE, OBJTYPE_PAUSE);
-		m_pCursor->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_SKY"));
+		m_pCursor->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_KOUZI"));
 	}
 
 	return S_OK;

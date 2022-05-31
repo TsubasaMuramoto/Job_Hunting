@@ -1,10 +1,10 @@
 //==================================================
 //テクスチャのパス読み込み用ファイル
-//Author加藤瑞葵
+//Author:村元翼
 //==================================================
 
 // テクスチャ最大数
-TEX_NUM = 21
+TEX_NUM = 22
 
 // 空
 PAS = data/TEXTURE/sky.jpg
@@ -48,6 +48,8 @@ NAME = TEX_TYPE_NUMBER_ONE
 // 目印
 PAS = data/TEXTURE/Allow000.png
 NAME = TEX_TYPE_ALLOW
+PAS = data/TEXTURE/kouzityuu.png
+NAME = TEX_TYPE_KOUZI
 
 // エフェクト
 PAS = data/TEXTURE/effect000.jpg

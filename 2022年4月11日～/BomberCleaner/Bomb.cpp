@@ -1,21 +1,19 @@
-//========================================
+//=============================================================================
 // ”š’e‚Ìˆ—
 // Author : ‘ºŒ³—ƒ
-//========================================
+//=============================================================================
 #include "Bomb.h"
 #include "model.h"
 #include "manager.h"
 #include "renderer.h"
 #include "effect.h"
-#include "LoadX.h"
 #include "effect_blast.h"
 #include "control_throw.h"
-#include "meshfield.h"
 #include "shadow.h"
 
-//===========================================
+//=============================================================================
 // ƒ}ƒNƒ’è‹`
-//===========================================
+//=============================================================================
 #define BOMB_TIME				(240)								// ”š”­ŽžŠÔ
 #define SHRINK_AND_SWELL_SPEED	(0.05f)								// Lk‘¬“x
 #define MAX_SCALE_X				(1.1f)								// Å‘åƒXƒP[ƒ‹
@@ -33,13 +31,13 @@ CBomb::CBomb(OBJTYPE nPriority) : CScene(nPriority)
 	m_rot			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// ‰ñ“]
 	m_scale			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// ƒXƒP[ƒ‹
 	m_Emissive		= D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);	// ŠgŽUŒõ
-	m_nBombTime		= BOMB_TIME;
-	m_fSphereRot	= 0.0f;
-	m_fSphereSize	= 1.0f;
-	m_fSphereAlpha	= 1.0f;
-	m_bIgnition		= false;
-	m_bShrink		= false;
-	m_bBlink		= false;
+	m_nBombTime		= BOMB_TIME;							// ”š”­‚Ü‚Å‚ÌŽžŠÔ
+	m_fSphereRot	= 0.0f;									// ”š•—‚Ì‰ñ“]
+	m_fSphereSize	= 1.0f;									// ”š•—‚ÌƒTƒCƒY
+	m_fSphereAlpha	= 1.0f;									// ”š•—‚Ìƒ¿’l
+	m_bIgnition		= false;								// ’…‰Î”»’è
+	m_bShrink		= false;								// Lk”»’è
+	m_bBlink		= false;								// “_–Å”»’è
 }
 
 //=============================================================================
@@ -170,8 +168,6 @@ void CBomb::Update(void)
 			m_pShadow->CScene::SetPosOld({ m_pos.x ,m_pos.y, m_pos.z });
 		}
 	}
-
-	//CScene::SetPos(m_pos);
 }
 
 //=============================================================================
@@ -264,9 +260,6 @@ void CBomb::Explosion(void)
 		float fRad = m_pModel->GetSize().x;
 		CBlast::Create(m_pos, { 30.0f ,30.0f,30.0f }/*{ fRad, fRad ,fRad }*/, { 1.0f,0.0f,0.0f,1.0f }, 20, 20);
 	}
-
-	// I—¹
-	Uninit();
 }
 
 //=============================================================================
@@ -319,7 +312,7 @@ void CBomb::Ignition(void)
 	m_pModel->SetEmissive(m_Emissive);
 	m_pModel->SetScale(m_scale);
 
-	if (m_nBombTime <= 0)	// 0‚Å”š”­‚·‚é
+	if (m_nBombTime <= 0)	// 0‚Å”š”­ˆ—‚Éi
 	{
 		Explosion();
 	}

@@ -16,8 +16,8 @@
 class CRenderer
 {
 public:
-	CRenderer();	// コンストラクタ
-	~CRenderer();	// デストラクタ
+	CRenderer();												// コンストラクタ
+	~CRenderer();												// デストラクタ
 
 	HRESULT Init(HWND hWnd, bool bWindow);						// 全体の初期化
 	void Uninit(void);											// 全体の終了
@@ -34,15 +34,12 @@ public:
 private:
 #ifdef _DEBUG
 	void DrawFPS(void);											// FPSの描画
-	void DrawTXT(void);
+	void DrawTXT(void);											// デバッグ文字の描画
+	LPD3DXFONT	m_pFont = nullptr;								// フォントへのポインタ
 #endif
 
-	LPDIRECT3D9				m_pD3D = NULL;						// Direct3Dオブジェクト
-	LPDIRECT3DDEVICE9		m_pD3DDevice = NULL;				// Deviceオブジェクト(描画に必要)
-
-#ifdef _DEBUG
-	LPD3DXFONT	m_pFont = NULL;									// フォントへのポインタ
-#endif
+	LPDIRECT3D9				m_pD3D = nullptr;					// Direct3Dオブジェクト
+	LPDIRECT3DDEVICE9		m_pD3DDevice = nullptr;				// Deviceオブジェクト(描画に必要)
 };
 
-#endif _RENDERER_H_
+#endif

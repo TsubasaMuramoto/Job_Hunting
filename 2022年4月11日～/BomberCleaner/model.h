@@ -14,7 +14,6 @@
 //========================================================
 // マクロ定義
 //========================================================
-#define MAX_MODEL_TEX		(10)	// モデルのテクスチャ数
 #define MAX_MODEL_VTX		(8)		// モデルの頂点数
 #define SURFACE_NUM			(6)		// キューブ体の面の数
 
@@ -72,19 +71,22 @@ public:
 	void Update(void);									// 更新
 	void Draw(void);									// 描画
 
-	// 生成(ファイルネームはファイルのパスを入れる)
+	// 生成
 	static CModel *Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, int nXType,bool bCollision = true);
 
+	//------------------------------------
+	// 当たり判定系
+	//------------------------------------
 	bool CModel::CalcParticlePlaneCollision(FLOAT r, D3DXVECTOR3 *pPre_pos, D3DXVECTOR3 *pPos, D3DXVECTOR3 *pNormal, D3DXVECTOR3 *pPlane_pos, FLOAT *t, D3DXVECTOR3 *pOut_colli);
 	bool SurfaceCollisionSphere(CScene *pScene);															// 面と球の当たり判定
-	bool SphereCollisionSphere(float fRadius,CScene *pScene);				// 球と球の当たり判定
+	bool SphereCollisionSphere(float fRadius,CScene *pScene);												// 球と球の当たり判定
 	bool DotCollisionCube(CScene *pScene, const HIT_TYPE &hit_type);										// 点と直方体の当たり判定
 	bool LineCollisionCube(CScene *pScene, const HIT_TYPE &hit_type);										// 線と直方体の当たり判定
 	bool HitFrom(const HIT_FROM &hitFrom, const float *fDot, const float *fDotOld, const float &ObjRad);	// 範囲内に当たっているか(引数：タイプ,内積,1フレーム前の内積)
 	D3DXVECTOR3 PushDistanceSide(const D3DXVECTOR3 &moveVec, const D3DXVECTOR3 &vecNor);					// 横判定時の押し出す距離を求める
 
 	//---------------------------------------
-	// SETTER & GETTER
+	// 設定・取得関数
 	//---------------------------------------
 	void SetParent(CModel *pModel)				{ m_pParent = pModel; }			// 親のモデルを代入
 	void SetPos(D3DXVECTOR3 pos)				{ m_pos = pos; }				// 位置設定
@@ -140,4 +142,4 @@ private:
 };
 
 
-#endif // !_MODEL_H
+#endif

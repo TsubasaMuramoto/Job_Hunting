@@ -1,5 +1,6 @@
 //-------------------------------------------
 // キーボードの入力処理
+// Author:村元翼
 //-------------------------------------------
 #ifndef _KEYBOARD_H_
 #define _KEYBOARD_H_
@@ -17,18 +18,19 @@
 class CInputkeyboard : public CInput
 {
 public:
-	CInputkeyboard();
-	~CInputkeyboard();
-	HRESULT Init(HINSTANCE hInstance, HWND hWnd);
-	void Uninit(void);
-	void Update(void);
-	bool GetPress(int nKey);
-	bool GetTrigger(int Key);
+	CInputkeyboard();									// コンストラクタ
+	~CInputkeyboard();									// デストラクタ
+
+	HRESULT Init(HINSTANCE hInstance, HWND hWnd);		// 初期化
+	void Uninit(void);									// 終了
+	void Update(void);									// 更新
+
+	bool GetPress(int nKey);							// プレス情報取得
+	bool GetTrigger(int Key);							// トリガー情報取得
 
 private:
 	BYTE m_aKeyState[NUM_KEY_MAX];				// キーボードの入力情報(プレス情報)
 	BYTE m_aKeyStateTrigger[NUM_KEY_MAX];		// キーボードの入力情報(トリガー情報)
 
 };
-
-#endif _KEYBOARD_H_
+#endif

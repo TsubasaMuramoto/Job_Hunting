@@ -136,13 +136,12 @@ void CCamera::MoveCamera(void)
 {
 	// “ü—ÍƒfƒoƒCƒX‚ÌŽæ“¾
 	CInputkeyboard *pKey = CManager::GetInstance()->GetKeyboard();
-	CXInput *pGamePad = CManager::GetInstance()->GetXInput();
 	CDInput *pDInput = CManager::GetInstance()->GetDInput();
 
 	//++++++++++++++++++++++++++++++//
 	//			Ž‹“_‚Ì‰ñ“]			//
 	//++++++++++++++++++++++++++++++//
-	if (pGamePad->GetGamePad()->m_state.Gamepad.sThumbRX >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || pDInput->GetGamepad().lRx >= DINPUT_STICK_RANGE)
+	if (CInput::PressAnyAction(CInput::ACTION_LEFT))
 	{	// ¶‚Ö‰ñ“]
 		m_rot.y += CAMERA_SPEED;
 		if (m_rot.y > D3DX_PI)
@@ -150,7 +149,7 @@ void CCamera::MoveCamera(void)
 			m_rot.y = -D3DX_PI;
 		}
 	}
-	if (pGamePad->GetGamePad()->m_state.Gamepad.sThumbRX <= -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || pDInput->GetGamepad().lRx <= -DINPUT_STICK_RANGE)
+	if (CInput::PressAnyAction(CInput::ACTION_RIGHT))
 	{	// ‰E‚Ö‰ñ“]
 		m_rot.y += -CAMERA_SPEED;
 		if (m_rot.y < -D3DX_PI)
@@ -159,7 +158,7 @@ void CCamera::MoveCamera(void)
 		}
 	}
 
-	if (pGamePad->GetGamePad()->m_state.Gamepad.sThumbRY >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || pDInput->GetGamepad().lRy <= -DINPUT_STICK_RANGE)
+	if (CInput::PressAnyAction(CInput::ACTION_DOWN))
 	{	// ‰º‚Ö‰ñ“]
 		m_rot.x += -CAMERA_SPEED;
 		if (m_rot.x < 0.0f + D3DX_PI / 2)
@@ -167,7 +166,7 @@ void CCamera::MoveCamera(void)
 			m_rot.x = 0.0f + D3DX_PI / 2 + _OX_EPSILON_;
 		}
 	}
-	if (pGamePad->GetGamePad()->m_state.Gamepad.sThumbRY <= -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || pDInput->GetGamepad().lRy >= DINPUT_STICK_RANGE)
+	if (CInput::PressAnyAction(CInput::ACTION_UP))
 	{	// ã‚Ö‰ñ“]
 		m_rot.x += CAMERA_SPEED;
 		if (m_rot.x > D3DX_PI)
@@ -236,12 +235,14 @@ void CCamera::MoveCamera(void)
 		m_posR.z -= cosf(m_rot.y) * 2.0f;
 	}
 #endif
-
+	//++++++++++++++++++++++++++++//
+	//		ƒJƒƒ‰ˆÚ“®ŒÀŠE		  //
+	//++++++++++++++++++++++++++++//
 	if (m_posV.x > MOVELIMIT)
 	{
 		m_posV.x = MOVELIMIT;
 	}
-	if (m_posV.x < -MOVELIMIT)
+	else if (m_posV.x < -MOVELIMIT)
 	{
 		m_posV.x = -MOVELIMIT;
 	}
@@ -249,7 +250,7 @@ void CCamera::MoveCamera(void)
 	{
 		m_posV.z = MOVELIMIT;
 	}
-	if (m_posV.z < -MOVELIMIT)
+	else if (m_posV.z < -MOVELIMIT)
 	{
 		m_posV.z = -MOVELIMIT;
 	}

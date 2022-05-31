@@ -30,7 +30,7 @@ typedef struct
 } VERTEX_3D;
 
 //------------------------------------------------------------------------------
-//クラスの定義
+// クラスの定義
 //------------------------------------------------------------------------------
 class CScene3D : public CScene
 {
@@ -51,7 +51,7 @@ public:
 	void Draw(void);
 
 	//--------------------------------------------
-	// セッター・ゲッター
+	// 設定・取得関数
 	//--------------------------------------------
 	void BindTexture(LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }			// テクスチャ設定処理
 	void SetPos(D3DXVECTOR3 pos, D3DXVECTOR3 scale);									// 頂点座標の設定
@@ -71,11 +71,8 @@ protected:
 	LPDIRECT3DTEXTURE9		m_pTexture = NULL;				// テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff = NULL;				// 頂点バッファへのポインタ
 	D3DXMATRIX m_mtxWorld;
-	D3DXVECTOR3 m_pos;
-	D3DXVECTOR3 m_rot;
-	D3DXVECTOR3 m_size;
-
+	D3DXVECTOR3 m_pos;										// 位置
+	D3DXVECTOR3 m_rot;										// 回転
+	D3DXVECTOR3 m_size;										// サイズ
 };
-
-
-#endif // !_SCENE3D_H
+#endif

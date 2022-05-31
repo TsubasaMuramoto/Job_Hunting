@@ -20,28 +20,30 @@
 //=============================================================================
 // マクロ定義
 //=============================================================================
-#define PLAYER_SHADOWSIZE	(D3DXVECTOR3(m_size.x * 1.5f,0.0f,m_size.z * 1.5f))
-#define CARRY_RANGE			(600.0f)
-#define CARRY_RANGE_DIST	(10000.0f)
-#define MARK_SIZE			(D3DXVECTOR3(10.0f,40.0f,0.0f))
-#define MAX_PATTERN			(5)
+#define PLAYER_SHADOWSIZE	(D3DXVECTOR3(m_size.x * 1.5f,0.0f,m_size.z * 1.5f))	// プレイヤー影サイズ
+#define MOVE_EFFECTSIZE		(D3DXVECTOR3(5.0f,5.0f,0.0f))
+#define CARRY_RANGE			(600.0f)											// 持ち運べる範囲
+#define CARRY_RANGE_DIST	(10000.0f)											// 持ち運べる範囲(2点間の距離と比較する)
+#define MARK_SIZE			(D3DXVECTOR3(10.0f,40.0f,0.0f))						// 目印のサイズ
+#define MAX_PATTERN			(5)													// 目印のテクスチャパターンの数
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 CPlayer::CPlayer(OBJTYPE nPriority) : CScene(nPriority)
 {
-	m_pBomb = nullptr;
-	m_pModel = nullptr;
-	m_pBillboard = nullptr;
+	m_pBomb			= nullptr;
+	m_pModel		= nullptr;
+	m_pBillboard	= nullptr;
 	m_Direction		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_pos			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Oldpos		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Speed			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_fGravity		= 0.0f;
-	m_nFrame		= 0;
-	m_nPattern		= 0;
 	m_fGravitySpeed = GRAVITY_SPEED;
 	m_fMaxSpeed		= MAX_SPEED;
+	m_nFrame		= 0;
+	m_nPattern		= 0;
 	m_bJump			= false;
 	m_state			= STATE_NORMAL;
 }
@@ -78,7 +80,7 @@ CPlayer *CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nType)
 //=============================================================================
 HRESULT CPlayer::Init(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 {
-	// 位置取得
+	// 位置・回転保存
 	m_pos = pos;
 	m_rot = rot;
 
@@ -106,7 +108,7 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 		m_pShadow = CShadow::Create({m_pos.x , m_pos.y - (m_size.y / 2),m_pos.z}, PLAYER_SHADOWSIZE, { 0.0f,0.0f,0.0f });
 	}
 
-	// プレイヤー情報設定
+	// 位置・回転設定
 	CScene::SetPos(m_pos);
 	CScene::SetSize(m_size);
 
@@ -161,7 +163,6 @@ void CPlayer::Update()
 	// プレイヤー制御系関数
 	//------------------------------------------
 	Move();														// 移動
-	//Jump(m_fGravity, m_bJump);								// ジャンプ
 	Action();													// アクション
 	Gravity(m_pos, m_fGravity, m_fGravitySpeed, m_bJump);		// 重力
 
@@ -264,6 +265,7 @@ void CPlayer::Inertia(D3DXVECTOR3 &speed)
 //-----------------------------------------------------------------
 void CPlayer::Move(void)
 {
+	// カメラ情報取得
 	CCamera *pCamera = CManager::GetInstance()->GetCamera(0);
 
 	//=============================================================================
@@ -277,6 +279,9 @@ void CPlayer::Move(void)
 		move_x *= m_Speed.x;
 		move_z *= m_Speed.z;
 
+		//---------------------------------------------------
+		// X移動(横移動)
+		//---------------------------------------------------
 		if (m_Speed.x != 0.0f)
 		{
 			if (m_Speed.x > 0.0f)
@@ -297,6 +302,9 @@ void CPlayer::Move(void)
 
 		}
 
+		//---------------------------------------------------
+		// Z移動(縦移動)
+		//---------------------------------------------------
 		if (m_Speed.z != 0.0f)
 		{
 			if (m_Speed.z > 0.0f)
@@ -317,7 +325,7 @@ void CPlayer::Move(void)
 		}
 
 		// 移動のエフェクト
-		CEffect::Create(m_pos, { 5.0f, 5.0f, 0.0f }, { 1.0f, 1.0f, 1.0f ,1.0f},0.1f, 1);
+		CEffect::Create(m_pos, MOVE_EFFECTSIZE, { 1.0f, 1.0f, 1.0f ,1.0f }, 0.1f, 1);
 	}
 
 	//==========================================================================================================
@@ -485,6 +493,7 @@ bool CPlayer::Carry(void)
 	}
 	else
 	{
+		// 範囲に爆弾がないなら目印を消す
 		if (m_pBillboard)
 		{
 			m_pBillboard->Uninit();
@@ -499,9 +508,12 @@ bool CPlayer::Carry(void)
 //-----------------------------------------------------------------------------------------------
 void CPlayer::Action(void)
 {
+	//--------------------------------------------------------------
+	// 状態別処理
+	//--------------------------------------------------------------
 	switch (m_state)
 	{
-	case STATE_NORMAL:
+	case STATE_NORMAL:	// 通常
 		if (Carry())
 		{
 			m_state = STATE_HOLD;
@@ -509,7 +521,7 @@ void CPlayer::Action(void)
 
 		break;
 
-	case STATE_HOLD:
+	case STATE_HOLD:	// 保持
 		if (m_pBomb)
 		{
 			m_pBomb->SetPos({ m_pos.x,m_pos.y + m_size.y,m_pos.z });

@@ -9,8 +9,8 @@
 //--------------------------------------
 // マクロ定義
 //--------------------------------------
-#define MAX_RESULT (4)
-#define RESULT_RANKING_POSY				(80.0f)				//ランキングのposY
+#define MAX_RESULT					(4)
+#define RESULT_RANKING_POSY			(80.0f)				//ランキングのposY
 
 //--------------------------------------
 // 前方宣言
@@ -47,10 +47,10 @@ public:
 	void Draw(void);
 
 private:
-	CRanking			*m_pRanking;
-	CUi					*m_pUi;							
+	CRanking			*m_pRanking;					// ランキングクラス
+	CUi					*m_pUi;							// UI
 	CUi					*m_pReturnTitle;				// タイトルに戻るUI
-	CBg					*m_pBgResult;
+	CBg					*m_pBgResult;					// リザルト背景
 	int					m_nSelectType;					// 現在の選択
 	int					m_nFrame;						// フレーム数
 

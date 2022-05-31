@@ -45,12 +45,12 @@ public:
 	//-----------------------------
 	typedef enum
 	{
-		MODTYPE_NORMAL = 0,
-		MODTYPE_BOMB,
-		MODTYPE_BOMBSPAWNER,
-		MODTYPE_TARGET,
-		MODTYPE_PLAYER,
-		MODTYPE_MAX
+		MODTYPE_NORMAL = 0,			// 通常
+		MODTYPE_BOMB,				// 爆弾
+		MODTYPE_BOMBSPAWNER,		// 爆弾スポナー
+		MODTYPE_TARGET,				// 対象
+		MODTYPE_PLAYER,				// プレイヤー
+		MODTYPE_MAX					
 
 	}MODTYPE;
 
@@ -59,30 +59,30 @@ public:
 	//------------------------------------
 	typedef enum
 	{
-		MESH_FIELD = 0,
-		MESH_WALL,
-		MESH_CYLINDER,
-		MESH_SPHERE,
+		MESH_FIELD = 0,				// フィールド
+		MESH_WALL,					// ウォール
+		MESH_CYLINDER,				// シリンダー
+		MESH_SPHERE,				// スフィア
 		MESH_MAX
 
 	}MESH_TYPE;
 
-	CScene();													// デフォルトコンストラクタ
-	explicit CScene(OBJTYPE nPriority);							// オーバーロードコンストラクタ
-	virtual ~CScene();											// デストラクタ
+	CScene();														// デフォルトコンストラクタ
+	explicit CScene(OBJTYPE nPriority);								// オーバーロードコンストラクタ
+	virtual ~CScene();												// デストラクタ
 
 	// 純粋仮想関数
-	virtual HRESULT Init(D3DXVECTOR3 pos, D3DXVECTOR3 size) = 0;// ポリゴンの初期化
-	virtual void Uninit(void) = 0;								// ポリゴンの終了
-	virtual void Update(void) = 0;								// ポリゴンの更新
-	virtual void Draw(void) = 0;								// ポリゴンの描画
+	virtual HRESULT Init(D3DXVECTOR3 pos, D3DXVECTOR3 size) = 0;	// ポリゴンの初期化
+	virtual void Uninit(void) = 0;									// ポリゴンの終了
+	virtual void Update(void) = 0;									// ポリゴンの更新
+	virtual void Draw(void) = 0;									// ポリゴンの描画
 
-	static void UpdateAll();									// 全てのポリゴンの更新
-	static void DrawAll();										// 全てのポリゴンの描画
-	static void ReleaseAll();									// 全てのポリゴンの解放
+	static void UpdateAll();										// 全てのポリゴンの更新
+	static void DrawAll();											// 全てのポリゴンの描画
+	static void ReleaseAll();										// 全てのポリゴンの解放
 
 	//-----------------------------
-	// SETTER & GETTER
+	// 設定・取得関数
 	//-----------------------------
 	void SetPos(D3DXVECTOR3 pos)			{ m_pos = pos; }					// 位置の設定
 	void SetPosOld(D3DXVECTOR3 posOld)		{ m_posOld = posOld; }				// 最後の位置の設定
@@ -128,4 +128,4 @@ private:
 	MODTYPE			m_ModelType;							// モデルの種類
 };
 
-#endif _SCENE_H_
+#endif

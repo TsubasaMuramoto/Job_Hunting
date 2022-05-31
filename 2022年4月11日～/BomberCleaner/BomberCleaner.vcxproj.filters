@@ -49,9 +49,6 @@
     <Filter Include="ソース ファイル\外部読み込み系">
       <UniqueIdentifier>{335703d9-a5f6-4c2d-8e23-cca7314a31c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\読み込み系">
-      <UniqueIdentifier>{e78af062-3787-45b4-9db6-e222c4befbdf}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">

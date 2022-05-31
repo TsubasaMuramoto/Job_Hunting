@@ -4,9 +4,6 @@
 #include "scene2D.h"
 #include "renderer.h"
 #include "manager.h"
-#include "texture.h"
-#include "game.h"
-#include "bg.h"
 
 //=============================================================================
 // コンストラクタ

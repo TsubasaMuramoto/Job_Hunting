@@ -175,6 +175,7 @@ void CTitle::Update(void)
 				if (!m_pTutorial)
 				{
 					m_pTutorial = CUi::Create({ SCREEN_WIDTH / 2,SCREEN_HEIGHT / 2, 0.0f }, { SCREEN_WIDTH / 1.5f,SCREEN_HEIGHT / 1.5f,0.0f }, CUi::UI_TYPE_NONE);
+					m_pTutorial->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_KOUZI"));
 				}
 				else
 				{

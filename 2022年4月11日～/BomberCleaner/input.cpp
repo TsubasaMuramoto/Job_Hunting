@@ -107,6 +107,18 @@ bool CInput::PressAnyAction(const ACTION &action)
 	case ACTION_RIGHT:	// ‰Es“®
 		return (pKey->GetTrigger(DIK_D) || pXPad->GetButtonTrigger(XINPUT_GAMEPAD_DPAD_RIGHT) || pDPad->GetGamepad().lX >= DINPUT_STICK_RANGE) ||
 				pKey->GetTrigger(DIK_RIGHT) || pXPad->GetGamePad()->m_state.Gamepad.sThumbLX >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
+
+	case ACTION_R_UP:	// ã‰ñ“]‚È‚Ç
+		return pXPad->GetGamePad()->m_state.Gamepad.sThumbRY <= -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || pDPad->GetGamepad().lRy >= DINPUT_STICK_RANGE;
+
+	case ACTION_R_DOWN:	// ‰º‰ñ“]‚È‚Ç
+		return pXPad->GetGamePad()->m_state.Gamepad.sThumbRY >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || pDPad->GetGamepad().lRy <= -DINPUT_STICK_RANGE;
+
+	case ACTION_R_RIGHT: // ‰E‰ñ“]‚È‚Ç
+		return pXPad->GetGamePad()->m_state.Gamepad.sThumbRX <= -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || pDPad->GetGamepad().lRx <= -DINPUT_STICK_RANGE;
+
+	case ACTION_R_LEFT:	// ¶‰ñ“]‚È‚Ç
+		return pXPad->GetGamePad()->m_state.Gamepad.sThumbRX >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE || pDPad->GetGamepad().lRx >= DINPUT_STICK_RANGE;
 	}
 
 	return false;

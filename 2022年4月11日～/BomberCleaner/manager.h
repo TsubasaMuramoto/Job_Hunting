@@ -1,7 +1,7 @@
-//--------------------------
+//*****************************************************************************
 // manager.hの作成
 // Author:村元翼
-//--------------------------
+//*****************************************************************************
 #ifndef _MANAGER_H_
 #define _MANAGER_H_
 
@@ -31,9 +31,8 @@ class CLoadX;
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MAX_POLYGON2D (10)
-#define MAX_LIGHT (4)
-#define MOVELIMIT			(1450.0f)	// 移動限界
+#define MAX_LIGHT		(4)
+#define MOVELIMIT		(1450.0f)	// 移動限界
 
 //*****************************************************************************
 // クラス定義
@@ -51,11 +50,6 @@ public:
 		RESULT,
 		MAX
 	};
-
-	//MODE& operator++(MODE& mode)
-	//{
-	//	return MODE::GAME;
-	//}
 
 	//----------------------------------
 	// メソッド
@@ -85,11 +79,10 @@ public:
 	static bool GetStop()				{ return m_bStop; }							// ストップの取得
 
 private:
-
 	CManager();												// コンストラクタ
 	~CManager();											// デストラクタ
 
-	static CManager			*s_pManager;					// マネージャーのクラス
+	static CManager			*s_pManager;					// シングルトンマネージャーのクラス
 	static CRenderer		*m_pRenderer;					// レンダラーのクラス
 	static CTexture			*m_pTexture;					// テクスチャのクラス
 	static CInputkeyboard	*m_pInputKeyboard;				// キーボードのクラス
@@ -109,7 +102,5 @@ private:
 	
 	static bool				m_bStop;						// ストップするか
 	static bool				m_bPause;						// ポーズにするか
-
 };
-
 #endif

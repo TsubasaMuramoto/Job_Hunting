@@ -202,6 +202,10 @@ void CDInput::SetAxis(HWND hWnd)
 	m_pJoystick->EnumObjects(EnumAxesCallback, (void*)hWnd, DIDFT_AXIS);
 }
 
+
+//===============================================
+// “ü—Í•ûŒüŠm”F
+//===============================================
 void CDInput::PrintState(void)
 {
 	if (m_aState.lX >= DINPUT_STICK_RANGE)

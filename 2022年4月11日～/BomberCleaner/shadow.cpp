@@ -48,8 +48,7 @@ CShadow *CShadow::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot)
 			pShadow->m_pos = pos;			// à íu
 			pShadow->m_size = size;			// ëÂÇ´Ç≥
 			pShadow->m_rot = rot;			// âÒì]
-
-			pShadow->Init(pos, size);	// èâä˙âª
+			pShadow->Init(pos, size);		// èâä˙âª
 		}
 	}
 
@@ -88,9 +87,7 @@ void CShadow::Update(void)
 	CScene3D::Update();
 
 	Y -= GRAVITY;
-	//CScene3D::SetPos({ m_pos.x, Y, m_pos.z }, m_size);
 	CScene::SetPos({ m_pos.x, Y, m_pos.z });
-	//SetGravity(GRAVITY);
 }
 
 //=============================================================================

@@ -38,7 +38,7 @@ public:
 	//-------------------------------
 	// Getter
 	//-------------------------------
-	static XData GetXData(string xName);
+	static XData GetXData(string xName);						// Xファイルを文字列検索で取得
 	static XData GetXData(int nNum)	{ return m_vDataX[nNum]; }	// Xファイルデータ取得
 	static int GetNumAll()			{ return m_nNum; }			// Xファイル総数取得
 	static int GetNum(string xName)	{ return m_NameX[xName]; }	// Xファイル指定番号取得
@@ -46,6 +46,6 @@ public:
 private:
 	static vector<XData>		m_vDataX;		// Xファイルデータ構造体
 	static map<string, int>		m_NameX;		// Xファイルの種類
-	static int m_nNum;
+	static int m_nNum;							// Xファイルの総数
 };
 #endif _LOADX_H_

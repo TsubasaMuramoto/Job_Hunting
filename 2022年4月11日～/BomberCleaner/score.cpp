@@ -43,11 +43,11 @@ CScore *CScore::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	// インスタンス生成
 	CScore *pScore = nullptr;
 
-	if (pScore == nullptr)
+	if (!pScore)
 	{
 		pScore = new CScore;
 
-		if (pScore != nullptr)
+		if (pScore)
 		{
 			pScore->Init(pos, size);	// 初期化
 		}
@@ -61,19 +61,21 @@ CScore *CScore::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 //---------------------------------------------------
 HRESULT CScore::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 {
-	for (int nCntTime = 0; nCntTime < MAX_SCORE; nCntTime++)
+	// ナンバー生成
+	for (int nCnt = 0; nCnt < MAX_SCORE; nCnt++)
 	{
-		m_apNumber[nCntTime] = CNumber::Create(D3DXVECTOR3(pos.x + nCntTime * 50, pos.y, pos.z), size);
-		m_apNumber[nCntTime]->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_NUMBER"));
-		m_apNumber[nCntTime]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		m_apNumber[nCnt] = CNumber::Create(D3DXVECTOR3(pos.x + nCnt * 50, pos.y, pos.z), size);
+		m_apNumber[nCnt]->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_NUMBER"));
+		m_apNumber[nCnt]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_nAll++;
 	}
 
+	// 位置・サイズ設定
 	m_pos = pos;
 	m_size = size;
-
 	SetPos(m_pos);
 	SetSize(m_size);
+
 	return S_OK;
 }
 
@@ -82,16 +84,17 @@ HRESULT CScore::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 //---------------------------------------------------
 void CScore::Uninit()
 {
-	for (int nCntTime = 0; nCntTime < MAX_SCORE; nCntTime++)
+	// ナンバー破棄
+	for (int nCnt = 0; nCnt < MAX_SCORE; nCnt++)
 	{
-		if (m_apNumber[nCntTime] != nullptr)
+		if (m_apNumber[nCnt])
 		{
-			m_apNumber[nCntTime]->Uninit();
-			m_apNumber[nCntTime] = nullptr;
+			m_apNumber[nCnt]->Uninit();
+			m_apNumber[nCnt] = nullptr;
 		}
 	}
 
-	CManager::GetPlayData()->SetScore(m_nScore);
+	CManager::GetPlayData()->SetScore(m_nScore);	// プレイデータにスコアを設定
 	m_nAll = 0;
 	Release();
 }
@@ -143,22 +146,6 @@ void CScore::SetScore()
 	{
 		m_apNumber[nCnt]->SetNumber(m_nScore % ((int)pow(10, m_nAll) / nDecrement) / ((int)pow(10, m_nAll - 1) / nDecrement));
 	}
-
-	//for (int nCnt = 0; nCnt < MAX_SCORE; nCnt++)
-	//{
-	//	if (nCnt == 0)										// 1桁目
-	//	{
-	//		m_apNumber[nCnt]->SetNumber(m_nScore / (int)pow(10, MAX_SCORE - 1));
-	//	}
-	//	else if (nCnt == MAX_SCORE - 1)						// 最後の桁
-	//	{
-	//		m_apNumber[nCnt]->SetNumber(m_nScore % 10);
-	//	}
-	//	else												// それ以外の桁
-	//	{
-	//		m_apNumber[nCnt]->SetNumber(m_nScore % (int)pow(10, MAX_SCORE - (float)nCnt) / (int)pow(10, MAX_SCORE - 1 - (float)nCnt));
-	//	}
-	//}
 }
 
 //================================================

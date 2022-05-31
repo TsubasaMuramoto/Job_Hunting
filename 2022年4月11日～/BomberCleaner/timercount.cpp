@@ -1,7 +1,7 @@
 //=============================================================================
 //
 // 時間経過の処理 [timercount.cpp]
-// Author : 土居大輝
+// Author : 村元翼
 //
 //=============================================================================
 
@@ -75,7 +75,7 @@ void CTimerCount::Uninit(void)
 //=============================================================================
 void CTimerCount::Update(void)
 {
-	if (m_bStop == false)
+	if (!m_bStop)
 	{
 		// 現在の時間を取得
 		m_dwCurrentTime = timeGetTime();
@@ -95,8 +95,6 @@ void CTimerCount::Update(void)
 		for (int nCnt = 0; nCnt < MAX_TIME; nCnt++)
 		{
 			m_apNumber[nCnt]->SetNumber(m_nTimerCount % (int)pow(10, MAX_TIME - nCnt) / (int)pow(10, (MAX_TIME - 1) - nCnt));
-			//m_apNumber[1]->SetNumber(m_nTimerCount % (int)pow(10, 2) / (int)pow(10, 1));
-			//m_apNumber[2]->SetNumber(m_nTimerCount % (int)pow(10, 1));
 		}
 		// 時間切れになったら
 		if (m_nTimerCount == 0)
@@ -116,44 +114,6 @@ void CTimerCount::Update(void)
 		{
 
 		}
-
-		//if (m_nTime <= 30)
-		//{
-		//	//サウンド取得
-		//	//CSound *pSound = CManager::GetSound();
-
-		//	// 残り時間少なくなると色を変える
-		//	m_col.a = 1.0f;
-		//	m_col.r = 1.0f;
-		//	m_apNumber[0]->SetColor(m_col);
-		//	m_apNumber[1]->SetColor(m_col);
-		//	m_apNumber[2]->SetColor(m_col);
-		//}
-		//m_mode = CManager::GetMode();
-		//if (m_mode == CManager::MODE_GAME)
-		//{
-		//	// 時間切れ
-		//	if (m_nTime == 0)
-		//	{
-		//		if (m_bflag == false)
-		//		{
-		//			CUI::Create(D3DXVECTOR3(SCREEN_CENTER_X, SCREEN_CENTER_Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(TIMEUP_WIDTH, TIMEUP_HEIGHT, 0.0f), CTexture::TEXTURETYPE_TIMEUP);
-		//			m_bflag = true;
-		//		}
-		//		m_IntervalTime++;
-		//		if (m_IntervalTime >= INTERVAL_TIME)
-		//		{
-		//			// リザルト行き
-		//			if (m_fade == false)
-		//			{
-		//				pFade->SetFade(CManager::MODE_RESULT);
-		//				m_fade = true;
-		//				m_bStop = true;
-		//			}
-		//		}
-		//		m_nTime = 0;
-		//	}
-		//}
 	}
 }
 
@@ -193,7 +153,7 @@ CTimerCount *CTimerCount::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, int time, bo
 	CTimerCount *pTimerCount = new CTimerCount;
 
 	// 時間の準備
-	if (pTimerCount != nullptr)
+	if (pTimerCount)
 	{
 		pTimerCount->m_bStop = bStop;		// 停止するか
 		pTimerCount->m_nTimerCount = time;	// 時間

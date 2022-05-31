@@ -19,15 +19,10 @@
 //========================================
 // マクロ定義
 //========================================
-#define MAX_STAGE_MODEL (300)			// モデル(パーツ)の最大数
-#define MAX_STAGE_ENEMY (50)			// モデル(パーツ)の最大数
-#define MAX_STAGE		(3)				// ステージ数
 
 //========================================
 // 静的メンバ変数の初期化
 //========================================
-//int		CStage::m_NumModel = 0;
-//int		CStage::m_NumPlayer = 0;
 
 //========================================
 // コンストラクタ
@@ -57,14 +52,7 @@ HRESULT CStage::Init(void)
 //--------------------------------------------
 void CStage::Uninit(void)
 {
-	//for (int nCnt = 0; nCnt < MAX_PLAYER ; nCnt++)
-	//{
-	//	if (m_pPlayer[nCnt])
-	//	{
-	//		m_pPlayer[nCnt]->Uninit();
-	//		m_pPlayer[nCnt] = nullptr;
-	//	}
-	//}
+
 }
 
 //--------------------------------------------
@@ -86,7 +74,6 @@ void CStage::SetStage(const char *aStageFileName)
 	if (pFile = fopen(aStageFileName, "r"))
 	{
 		char aStr[6][255] = { NULL };		// 読み込みに使う変数
-		int nNumPlayer = 0 ;
 
 		// END_SCRIPTが呼ばれるまでループする
 		// １単語を読み込む
@@ -195,7 +182,7 @@ void CStage::SetStage(const char *aStageFileName)
 					{
 						switch (nFunc)
 						{
-						case CScene::MODTYPE_NORMAL:		// ただのモデル
+						case CScene::MODTYPE_NORMAL:		// 通常モデル
 							CModel_Spawner::Create(pos, rot, scale, nType);
 							break;
 
@@ -234,7 +221,7 @@ void CStage::SetStage(const char *aStageFileName)
 					if (strcmp(aStr[1], "END_PLAYER_SET") == 0)		// オブジェクトの生成
 					{
 						// プレイヤーの読み込み
-						CPlayer::Create({ 0.0f,50.0f,0.0f }, {0.0f,0.0f,0.0f}, 0);		// プレイヤー生成
+						CPlayer::Create({ 0.0f,50.0f,0.0f }, { 0.0f,0.0f,0.0f }, 0);		// プレイヤー生成
 						break;
 					}
 				}
@@ -261,223 +248,5 @@ void CStage::SetStage(const char *aStageFileName)
 
 	// ファイルを閉じる
 	fclose(pFile);
-}
-
-//------------------------------------
-// ステージの読み込み設置
-//------------------------------------
-void CStage::StageSet(const char *sStageFileName)
-{
-	//char sString[6][255];	// 読み込み用の変数
-	//int nCntNumModel = 0;
-	//int nCntModel = 0;
-	//int nCntField = 0;
-	//D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//D3DXVECTOR3 rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//D3DXVECTOR3 size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//int nBlockX = 0;
-	//int nBlockY = 0;
-	//int nType = 0;
-
-	//// ファイル読み込み
-	//FILE *pFile = fopen(sStageFileName, "r");
-
-	//// NULLチェック
-	//if (pFile != NULL)
-	//{
-	//	// END_SCRIPTが呼ばれるまでループする
-	//	while (1)
-	//	{
-	//		// １単語を読み込む
-	//		fscanf(pFile, "%s", &sString[0]);
-
-	//		// パーツ数の読み込み
-	//		if (strcmp(sString[0], "NUM_MODEL") == 0)
-	//		{
-
-	//			fscanf(pFile, "%s", &sString[1]);	// イコールを噛ませる
-	//			fscanf(pFile, "%d", &m_NumModel);	// パーツ数を読み込む
-	//			m_sModelFileName = new char*[m_NumModel];
-
-	//			for (int nCnt = 0; nCnt < m_NumModel; nCnt++)
-	//			{
-	//				m_sModelFileName[nCnt] = new char[64];
-	//			}
-	//		}
-
-	//		if (strcmp(sString[0], "MODEL_FILENAME") == 0)
-	//		{
-	//			//モデルファイルのパス読み込み
-	//			fscanf(pFile, "%s", &sString[1]);
-	//			fscanf(pFile, "%s", m_sModelFileName[nCntNumModel]);
-	//			nCntNumModel++;
-	//		}
-	//		if (strcmp(sString[0], "NUM_FIELD") == 0)
-	//		{
-	//			int Num = 0;
-	//			//モデルファイルのパス読み込み
-	//			fscanf(pFile, "%s", &sString[1]);
-	//			fscanf(pFile, "%d", &Num);
-	//			m_pField = new CField*[Num];
-	//			m_NumMaxField = Num;
-
-	//		}
-
-	//		// メッシュフィールドの読み込み
-	//		while (strcmp(sString[0], "FIELDSET") == 0)
-	//		{
-
-	//			fscanf(pFile, "%s", &sString[1]);	// イコールを噛ませる
-	//			if (strcmp(sString[1], "POS") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%f %f %f", &pos.x, &pos.y, &pos.z);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "ROT") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%f %f %f", &rot.x, &rot.y, &rot.z);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "BLOCK") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%d %d", &nBlockX, &nBlockY);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "SIZE") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%f %f", &size.x, &size.z);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "END_FIELDSET") == 0)
-	//			{
-	//				m_pField[nCntField] = CField::Create(pos, size, rot, nBlockX, nBlockY, CTexture::FIELD);
-
-	//				nCntField++;
-	//				break;
-	//			}
-	//		}
-	//		// モデルの読み込み
-	//		while (strcmp(sString[0], "MODELSET") == 0)
-	//		{
-	//			fscanf(pFile, "%s", &sString[1]);	// イコールを噛ませる
-	//			if (strcmp(sString[1], "TYPE") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%d", &nType);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "POS") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%f %f %f", &pos.x, &pos.y, &pos.z);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "ROT") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%f %f %f", &rot.x, &rot.y, &rot.z);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "SIZE") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%f %f", &size.x, &size.z);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "END_MODELSET") == 0)
-	//			{
-	//				m_pStageModel[nCntModel] = CModel_Spawner::Create(pos / 2.0f, rot, m_sModelFileName[nType]);
-	//				if (nType == 5)
-	//				{
-	//					m_pStageModel[nCntModel]->SetBoolRot(true);
-	//				}
-	//				nCntModel++;
-	//				m_NumMaxModel++;
-	//				break;
-	//			}
-	//		}
-	//		// 敵の読み込み
-	//		while (strcmp(sString[0], "ENEMYSET") == 0)
-	//		{
-	//			fscanf(pFile, "%s", &sString[1]);	// イコールを噛ませる
-	//			if (strcmp(sString[1], "ENEMYTYPE") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%d", &nType);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "POS") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%f %f %f", &pos.x, &pos.y, &pos.z);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "ROT") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%f %f %f", &rot.x, &rot.y, &rot.z);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "END_ENEMYSET") == 0)
-	//			{
-	//				switch (nType)
-	//				{
-	//				case 0:
-	//					m_pEnemy[m_NumMaxEnemy] = CEnemy::Create(pos, rot);
-	//					m_NumMaxEnemy++;
-	//					break;
-	//				case 1:
-	//					m_pEnemy_baum[m_NumMaxEnemyBaum] = CEnemy_Baum::Create(pos, rot);
-	//					m_NumMaxEnemyBaum++;
-	//					break;
-	//				}
-	//				break;
-	//			}
-
-	//		}
-	//		// 障害物の読み込み
-	//		while (strcmp(sString[0], "BARRIERSET") == 0)
-	//		{
-	//			fscanf(pFile, "%s", &sString[1]);	// イコールを噛ませる
-	//			if (strcmp(sString[1], "BARRIERTYPE") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%d", &nType);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "POS") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%f %f %f", &pos.x, &pos.y, &pos.z);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "ROT") == 0)
-	//			{
-	//				fscanf(pFile, "%s", &sString[2]);	// イコールを噛ませる
-	//				fscanf(pFile, "%f %f %f", &rot.x, &rot.y, &rot.z);	// イコールを噛ませる
-	//			}
-	//			if (strcmp(sString[1], "END_BARRIERSET") == 0)
-	//			{
-	//				switch (nType)
-	//				{
-	//				case 0:
-	//					CBarrier_Block::Create(pos, rot);
-	//					break;
-	//				case 1:
-	//					CBarrier_wood::Create(pos, rot);
-	//					break;
-	//				}
-	//				break;
-	//			}
-
-	//		}
-
-	//		if (strcmp(sString[0], "END_SCRIPT") == 0)
-	//		{
-	//			break;
-	//		}
-
-	//	}
-	//}
-
-	//else
-	//{
-	//	// エラー出力
-	//	perror("ファイルが開けませんでした");
-	//}
-
-	//// ファイルを閉じる
-	//fclose(pFile);
 }
 

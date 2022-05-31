@@ -46,24 +46,22 @@ public:
 	static CScene2D *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size,OBJTYPE objtype = OBJTYPE_POLYGON2D);
 
 	//------------------------------------------------------------------------------
-	// Setter
+	// 設定・取得関数
 	//------------------------------------------------------------------------------
 	// 位置設定
 	void SetScalePos(D3DXVECTOR3 pos, D3DXVECTOR3 scale);
 	void SetPos(D3DXVECTOR3 vtx0, D3DXVECTOR3 vtx1, D3DXVECTOR3 vtx2, D3DXVECTOR3 vtx3);	
 	void SetPos(D3DXVECTOR3 pos, D3DXVECTOR3 scale,bool bScroll = true);
 	void SetPos(D3DXVECTOR3 pos, D3DXVECTOR3 scale, D3DXVECTOR3 Rotvtx0, D3DXVECTOR3 Rotvtx1, D3DXVECTOR3 Rotvtx2, D3DXVECTOR3 Rotvtx3);
-
 	// テクスチャ設定
 	void SetTex(int nAnim,int nPartU);
 	void SetTex(float fSpeedX, float fSpeedY);
 	void SetTex(float nPatternX, float nPatternY, float fSizeX,float fSizeY);
-
 	// カラー設定
 	void SetCol(D3DXCOLOR col);
-
 	// テクスチャ取得
-	void BindTexture(LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }					
+	void BindTexture(LPDIRECT3DTEXTURE9 pTexture) { m_pTexture = pTexture; }
+
 	static D3DXVECTOR3 Move(D3DXVECTOR3 *pPos, float angle, float speed);		// 移動
 
 private:
@@ -71,6 +69,5 @@ private:
 protected:
 	LPDIRECT3DTEXTURE9		m_pTexture;				// テクスチャへのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;				// 頂点バッファへのポインタ
-	bool m_bUse;									// 使用状況
 };
-#endif // !_SCENE2D_H
+#endif

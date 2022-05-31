@@ -41,9 +41,9 @@ CBombSpawner::~CBombSpawner()
 //=============================================================================
 HRESULT CBombSpawner::Init(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 {
-	m_pos = pos;
-	m_rot = rot;
-	CScene::SetPos(m_pos);
+	m_pos = pos;			// 位置
+	m_rot = rot;			// 回転
+	CScene::SetPos(m_pos);	// 位置を設定
 
 	return S_OK;
 }
@@ -113,10 +113,6 @@ void CBombSpawner::Draw(void)
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
-
-	// 大きさを反映
-	//D3DXMatrixScaling(&mtxScale, m_scale.x, m_scale.y, m_scale.z);
-	//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScale);
 
 	// 向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);

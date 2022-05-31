@@ -23,7 +23,6 @@ class CBomb;
 class CBombSpawner : public CScene
 {
 public:
-
 	//---------------------------------
 	// コンストラクタ・デストラクタ
 	//---------------------------------
@@ -50,5 +49,4 @@ private:
 	int				m_nSpawnTime;		// スポーンタイム
 	bool			m_bIsThere;			// そこに存在しているか
 };
-
 #endif

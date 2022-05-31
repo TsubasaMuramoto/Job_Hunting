@@ -1,6 +1,6 @@
 //=============================================================================
 //テクスチャ処理
-//Author:加藤瑞葵
+//Author:村元翼
 //=============================================================================
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
@@ -41,8 +41,8 @@ void CTexture::Init(void)
 	pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();	// デバイスを取得する
 
 	// textファイル読み込み
-	FILE *pFile = fopen("data/TEXTURE/SCRIPT/texture.txt", "r");
-	if (pFile != NULL)
+	FILE *pFile;
+	if (pFile = fopen("data/TEXTURE/SCRIPT/texture.txt", "r"))
 	{
 		char cString[128];
 		// 一行ずつ保存

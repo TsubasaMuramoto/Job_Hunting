@@ -24,8 +24,6 @@ public:
 	void Update(CScene *pObject);			// XVˆ—
 	static CControlBlink *Create(void);		// ¶¬ˆ—
 
-private:
-	int m_nFrame;
 };
 
-#endif	//_CONTROL_BLINK_H_
+#endif

@@ -32,8 +32,6 @@ CRanking::CRanking()
 	m_col.g = 0.0f;
 	m_col.b = 0.0f;
 	m_col.a = 0.0f;
-
-	//memset(&m_apUi, NULL, sizeof(m_apUi));
 }
 
 //================================================
@@ -56,7 +54,7 @@ HRESULT CRanking::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 {
 	for (int nCntRanking = 0; nCntRanking < MAX_RANKING; nCntRanking++)
 	{
-		//スコアの生成
+		// スコアの生成
 		m_apScore[nCntRanking] = CScore::Create
 		(
 			D3DXVECTOR3
@@ -80,6 +78,7 @@ HRESULT CRanking::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 			RANKING_RANK_POLYGON_SIZE
 		);
 
+		// 順位テクスチャ
 		switch (nCntRanking)
 		{
 		case 0:
@@ -102,8 +101,7 @@ HRESULT CRanking::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 
 	//ロード処理
 	FILE *pFile;
-	pFile = fopen(RANKING_TEXT, "r");
-	if (pFile != NULL)
+	if (pFile = fopen(RANKING_TEXT, "r"))
 	{
 		for (int nCntRanking = 0; nCntRanking < MAX_RANKING; nCntRanking++)
 		{
@@ -149,9 +147,7 @@ HRESULT CRanking::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	}
 
 	//セーブ処理
-	pFile = fopen(RANKING_TEXT, "w");
-
-	if (pFile != NULL)
+	if (pFile = fopen(RANKING_TEXT, "w"))
 	{
 		for (int nCntRanking = 0; nCntRanking < MAX_RANKING; nCntRanking++)
 		{
@@ -180,14 +176,14 @@ void CRanking::Uninit(void)
 {
 	for (int nCntRanking = 0; nCntRanking < MAX_RANKING; nCntRanking++)
 	{
-		if (m_apScene2D[nCntRanking] != nullptr)
+		if (m_apScene2D[nCntRanking])
 		{
 			m_apScene2D[nCntRanking]->Uninit();
 			delete m_apScene2D[nCntRanking];
 			m_apScene2D[nCntRanking] = nullptr;
 		}
 
-		if (m_apScore[nCntRanking] != nullptr)
+		if (m_apScore[nCntRanking])
 		{
 			m_apScore[nCntRanking]->Uninit();
 			delete m_apScore[nCntRanking];
@@ -207,7 +203,6 @@ void CRanking::Update(void)
 	{
 		//スコアの位置取得処理
 		D3DXVECTOR3 posScore = m_apScore[nCntRanking]->GetPos();
-
 
 		if (posScore.x > SCREEN_WIDTH / 2.0f)
 		{
@@ -267,7 +262,6 @@ void CRanking::Update(void)
 			{
 				//ナンバーを取得してカラーを設定
 				m_apScore[nCntRanking]->GetNumber(nCntNumber)->SetCol(m_col);
-				//m_apUi[nCntRanking]->SetCol(m_col);
 			}
 			break;
 		}
@@ -283,19 +277,41 @@ void CRanking::Draw(void)
 }
 
 //================================================
-//生成処理
+// 生成処理
 //================================================
 CRanking* CRanking::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 {
 	//インスタンスの生成
 	CRanking *pRanking = nullptr;
-	if (pRanking == nullptr)
+	if (!pRanking)
 	{
 		pRanking = new CRanking;
-		if (pRanking != nullptr)
+		if (pRanking)
 		{
 			pRanking->Init(pos, size);
 		}
 	}
 	return pRanking;
+}
+
+//================================================
+// ランキング削除
+//================================================
+void CRanking::DeleteRanking(void)
+{
+	//セーブ処理
+	FILE *pFile;
+	if (pFile = fopen(RANKING_TEXT, "w"))
+	{
+		for (int nCntRanking = 0; nCntRanking < MAX_RANKING; nCntRanking++)
+		{
+			m_apScore[nCntRanking]->SetScore(0);
+			fprintf(pFile, "%d\n", m_apScore[nCntRanking]->GetScore());
+		}
+	}
+	else
+	{
+		printf("ファイルが開けませんでした\n");
+	}
+	fclose(pFile);
 }

@@ -1,16 +1,21 @@
 //=============================================================================
 // コントロール処理 [control_blink.cpp]
-// Author : ムラモトツバサ
+// Author : 村元翼
 //=============================================================================
 #include "control_blink.h"
 #include "ui.h"
+
+//=============================================================================
+// マクロ定義
+//=============================================================================
+#define BLINK_FRAME (30)
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 CControlBlink::CControlBlink()
 {
-	m_nFrame = 0;
+
 }
 
 //=============================================================================
@@ -42,38 +47,34 @@ void CControlBlink::Uninit()
 //=============================================================================
 void CControlBlink::Update(CScene *pObject)
 {
-	// フレーム加算
-	m_nFrame++;
-
 	CUi *pUi = nullptr;
-	if (pUi == nullptr)
+	if (!pUi)
 	{
 		// オブジェクトをUIクラスにキャスト
 		pUi = (CUi*)pObject;
 
-		if (pUi != nullptr)
+		if (pUi)
 		{
+			// フレーム加算
+			m_nFrame++;
+
 			D3DXCOLOR color;
 			color = pUi->GetCol();
 
-			if (m_nFrame > 30)
+			if (m_nFrame == BLINK_FRAME)
 			{
-				// 透明化
-				color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f);
-				pUi->SetCol(color);
+				color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f);	// 透明化
 			}
 
-			if (m_nFrame > 60)
+			else if (m_nFrame == BLINK_FRAME * 2)
 			{
-				// 透明化
-				color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-				pUi->SetCol(color);
-				m_nFrame = 0;
+				color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// 不透明化
+				m_nFrame = 0;								// フレーム数リセット
 			}
+
+			pUi->SetCol(color);	// カラーの設定
 		}
 	}
-
-
 }
 
 //=============================================================================
@@ -84,15 +85,14 @@ CControlBlink *CControlBlink::Create()
 	//インスタンスの生成
 	CControlBlink *pControlBlink = nullptr;
 
-	if (pControlBlink == nullptr)
+	if (!pControlBlink)
 	{
 		pControlBlink = new CControlBlink;
 
-		if (pControlBlink != nullptr)
+		if (pControlBlink)
 		{
 			pControlBlink->Init();
 		}
 	}
 	return pControlBlink;
-
 }

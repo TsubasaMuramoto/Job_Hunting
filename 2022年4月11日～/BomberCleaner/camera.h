@@ -9,7 +9,7 @@
 //==============================================================================
 // マクロ定義
 //==============================================================================
-#define MAX_CAMERA				(1)			// カメラの最大数
+#define MAX_CAMERA		(1)		// カメラの最大数
 
 //==============================================================================
 // 前方宣言
@@ -34,16 +34,16 @@ public:
 	static CCamera *Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float viewportX, float viewportY, float viewportWidth, float viewporHeight, int nID);
 
 	//--------------------------------------------------
-	// GETTER & SETTER
+	// 設定・取得関数
 	//--------------------------------------------------
-	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }		// 回転セット
-	D3DXVECTOR3 GetPosV(void)	{ return m_posV; }		// 視点
-	D3DXVECTOR3 GetPosR(void)	{ return m_posR; }		// 注視点
-	D3DXVECTOR3 GetRot(void)	{ return m_rot; }		// 回転
-	float		GetLong(void)	{ return m_fLong; }		// 視点注視点の距離
+	void SetRot(D3DXVECTOR3 rot)	{ m_rot = rot; }		// 回転セット
+	D3DXVECTOR3 GetPosV(void)		{ return m_posV; }		// 視点
+	D3DXVECTOR3 GetPosR(void)		{ return m_posR; }		// 注視点
+	D3DXVECTOR3 GetRot(void)		{ return m_rot; }		// 回転
+	float		GetLong(void)		{ return m_fLong; }		// 視点注視点の距離
 
-	void SetPlayerCamera(CPlayer *pPlayer);				// カメラがプレイヤーに追従する関数
-	void MoveCamera(void);								// 移動関数
+	void SetPlayerCamera(CPlayer *pPlayer);					// カメラがプレイヤーに追従する関数
+	void MoveCamera(void);									// 移動関数
 
 
 private:
@@ -57,4 +57,4 @@ private:
 	D3DXMATRIX m_mtxView;			// ビューマトリックス
 };
 
-#endif // !_CAMERA_H
+#endif

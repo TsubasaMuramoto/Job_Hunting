@@ -1,7 +1,7 @@
 //=============================================================================
 //
 // 数字の処理 [number.cpp]
-// Author :土居大輝
+// Author : 村元翼
 //
 //=============================================================================
 
@@ -27,15 +27,15 @@ CNumber::~CNumber()
 }
 
 //=============================================================================
-//数字の生成
+//　数字の生成
 //=============================================================================
 CNumber *CNumber::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 {
-	//数字のインスタンス生成
+	// 数字のインスタンス生成
 	CNumber *pNumber = new CNumber;
 
 	// 数字の準備
-	if (pNumber != nullptr)
+	if (pNumber)
 	{
 		pNumber->Init(pos, size);																		// 初期化
 		pNumber->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_NUMBER"));		// テクスチャ取得
@@ -52,11 +52,11 @@ HRESULT CNumber::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	// シーン2D初期化
 	CScene2D::Init(pos,size);
 
-	//デバイスのポインタ
+	// デバイスのポインタ
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	//頂点バッファの生成
-	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4,//確保するバッファのサイズ
+	// 頂点バッファの生成
+	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4,	// 確保するバッファのサイズ
 		D3DUSAGE_WRITEONLY,
 		FVF_VERTEX_2D,
 		D3DPOOL_MANAGED,
@@ -105,9 +105,10 @@ HRESULT CNumber::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 void CNumber::Uninit(void)
 {
 	// 頂点バッファの破棄
-	if (m_pVtxBuff != nullptr)
+	if (m_pVtxBuff)
 	{
 		m_pVtxBuff->Release();
+		m_pVtxBuff = nullptr;
 	}
 
 	// シーン2D終了
@@ -134,7 +135,6 @@ void CNumber::Draw(void)
 	// デバイスを取得する
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
 
-	//CManager::GetInstance()->GetRenderer()->SetAddSynthesis(true, pDevice);
 	CManager::GetInstance()->GetRenderer()->SetAlphaTest(true, pDevice);			// アルファテスト
 
 	// 頂点バッファをデバイスのデータストリームに設定
@@ -151,7 +151,6 @@ void CNumber::Draw(void)
 		2												// 描画するプリミティブ数
 	);
 
-	//CManager::GetInstance()->GetRenderer()->SetAddSynthesis(false, pDevice);
 	CManager::GetInstance()->GetRenderer()->SetAlphaTest(false, pDevice);			// アルファテスト
 }
 
@@ -196,25 +195,3 @@ void CNumber::SetNumber(int nNumber)
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
 }
-
-//================================================
-// 位置設定処理
-//================================================
-//void CNumber::SetPos(D3DXVECTOR3 pos)
-//{
-//	m_pos = pos;
-//
-//	VERTEX_2D *pVtx;
-//
-//	//頂点バッファをロックし、頂点データのポインタを取得
-//	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-//
-//	//頂点座標
-//	pVtx[0].pos = D3DXVECTOR3(m_pos.x - m_size.x / 2.0f, m_pos.y - m_size.y / 2.0f, 0.0f);
-//	pVtx[1].pos = D3DXVECTOR3(m_pos.x + m_size.x / 2.0f, m_pos.y - m_size.y / 2.0f, 0.0f);
-//	pVtx[2].pos = D3DXVECTOR3(m_pos.x - m_size.x / 2.0f, m_pos.y + m_size.y / 2.0f, 0.0f);
-//	pVtx[3].pos = D3DXVECTOR3(m_pos.x + m_size.x / 2.0f, m_pos.y + m_size.y / 2.0f, 0.0f);
-//
-//	//頂点バッファをアンロックする
-//	m_pVtxBuff->Unlock();
-//}

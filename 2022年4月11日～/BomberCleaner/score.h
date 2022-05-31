@@ -23,25 +23,25 @@ class CNumber;
 class CScore : public CScene
 {
 public:
-	CScore(OBJTYPE nPriority = OBJTYPE_NUMBER);
-	~CScore();
+	CScore(OBJTYPE nPriority = OBJTYPE_NUMBER);			// コンストラクタ
+	~CScore();											// デストラクタ
 
-	HRESULT Init(D3DXVECTOR3 pos, D3DXVECTOR3 size);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
+	HRESULT Init(D3DXVECTOR3 pos, D3DXVECTOR3 size);	// 初期化
+	void Uninit(void);									// 終了
+	void Update(void);									// 更新
+	void Draw(void);									// 描画
 
 	static CScore	*Create(D3DXVECTOR3 pos, D3DXVECTOR3 fsize);			// スコアの生成
 	void			AddScore(int AddScore) { m_nScore += AddScore; };		// スコアの加算
 
 	//---------------------------------
-	// Getter & Setter
+	// 設定・取得関数
 	//---------------------------------
 	void			SetScore(void);											// スコアの描画設定
-	void			SetScore(int nScore);
-	void			SetScorePos(D3DXVECTOR3 pos);
-	CNumber			*GetNumber(int nNumber) { return m_apNumber[nNumber]; }
-	int				GetScore(void) { return m_nScore; }
+	void			SetScore(int nScore);									// スコアの設定
+	void			SetScorePos(D3DXVECTOR3 pos);							// スコア位置設定
+	CNumber			*GetNumber(int nNumber) { return m_apNumber[nNumber]; }	// ナンバー取得
+	int				GetScore(void)			{ return m_nScore; }			// 現在スコア取得
 
 private:
 	D3DXVECTOR3 m_pos;												// 位置

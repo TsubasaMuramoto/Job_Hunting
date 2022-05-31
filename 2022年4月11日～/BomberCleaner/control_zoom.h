@@ -24,9 +24,6 @@ public:
 	void Uninit(void);						// 終了処理
 	void Update(CScene *pObject);			// 更新処理
 	static CControlZoom *Create(void);		// 生成処理
-
-private:
-	int m_nFrame;							// フレーム数
 };
 
-#endif	//_CONTROL_ZOOM_H_
+#endif	

@@ -9,7 +9,7 @@ class CInput
 {
 public:
 	//------------------------------------
-	// ƒ^ƒCƒgƒ‹‰æ–Ê‚ÌUI
+	// “ü—Íî•ñ—ñ‹“
 	//------------------------------------
 	typedef enum
 	{
@@ -20,6 +20,10 @@ public:
 		ACTION_DOWN,
 		ACTION_RIGHT,
 		ACTION_LEFT,
+		ACTION_R_UP,
+		ACTION_R_DOWN,
+		ACTION_R_RIGHT,
+		ACTION_R_LEFT,
 		ACTION_MAX
 
 	}ACTION;

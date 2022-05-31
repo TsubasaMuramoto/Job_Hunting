@@ -38,14 +38,14 @@ CPause*			CManager::m_pPause					= nullptr;		// ポーズ
 CFade*			CManager::m_pFade					= nullptr;		// フェード
 CPlayData*		CManager::m_pPlayData				= nullptr;		// プレイデータ
 CLoadX*			CManager::m_pLoadX					= nullptr;		// X読み込みクラス
-CManager::MODE	CManager::m_mode					= MODE::TITLE;	// モード
+CManager::MODE	CManager::m_mode					= MODE::RESULT;	// モード
 bool			CManager::m_bOnlyOnce				= false;
 bool			CManager::m_bStop = false;
 bool			CManager::m_bPause = false;
 
-//--------------------------------------------------
+//================================================
 // コンストラクタ
-//--------------------------------------------------
+//================================================
 CManager::CManager()
 {
 
@@ -131,10 +131,10 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, bool bReturn)
 		}
 	}
 
-	m_pLight[0]->Init(D3DXVECTOR3(0.0f,0.0f,0.0f),D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.2f, -0.8f, -0.4f));
-	m_pLight[1]->Init(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(-0.2f, -0.8f, 0.4f));
-	m_pLight[2]->Init(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.4f, 0.0f));
-	m_pLight[3]->Init(D3DXVECTOR3(0.0f, 0.0f, -100.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.0f, 0.0f, -1.0f));
+	m_pLight[0]->Init({ 0.0f, 0.0f, 0.0f	},	{ 1.0f, 1.0f, 1.0f, 1.0f }, { 0.2f, -0.8f, -0.4f });
+	m_pLight[1]->Init({ 0.0f, 0.0f, 0.0f	},	{ 1.0f, 1.0f, 1.0f, 1.0f }, { -0.2f, -0.8f, 0.4f });
+	m_pLight[2]->Init({ 0.0f, 0.0f, 0.0f	},	{ 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.4f, 0.0f	});
+	m_pLight[3]->Init({ 0.0f, 0.0f, -100.0f },	{ 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f });
 
 	// テクスチャの生成
 	if (!m_pTexture)
@@ -150,7 +150,6 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, bool bReturn)
 	if (!m_pFade)
 	{
 		m_pFade = CFade::Create(m_mode);
-		//m_pFade->SetFade(m_mode);
 	}
 
 	// モードの設定
@@ -203,7 +202,6 @@ void CManager::Uninit(void)
 	{
 		if (m_apCamera[nCnt])
 		{
-			// 終了処理
 			m_apCamera[nCnt]->Uninit();
 			delete m_apCamera[nCnt];
 			m_apCamera[nCnt] = nullptr;
@@ -250,7 +248,7 @@ void CManager::Uninit(void)
 		m_pLoadX = nullptr;
 	}
 
-	// マネージャの破棄
+	// シングルトンマネージャの破棄
 	if (s_pManager)
 	{
 		delete s_pManager;
@@ -268,6 +266,7 @@ void CManager::Update(void)
 	{
 		m_pRenderer->Update();
 	}
+
 	//キーボードの更新
 	if (m_pInputKeyboard)
 	{
@@ -300,18 +299,18 @@ void CManager::Update(void)
 	}
 
 	//*******************************//
-	//  各種オブジェクトの更新処理   //
+	//		　モード更新処理		 //
 	//*******************************//
 	switch (m_mode)
 	{
-	case MODE::TITLE:
+	case MODE::TITLE:		// タイトル
 		if (m_pTitle)
 		{
 			m_pTitle->Update();
 		}
 		break;
 
-	case MODE::GAME:
+	case MODE::GAME:		// ゲーム
 		if (m_pGame)
 		{
 			m_pGame->Update();
@@ -347,7 +346,7 @@ void CManager::Update(void)
 		}
 		break;
 
-	case MODE::RESULT:
+	case MODE::RESULT:	// リザルト
 		if (m_pResult)
 		{
 			m_pResult->Update();
@@ -367,6 +366,7 @@ void CManager::Draw(void)
 		m_pRenderer->Draw();
 	}
 
+	// カメラ描画
 	for (int nCnt = 0; nCnt < MAX_CAMERA; nCnt++)
 	{
 		if (m_apCamera[nCnt])
@@ -398,7 +398,7 @@ void CManager::SetMode(MODE mode)
 	//-----------------------------------------------
 	switch (m_mode)
 	{
-	case MODE::TITLE:
+	case MODE::TITLE:		// タイトル
 		if (m_pTitle)
 		{
 			m_pTitle->Uninit();
@@ -407,7 +407,7 @@ void CManager::SetMode(MODE mode)
 		}
 		break;
 
-	case MODE::GAME:
+	case MODE::GAME:		// ゲーム
 		if (m_pGame)
 		{
 			// カメラの破棄
@@ -434,7 +434,7 @@ void CManager::SetMode(MODE mode)
 		}
 		break;
 
-	case MODE::RESULT:
+	case MODE::RESULT:		// リザルト
 		if (m_pResult)
 		{
 			m_pResult->Uninit();
@@ -444,7 +444,9 @@ void CManager::SetMode(MODE mode)
 		break;
 	}
 
+	//----------------------------------
 	// 全てのオブジェクトの破棄
+	//----------------------------------
 	CScene::ReleaseAll();
 
 	//----------------------------------
@@ -452,7 +454,7 @@ void CManager::SetMode(MODE mode)
 	//----------------------------------
 	switch (mode)
 	{
-	case MODE::TITLE:
+	case MODE::TITLE:		// タイトル
 		if (!m_pTitle)
 		{
 			m_pTitle = new CTitle;
@@ -463,7 +465,7 @@ void CManager::SetMode(MODE mode)
 		}
 		break;
 
-	case MODE::GAME:
+	case MODE::GAME:		// ゲーム
 		if (!m_pGame)
 		{
 			m_pGame = new CGame;
@@ -477,13 +479,12 @@ void CManager::SetMode(MODE mode)
 										(float)(SCREEN_WIDTH / MAX_CAMERA * nCnt), 0.0f,
 										(float)(SCREEN_WIDTH / MAX_CAMERA), (float)SCREEN_HEIGHT, nCnt);
 				}
-
 				m_pGame->Init();
 			}
 		}
 		break;
 
-	case MODE::RESULT:
+	case MODE::RESULT:		// リザルト
 		if (!m_pResult)
 		{
 			m_pResult = new CResult;
@@ -508,7 +509,7 @@ bool CManager::SetModeBool(MODE modeNext)
 	//=========================================================
 	// 画面遷移(ENTERまたはSTARTボタンを押す)
 	//=========================================================
-	if (CInput::PressAnyAction(CInput::ACTION_ENTER) || CInput::PressAnyAction(CInput::ACTION_ATTACK) && !m_bOnlyOnce)
+	if ((CInput::PressAnyAction(CInput::ACTION_ENTER) || CInput::PressAnyAction(CInput::ACTION_ATTACK)) && !m_bOnlyOnce)
 	{
 		m_pFade->SetFade(modeNext);						// ゲームモードへ
 		m_bOnlyOnce = true;								// ENTER連打防止

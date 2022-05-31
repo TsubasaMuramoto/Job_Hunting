@@ -8,7 +8,7 @@
 #include "scene3D.h"
 
 //==============================================================================
-// マクロ
+// マクロ定義
 //==============================================================================
 #define GRAVITY (1000.0f)
 
@@ -18,27 +18,21 @@
 class CShadow : public CScene3D
 {
 public:
-	CShadow(OBJTYPE nPriority = OBJTYPE_SHADOW);
-	~CShadow();
-	HRESULT Init(D3DXVECTOR3 pos, D3DXVECTOR3 size);
-	void Uninit(void);
-	void Update(void);
-	void Draw(void);
-	static CShadow *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot);
+	CShadow(OBJTYPE nPriority = OBJTYPE_SHADOW);									// コンストラクタ
+	~CShadow();																		// デストラクタ
+	HRESULT Init(D3DXVECTOR3 pos, D3DXVECTOR3 size);								// 初期化
+	void Uninit(void);																// 終了
+	void Update(void);																// 更新
+	void Draw(void);																// 描画
+	static CShadow *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot);		// 生成
 
-	void SetGround(const float &X, const float &Z)	{ m_pos.x = X, m_pos.z = Z; }
-	void SetHeight(const float &fHeight)			{ m_pos.y = fHeight; }
-	void SetGravity(float GravitySpeed);
-
-	//D3DXMATRIX *GetVtxMtx(void) { return &m_vtxMtxWorld[0]; }		// 頂点ワールドマトリックスの取得
-	//void SetVtxMtxWorld(D3DXVECTOR3 vtxPos, int nCntVtx);		// 頂点ワールドマトリックスの設定
+	void SetGround(const float &X, const float &Z)	{ m_pos.x = X, m_pos.z = Z; }	// 位置設定
+	void SetHeight(const float &fHeight)			{ m_pos.y = fHeight; }			// 高さ設定
+	void SetGravity(float GravitySpeed);											// 重力設定
 
 private:
-	D3DXVECTOR3 m_OriginSize;
-	//D3DXMATRIX m_vtxMtxWorld[FIELD_VTX];
-	//D3DXVECTOR3 m_vtx[FIELD_VTX];
-	//D3DXVECTOR3 m_vtxRot[FIELD_VTX];
+	D3DXVECTOR3 m_OriginSize;														// 生成時のサイズ
 };
 
 
-#endif // !_FIELD_H_
+#endif	

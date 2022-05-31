@@ -56,7 +56,7 @@ CModel *CModel::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, int 
 			pModel->m_rot = rot;							// 回転
 			pModel->m_scale = scale;						// 規模
 			pModel->m_bCollision = bCollision;				// 当たり判定をつけるか
-			pModel->Init(nXType);				// 初期化
+			pModel->Init(nXType);							// 初期化
 		}
 	}
 	return pModel;
@@ -121,6 +121,7 @@ void CModel::Init(int nXType)
 			m_vtxMin.z = vtx.z;
 		}
 
+		// xyzの最大値と最小値を引き、サイズにする
 		m_size.x = m_vtxMax.x - m_vtxMin.x;
 		m_size.y = m_vtxMax.y - m_vtxMin.y;
 		m_size.z = m_vtxMax.z - m_vtxMin.z;
@@ -172,6 +173,7 @@ void CModel::Init(int nXType)
 	m_vtx[7].vtx.y = m_vtxMin.y;
 	m_vtx[7].vtx.z = m_vtxMin.z;
 
+	//　変数初期化
 	m_SaveEmissive = { 0.0f,0.0f,0.0f,1.0f };
 }
 

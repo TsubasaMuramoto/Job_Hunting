@@ -78,7 +78,6 @@ void CResult::Uninit(void)
 //=============================================
 void CResult::Update(void)
 {
-
 	if (m_nFrame >= RETURN_TITLE_TIME)
 	{
 		if (!m_pReturnTitle)
@@ -93,6 +92,13 @@ void CResult::Update(void)
 	{
 		m_nFrame++;
 	}
+
+#ifdef _DEBUG
+	if (CManager::GetInstance()->GetKeyboard()->GetTrigger(DIK_R))
+	{
+		m_pRanking->DeleteRanking();
+	}
+#endif
 }
 
 //=============================================

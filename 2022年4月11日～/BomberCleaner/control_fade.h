@@ -23,9 +23,6 @@ public:
 	void Uninit(void);						// I—¹ˆ—
 	void Update(CScene *pObject);			// XVˆ—
 	static CControlFade *Create();			// ¶¬ˆ—
-
-private:
-	int m_nFrame;
 };
 
 #endif
