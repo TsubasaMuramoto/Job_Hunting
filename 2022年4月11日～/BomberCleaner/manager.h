@@ -77,6 +77,7 @@ public:
 	static void SetPause(bool bPause)	{ m_bPause = bPause; }						// ポーズの設定
 	static void SetStop(bool bStop)		{ m_bStop = bStop; }						// ストップの設定
 	static bool GetStop()				{ return m_bStop; }							// ストップの取得
+	static HWND GethWnd()				{ return m_hWnd; }							// ウィンドウハンドルの取得
 
 private:
 	CManager();												// コンストラクタ
@@ -102,5 +103,6 @@ private:
 	
 	static bool				m_bStop;						// ストップするか
 	static bool				m_bPause;						// ポーズにするか
+	static HWND				m_hWnd;							// ウィンドウハンドル
 };
 #endif

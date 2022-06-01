@@ -38,10 +38,11 @@ CPause*			CManager::m_pPause					= nullptr;		// ポーズ
 CFade*			CManager::m_pFade					= nullptr;		// フェード
 CPlayData*		CManager::m_pPlayData				= nullptr;		// プレイデータ
 CLoadX*			CManager::m_pLoadX					= nullptr;		// X読み込みクラス
-CManager::MODE	CManager::m_mode					= MODE::RESULT;	// モード
+CManager::MODE	CManager::m_mode					= MODE::GAME;	// モード
 bool			CManager::m_bOnlyOnce				= false;
 bool			CManager::m_bStop = false;
 bool			CManager::m_bPause = false;
+HWND			CManager::m_hWnd = nullptr;
 
 //================================================
 // コンストラクタ
@@ -64,6 +65,8 @@ CManager::~CManager()
 //================================================
 HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, bool bReturn)
 {
+	m_hWnd = hWnd;
+
 	// レンダラーの生成
 	if (!m_pRenderer)
 	{

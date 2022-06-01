@@ -198,6 +198,9 @@
     <ClCompile Include="shadow.cpp">
       <Filter>ソース ファイル\親クラス\シーンの継承\エフェクト系</Filter>
     </ClCompile>
+    <ClCompile Include="TextureFont.cpp">
+      <Filter>ソース ファイル\親クラス\シーンの継承\2Dポリゴン系</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stage.h">
@@ -345,6 +348,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="shadow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureFont.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

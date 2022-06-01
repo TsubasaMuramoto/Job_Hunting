@@ -17,7 +17,7 @@
 #define INERTIA				(0.1f)	// 慣性
 #define ACCELERATION		(0.2f)	// 加速度
 #define GRAVITY_SPEED		(0.8f)	// 重力の強さ
-#define ROTATING_VELOCITY	(0.05f)	// プレイヤーの回転速度
+#define ROTATING_VELOCITY	(0.001f)	// プレイヤーの回転速度
 #define JUMP				(13.0f)	// 重力
 
 //=============================================================
@@ -74,10 +74,10 @@ public:
 	void Inertia(D3DXVECTOR3 &speed);																// 慣性
 	void Gravity(D3DXVECTOR3& pos, float& fGravity, const float& fGravitySpeed, bool & bJump);		// 重力
 	void Action(void);																				// アクション
-	void Jump(float &fGravity, bool& bJump);														// ジャンプ
 	bool InputDirection(const MOVE_DIRECTION &moveDir);												// 移動方向入力関数
 	void SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot, const float fMaxSpeed);				// 移動・回転限界
 	bool Carry(void);																				// 爆弾持ち上げ関数
+	void Quaternion(void);
 
 	//---------------------------------------------------
 	// 設定・取得関数
@@ -101,11 +101,14 @@ private:
 	D3DXVECTOR3		m_Speed, m_Direction;			// 速度・向き
 	float			m_fGravitySpeed, m_fGravity;	// 重力加速度・重力
 	float			m_fMaxSpeed;					// 最大速度
+	float			m_fAngle;						// 回転する角度
 	int				m_nType;						// タイプ
 	int				m_nFrame;						// フレーム
 	int				m_nPattern;						// パターン
 	bool			m_bJump;						// ジャンプ判定
 	D3DXMATRIX		m_mtxWorld;						// ワールドマトリックス
+	D3DXMATRIX		RotMatrix;						// クォータニオンの計算に使うマトリックス
+
 	PLAYER_STATE	m_state;						// プレイヤーの状態
 };
 #endif 

@@ -141,7 +141,7 @@ void CCamera::MoveCamera(void)
 	//++++++++++++++++++++++++++++++//
 	//			Ž‹“_‚Ì‰ñ“]			//
 	//++++++++++++++++++++++++++++++//
-	if (CInput::PressAnyAction(CInput::ACTION_LEFT))
+	if (CInput::PressAnyAction(CInput::ACTION_R_LEFT))
 	{	// ¶‚Ö‰ñ“]
 		m_rot.y += CAMERA_SPEED;
 		if (m_rot.y > D3DX_PI)
@@ -149,7 +149,7 @@ void CCamera::MoveCamera(void)
 			m_rot.y = -D3DX_PI;
 		}
 	}
-	if (CInput::PressAnyAction(CInput::ACTION_RIGHT))
+	if (CInput::PressAnyAction(CInput::ACTION_R_RIGHT))
 	{	// ‰E‚Ö‰ñ“]
 		m_rot.y += -CAMERA_SPEED;
 		if (m_rot.y < -D3DX_PI)
@@ -158,7 +158,7 @@ void CCamera::MoveCamera(void)
 		}
 	}
 
-	if (CInput::PressAnyAction(CInput::ACTION_DOWN))
+	if (CInput::PressAnyAction(CInput::ACTION_R_DOWN))
 	{	// ‰º‚Ö‰ñ“]
 		m_rot.x += -CAMERA_SPEED;
 		if (m_rot.x < 0.0f + D3DX_PI / 2)
@@ -166,7 +166,7 @@ void CCamera::MoveCamera(void)
 			m_rot.x = 0.0f + D3DX_PI / 2 + _OX_EPSILON_;
 		}
 	}
-	if (CInput::PressAnyAction(CInput::ACTION_UP))
+	if (CInput::PressAnyAction(CInput::ACTION_R_UP))
 	{	// ã‚Ö‰ñ“]
 		m_rot.x += CAMERA_SPEED;
 		if (m_rot.x > D3DX_PI)

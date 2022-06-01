@@ -20,6 +20,7 @@
 #include "BombSpawner.h"
 #include "LoadX.h"
 #include "Ui.h"
+#include "TextureFont.h"
 
 //=========================================================
 // マクロ定義
@@ -93,13 +94,15 @@ HRESULT CGame::Init(void)
 
 	// タイマーカウント生成
 #ifdef _DEBUG
-	m_pTimer = CTimerCount::Create(D3DXVECTOR3(SCREEN_WIDTH - 250.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 30.0f, 0.0f), 10, false);
+	m_pTimer = CTimerCount::Create(D3DXVECTOR3(SCREEN_WIDTH - 250.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 30.0f, 0.0f), 10, true);
 #else
 	m_pTimer = CTimerCount::Create(D3DXVECTOR3(SCREEN_WIDTH - 250.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 30.0f, 0.0f), 60, false);
 #endif
 
 	// スコア生成
 	m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH - 300.0f, SCREEN_HEIGHT - 50.0f, 0.0f), D3DXVECTOR3(50.0f, 30.0f, 0.0f));
+
+	CFont::Create({ 500.0f,400.0f,0.0f }, 128,"あ");
 
 	return S_OK;
 }
@@ -117,7 +120,7 @@ void CGame::Uninit(void)
 //=========================================================
 void CGame::Update(void)
 {
-#if (1)
+#if (0)
 	if (!m_bStart && !m_bEnd)
 	{
 		//CCamera *pCamera = CManager::GetInstance()->GetCamera(0);

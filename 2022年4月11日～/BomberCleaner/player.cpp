@@ -44,6 +44,7 @@ CPlayer::CPlayer(OBJTYPE nPriority) : CScene(nPriority)
 	m_fMaxSpeed		= MAX_SPEED;
 	m_nFrame		= 0;
 	m_nPattern		= 0;
+	m_fAngle		= 0.0f;
 	m_bJump			= false;
 	m_state			= STATE_NORMAL;
 }
@@ -111,6 +112,9 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	// 位置・回転設定
 	CScene::SetPos(m_pos);
 	CScene::SetSize(m_size);
+
+	// 回転用マトリックスの初期化
+	D3DXMatrixIdentity(&RotMatrix);
 
 	return S_OK;
 }
@@ -188,12 +192,14 @@ void CPlayer::Draw()
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice(); // デバイスのポインタ
 	D3DXMATRIX mtxRotModel, mtxTransModel;											 // 計算用マトリックス
 
-	// 各パーツのワールドマトリックスの初期化
+	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
-
 	// 向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRotModel, m_rot.y, m_rot.x, m_rot.z);
-	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRotModel);
+	//D3DXMatrixRotationYawPitchRoll(&mtxRotModel, m_rot.y, m_rot.x, m_rot.z);
+	//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRotModel);
+	
+	// クォータニオンで生成した回転行列を掛ける
+	D3DXMatrixMultiply(&m_mtxWorld, &RotMatrix, &m_mtxWorld);
 
 	// 位置を反映
 	D3DXMatrixTranslation(&mtxTransModel, m_pos.x, m_pos.y, m_pos.z);
@@ -214,50 +220,50 @@ void CPlayer::Inertia(D3DXVECTOR3 &speed)
 	//------------------------------------------------
 	// 左右入力していない状態
 	//------------------------------------------------
-		// 0に戻り続ける処理
-		if (speed.x > 0.0f)
+	// 0に戻り続ける処理
+	if (speed.x > 0.0f)
+	{
+		speed.x -= INERTIA;
+
+		if (speed.x <= 0.0f)
 		{
-			speed.x -= INERTIA;
-
-			if (speed.x <= 0.0f)
-			{
-				speed.x = 0.0f;
-			}
+			speed.x = 0.0f;
 		}
+	}
 
-		else if (speed.x < 0.0f)
+	else if (speed.x < 0.0f)
+	{
+		speed.x += INERTIA;
+
+		if (speed.x >= 0.0f)
 		{
-			speed.x += INERTIA;
-
-			if (speed.x >= 0.0f)
-			{
-				speed.x = 0.0f;
-			}
+			speed.x = 0.0f;
 		}
+	}
 
 	//------------------------------------------------
 	// 上下入力していない状態
 	//------------------------------------------------
 		// 0に戻り続ける処理
-		if (speed.z > 0.0f)
+	if (speed.z > 0.0f)
+	{
+		speed.z -= INERTIA;
+
+		if (speed.z <= 0.0f)
 		{
-			speed.z -= INERTIA;
-
-			if (speed.z <= 0.0f)
-			{
-				speed.z = 0.0f;
-			}
+			speed.z = 0.0f;
 		}
+	}
 
-		else if (speed.z < 0.0f)
+	else if (speed.z < 0.0f)
+	{
+		speed.z += INERTIA;
+
+		if (speed.z >= 0.0f)
 		{
-			speed.z += INERTIA;
-
-			if (speed.z >= 0.0f)
-			{
-				speed.z = 0.0f;
-			}
+			speed.z = 0.0f;
 		}
+	}
 }
 
 //-----------------------------------------------------------------
@@ -265,9 +271,6 @@ void CPlayer::Inertia(D3DXVECTOR3 &speed)
 //-----------------------------------------------------------------
 void CPlayer::Move(void)
 {
-	// カメラ情報取得
-	CCamera *pCamera = CManager::GetInstance()->GetCamera(0);
-
 	//=============================================================================
 	// 移動する(座標・回転更新)
 	//=============================================================================
@@ -284,22 +287,23 @@ void CPlayer::Move(void)
 		//---------------------------------------------------
 		if (m_Speed.x != 0.0f)
 		{
+			m_fAngle -= move_x * ROTATING_VELOCITY;
+
 			if (m_Speed.x > 0.0f)
 			{
 				m_pos.x += move_x * sinf(m_rot.y);					// 移動はプレイヤーの向きに影響する
 				m_pos.z += move_x * cosf(m_rot.y);
-				m_rot.x += move_x * cosf(0.0f) * ROTATING_VELOCITY;
-				m_rot.z += move_x * sinf(0.0f) * ROTATING_VELOCITY;
+				//m_rot.x -= move_x * cosf(m_rot.y - (D3DX_PI / 2)) * ROTATING_VELOCITY;
+				//m_rot.z -= move_x * sinf(m_rot.y - (D3DX_PI / 2)) * ROTATING_VELOCITY;
 			}
 
 			else if (m_Speed.x < 0.0f)
 			{
 				m_pos.x += move_x * sinf(m_rot.y);
 				m_pos.z += move_x * cosf(m_rot.y);
-				m_rot.x -= move_x * cosf(D3DX_PI) * ROTATING_VELOCITY;
-				m_rot.z -= move_x * sinf(D3DX_PI) * ROTATING_VELOCITY;
+				//m_rot.x += move_x * cosf(m_rot.y + (D3DX_PI / 2)) * ROTATING_VELOCITY;
+				//m_rot.z += move_x * sinf(m_rot.y + (D3DX_PI / 2)) * ROTATING_VELOCITY;
 			}
-
 		}
 
 		//---------------------------------------------------
@@ -307,20 +311,23 @@ void CPlayer::Move(void)
 		//---------------------------------------------------
 		if (m_Speed.z != 0.0f)
 		{
+			m_fAngle -= move_z * ROTATING_VELOCITY;
+
 			if (m_Speed.z > 0.0f)
 			{
 				m_pos.x += move_z * sinf(m_rot.y);
 				m_pos.z += move_z * cosf(m_rot.y);
-				m_rot.x += move_z * cosf(0.0f) * ROTATING_VELOCITY;
-				m_rot.z += move_z * sinf(0.0f) * ROTATING_VELOCITY;
+				//m_rot.x -= move_z * cosf(m_rot.y - (D3DX_PI / 2)) * ROTATING_VELOCITY;
+				//m_rot.z -= move_z * sinf(m_rot.y - (D3DX_PI / 2)) * ROTATING_VELOCITY;
+
 			}
 
 			else if (m_Speed.z < 0.0f)
 			{
 				m_pos.x += move_z * sinf(m_rot.y);
 				m_pos.z += move_z * cosf(m_rot.y);
-				m_rot.x -= move_z * cosf(D3DX_PI) * ROTATING_VELOCITY;
-				m_rot.z -= move_z * sinf(D3DX_PI) * ROTATING_VELOCITY;
+				//m_rot.x += move_z * cosf(m_rot.y + (D3DX_PI / 2)) * ROTATING_VELOCITY;
+				//m_rot.z += move_z * sinf(m_rot.y + (D3DX_PI / 2)) * ROTATING_VELOCITY;
 			}
 		}
 
@@ -357,12 +364,32 @@ void CPlayer::Move(void)
 		// プレイヤーの角度を移動量の大きさで計算
 		float Ang = atan2f(m_Speed.x,m_Speed.z);
 		// カメラの向いてる方向に向かってまっすぐになるようにカメラの向きをアングルに足す
+		CCamera *pCamera = CManager::GetInstance()->GetCamera(0);
 		Ang = Ang + pCamera->GetRot().y;
 		m_rot.y = Ang;
+
 	}
 
 	Inertia(m_Speed);								// 慣性
 	SpeedAndRotLimit(m_Speed, m_rot, m_fMaxSpeed);	// 速度と回転限界
+	Quaternion();
+}
+
+//==========================================================================================================
+// クォータニオン回転処理関数
+//==========================================================================================================
+void CPlayer::Quaternion(void)
+{
+	D3DXVECTOR3 moveVec = m_pos - m_Oldpos;				// 移動ベクトル
+
+	D3DXVECTOR3 Axis = { 0.0f,0.0f,0.0f };				// 軸ベクトル(移動ベクトルと垂直のベクトル)
+	Axis.x = -moveVec.z;
+	Axis.z = moveVec.x;
+
+	D3DXQUATERNION QuaAns = { 0.0f,0.0f,0.0f,1.0f };	// 単位クォータニオン
+
+	D3DXQuaternionRotationAxis(&QuaAns, &Axis, D3DXToDegree(m_fAngle));
+	D3DXMatrixRotationQuaternion(&RotMatrix, &QuaAns);
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -389,6 +416,16 @@ void CPlayer::SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot,const float 
 	else if (rot.z > D3DX_PI)
 	{
 		rot.z = -D3DX_PI;
+	}
+
+
+	if (m_fAngle > D3DX_PI)
+	{
+		m_fAngle = -D3DX_PI;
+	}
+	else if (m_fAngle < -D3DX_PI)
+	{
+		m_fAngle = D3DX_PI;
 	}
 
 	//==========================================================================================================
@@ -543,14 +580,6 @@ void CPlayer::Action(void)
 		m_fGravity = JUMP;
 		m_bJump = true;
 	}
-}
-
-//-----------------------------------------------------------------------------------------------
-// ジャンプの処理(プレイヤーに今ジャンプできるかのbool(初期値はfalse)を持たして、第二引数に入れて)
-//-----------------------------------------------------------------------------------------------
-void CPlayer::Jump(float &fGravity, bool& bJump)
-{
-
 }
 
 //-----------------------------------------------------------------------------------------------

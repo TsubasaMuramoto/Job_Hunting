@@ -19,17 +19,17 @@
 CModel::CModel()
 {
 	memset(m_vtx, NULL, sizeof(m_vtx));
-	m_pMesh		= nullptr;										// メッシュ（頂点情報）へのポインタ
-	m_nNumVtx	= 0;											// 頂点の数
-	m_vtxMin	= D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// モデルの最小値
-	m_vtxMax	= D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// モデルの最大値
-	m_pos		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// モデルの位置（オフセット）
-	m_rot		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// モデルの向き
-	m_size		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// モデルの大きさ
-	m_scale		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);				// モデルの規模
-	m_SaveEmissive = { 0.0f,0.0f,0.0f,1.0f };
-	m_bDraw		= false;										
-	m_bDoOnce	= false;										// 一回のみ通る処理
+	m_pMesh			= nullptr;						// メッシュ（頂点情報）へのポインタ
+	m_nNumVtx		= 0;							// 頂点の数
+	m_vtxMin		= { 0.0f, 0.0f, 0.0f };			// モデルの最小値
+	m_vtxMax		= { 0.0f, 0.0f, 0.0f };			// モデルの最大値
+	m_pos			= { 0.0f, 0.0f, 0.0f };			// モデルの位置（オフセット）
+	m_rot			= { 0.0f, 0.0f, 0.0f };			// モデルの向き
+	m_size			= { 0.0f, 0.0f, 0.0f };			// モデルの大きさ
+	m_scale			= { 0.0f, 0.0f, 0.0f };			// モデルの規模
+	m_SaveEmissive	= { 0.0f, 0.0f, 0.0f,1.0f };	// 発光色保存
+	m_bDraw			= false;						// 描画するか					
+	m_bDoOnce		= false;						// 一回のみ通る処理
 }
 
 //=============================================================================
@@ -210,6 +210,10 @@ void CModel::Update(void)
 				case 1:
 					objtype = CScene::OBJTYPE_SHADOW;
 					hitType = TYPE_LINE;
+					break;
+				case 2:
+					objtype = CScene::OBJTYPE_MODEL;
+					hitType = TYPE_SPHERE;
 					break;
 				}
 

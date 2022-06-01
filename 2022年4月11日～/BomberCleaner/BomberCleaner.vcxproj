@@ -197,6 +197,7 @@
     <ClCompile Include="score.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="TextureFont.cpp" />
     <ClCompile Include="timercount.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="Ui.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="score.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="TextureFont.h" />
     <ClInclude Include="timercount.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="Ui.h" />

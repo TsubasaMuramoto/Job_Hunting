@@ -16,7 +16,7 @@ MESH_SET
 	POS = 0.0 0.0 0.0
 	ROT = 0.0 0.0 0.0
 	SIZE = 3000.00 3000.00
-	BLOCK = 1 1
+	BLOCK = 15 15
 END_MESH_SET
 
 //-------------------

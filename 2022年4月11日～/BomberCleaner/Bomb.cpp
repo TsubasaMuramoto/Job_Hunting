@@ -24,9 +24,9 @@
 //=============================================================================
 CBomb::CBomb(OBJTYPE nPriority) : CScene(nPriority)
 {
-	memset(&m_pShadow, 0, sizeof(m_pShadow));
-	memset(&m_pControl, 0, sizeof(m_pControl));
-	memset(&m_pModel, 0, sizeof(m_pModel));
+	memset(&m_pShadow, 0, sizeof(m_pShadow));				// シャドウ
+	memset(&m_pControl, 0, sizeof(m_pControl));				// コントロール
+	memset(&m_pModel, 0, sizeof(m_pModel));					// モデル
 	m_pos			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 位置
 	m_rot			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 回転
 	m_scale			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// スケール
@@ -57,7 +57,7 @@ HRESULT CBomb::Init(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	m_rot = rot;
 	m_fOriginScaleX = m_scale.x;	// スケールXを保存(初期サイズ)
 
-	CScene::SetPos(m_pos);
+	CScene::SetPos(m_pos);			// 位置設定
 
 	return S_OK;
 }
@@ -145,7 +145,7 @@ void CBomb::Update(void)
 
 			float fHitTime = 0.0f;
 			D3DXVECTOR3 Hitpos = {0.0f,0.0f,0.0f};
-				// シーンがnullになるまで通る
+			// シーンがnullになるまで通る
 			while (pScene)
 			{
 				// 次のシーンを取得
@@ -217,7 +217,7 @@ CBomb *CBomb::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, int nX
 		pBomb = new CBomb();
 		if (pBomb)
 		{
-			pBomb->m_scale = scale;
+			pBomb->m_scale = scale;		// スケール
 			pBomb->Init(pos, rot);		// 初期化
 
 			// 角度をラジアンに変換
@@ -312,9 +312,10 @@ void CBomb::Ignition(void)
 	m_pModel->SetEmissive(m_Emissive);
 	m_pModel->SetScale(m_scale);
 
-	if (m_nBombTime <= 0)	// 0で爆発処理に進
+	if (m_nBombTime <= 0)	// 0で爆発処理
 	{
 		Explosion();
+		Uninit();
 	}
 }
 
