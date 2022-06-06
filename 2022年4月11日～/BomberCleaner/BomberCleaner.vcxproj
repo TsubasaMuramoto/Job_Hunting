@@ -170,6 +170,7 @@
     <ClCompile Include="field.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="effect_blast.cpp" />
+    <ClCompile Include="Goal.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="shadow.cpp" />
     <ClCompile Include="Target.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="field.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="effect_blast.h" />
+    <ClInclude Include="Goal.h" />
     <ClInclude Include="pause.h" />
     <ClInclude Include="shadow.h" />
     <ClInclude Include="Target.h" />

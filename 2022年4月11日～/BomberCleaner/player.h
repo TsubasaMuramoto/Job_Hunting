@@ -98,7 +98,7 @@ private:
 	D3DXVECTOR3		m_pos,m_Oldpos;					// 位置・最後の位置
 	D3DXVECTOR3		m_rot;							// 回転
 	D3DXVECTOR3		m_size;							// サイズ
-	D3DXVECTOR3		m_Speed, m_Direction;			// 速度・向き
+	D3DXVECTOR3		m_Speed, m_Direction;			// 速度・向き			
 	float			m_fGravitySpeed, m_fGravity;	// 重力加速度・重力
 	float			m_fMaxSpeed;					// 最大速度
 	float			m_fAngle;						// 回転する角度
@@ -107,8 +107,7 @@ private:
 	int				m_nPattern;						// パターン
 	bool			m_bJump;						// ジャンプ判定
 	D3DXMATRIX		m_mtxWorld;						// ワールドマトリックス
-	D3DXMATRIX		RotMatrix;						// クォータニオンの計算に使うマトリックス
-
+	D3DXMATRIX		m_mtxRot;						// クォータニオンの計算に使うマトリックス
 	PLAYER_STATE	m_state;						// プレイヤーの状態
 };
 #endif 
