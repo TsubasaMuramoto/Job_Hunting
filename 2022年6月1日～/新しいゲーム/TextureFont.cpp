@@ -154,11 +154,16 @@ HRESULT CFont::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	//バッファの生成
-	pVtx[0].pos = D3DXVECTOR3(m_pos.x + iFnt_w, m_pos.y,			0.0f);
-	pVtx[1].pos = D3DXVECTOR3(m_pos.x + iFnt_w, m_pos.y + iFnt_h,	0.0f);
-	pVtx[2].pos = D3DXVECTOR3(m_pos.x,			m_pos.y,			0.0f);
-	pVtx[3].pos = D3DXVECTOR3(m_pos.x,			m_pos.y + iFnt_h,	0.0f);
+	// バッファの生成
+	pVtx[0].pos = D3DXVECTOR3(m_pos.x - iFnt_w, m_pos.y + iFnt_h,	0.0f);
+	pVtx[1].pos = D3DXVECTOR3(m_pos.x - iFnt_w, m_pos.y,			0.0f);
+	pVtx[2].pos = D3DXVECTOR3(m_pos.x,			m_pos.y + iFnt_h,	0.0f);
+	pVtx[3].pos = D3DXVECTOR3(m_pos.x,			m_pos.y,			0.0f);
+
+	pVtx[0].tex = D3DXVECTOR2(0.0f, 1.0f);
+	pVtx[1].tex = D3DXVECTOR2(0.0f, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(1.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(1.0f, 0.0f);
 
 	m_pVtxBuff->Unlock();
 

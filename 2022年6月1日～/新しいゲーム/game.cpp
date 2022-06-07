@@ -23,6 +23,7 @@
 #include "TextureFont.h"
 #include "Goal.h"
 #include "RemainCount.h"
+#include "StringManager.h"
 
 //=========================================================
 // マクロ定義
@@ -30,6 +31,7 @@
 #define SKY_SIZE (D3DXVECTOR3())
 #define COUNT_DOWN_FRAME (60)
 #define UI_SIZE (D3DXVECTOR3(1.0f,1.0f,0.0f))
+#define LETTER_SPACE (50.0f)
 
 //=========================================================
 // 静的メンバ変数の初期化
@@ -96,9 +98,22 @@ HRESULT CGame::Init(void)
 	m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH - 300.0f, SCREEN_HEIGHT - 50.0f, 0.0f), D3DXVECTOR3(50.0f, 30.0f, 0.0f));
 
 	// 残機カウント生成
-	CRemainCount::Create(SCREEN_CENTER, { 100.0f,100.0f,0.0f });
+	CRemainCount::Create(SCREEN_CENTER, REMAIN_SIZE);
 
-	CFont::Create({ 100.0f,400.0f,0.0f }, 128,"あ");
+	// テクスチャフォント
+	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 0),FONT_POS.y ,FONT_POS.z }, 64, "Q");
+	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 1),FONT_POS.y ,FONT_POS.z }, 64, "で");
+	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 2),FONT_POS.y ,FONT_POS.z }, 64, "カ");
+	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 3),FONT_POS.y ,FONT_POS.z }, 64, "メ");
+	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 4),FONT_POS.y ,FONT_POS.z }, 64, "ラ");
+	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 5),FONT_POS.y ,FONT_POS.z }, 64, "追");
+	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 6),FONT_POS.y ,FONT_POS.z }, 64, "従");
+	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 7),FONT_POS.y ,FONT_POS.z }, 64, "切");
+	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 8),FONT_POS.y ,FONT_POS.z }, 64, "り");
+	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 9),FONT_POS.y ,FONT_POS.z }, 64, "替");
+	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 10),FONT_POS.y,FONT_POS.z }, 64, "え");
+
+	CStringManager::Create(FONT_POS, LETTER_SPACE, 64, "Qでカメラ切り替え");
 
 	return S_OK;
 }

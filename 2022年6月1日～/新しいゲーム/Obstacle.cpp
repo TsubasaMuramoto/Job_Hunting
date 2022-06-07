@@ -105,7 +105,7 @@ void CObstacle::Update()
 	{
 		m_pModel->Update();
 
-		if (m_pModel->GetHitBool() && !m_bDoOnce)
+		if (m_pModel->GetPlayerHitBool() && !m_bDoOnce)
 		{
 			m_bDoOnce = true;
 			CPlayer *pPlayer = (CPlayer*)CScene::GetScene(OBJTYPE_PLAYER);

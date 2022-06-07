@@ -101,8 +101,8 @@ void CGoal::Update(void)
 	{
 		m_pModel->Update();
 
-#if(0)
-		if (m_pModel->GetHitBool())		// ゴールに当たるとリザルトにいく
+#if(1)
+		if (m_pModel->GetPlayerHitBool())		// ゴールに当たるとリザルトにいく
 		{
 			// ゴールメッセージの表示
 			if (m_nFrame == 0)

@@ -15,8 +15,8 @@ MESH_SET
 	TEX_TYPE = 0
 	POS = 0.0 0.0 0.0
 	ROT = 0.0 0.0 0.0
-	SIZE = 3000.00 3000.00
-	BLOCK = 15 15
+	SIZE = 3000.00 500.00
+	BLOCK = 15 3
 END_MESH_SET
 
 //=======================================================
@@ -26,10 +26,43 @@ END_MESH_SET
 MODEL_SET
 	FUNC = 2
 	TYPE = 4
-	POS = 800.0 0.0 0.0
+	POS = 650.0 0.0 0.0
 	ROT = 0.0 0.0 0.0
 	SCALE = 1.0 1.0 1.0
 END_MODEL_SET
+
+MODEL_SET
+	FUNC = 2
+	TYPE = 4
+	POS = 600.0 0.0 0.0
+	ROT = 0.0 0.0 0.0
+	SCALE = 1.0 1.0 1.0
+END_MODEL_SET
+
+MODEL_SET
+	FUNC = 2
+	TYPE = 4
+	POS = 300.0 0.0 0.0
+	ROT = 0.0 0.0 0.0
+	SCALE = 1.0 1.0 1.0
+END_MODEL_SET
+
+MODEL_SET
+	FUNC = 2
+	TYPE = 4
+	POS = 000.0 0.0 0.0
+	ROT = 0.0 0.0 0.0
+	SCALE = 1.0 1.0 1.0
+END_MODEL_SET
+
+MODEL_SET
+	FUNC = 2
+	TYPE = 4
+	POS = -400.0 0.0 0.0
+	ROT = 0.0 0.0 0.0
+	SCALE = 1.0 1.0 1.0
+END_MODEL_SET
+
 
 MODEL_SET
 	FUNC = 1

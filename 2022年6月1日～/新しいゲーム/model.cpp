@@ -238,6 +238,10 @@ void CModel::Update(void)
 						if (LineCollisionCube(pScene, hitType))
 						{
 							m_bHit = true;	// ˆê‰ñ‚Å‚à“–‚½‚ê‚Îƒqƒbƒg”»’è‚Æ‚·‚é
+							if (objtype == CScene::OBJTYPE_PLAYER)
+							{
+								m_bPlayerHit = true;
+							}
 						}
 					}
 

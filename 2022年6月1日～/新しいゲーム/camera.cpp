@@ -182,7 +182,6 @@ void CCamera::MoveCamera(void)
 			m_fLong = CAMERA_DISTANCE_MAX;
 		}
 	}
-
 }
 
 //=============================================================================
@@ -275,8 +274,12 @@ void CCamera::NoFollowingPlayer(void)
 	//	　	マウスでの回転		  //
 	//****************************//
 	CMouse *pMouse = CManager::GetInstance()->GetMouse();
-	float CameraPosRX = (float)pMouse->GetMousePos().lX;
-	float CameraPosRZ = (float)pMouse->GetMousePos().lY;
+	float CameraPosRX = (float)pMouse->GetMousePos().lX;	// マウスカーソルの横軸
+	float CameraPosRZ = (float)pMouse->GetMousePos().lY;	// マウスカーソルの縦軸
+	float MouseWheel = (float)pMouse->GetMousePos().lZ;		// マウスホイールの回転
+
+	// マウスの位置固定&カーソルを非表示にする
+	SetCursorPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
 	if (CameraPosRZ > 0.0f || CameraPosRZ < -0.0f)
 	{
@@ -286,6 +289,29 @@ void CCamera::NoFollowingPlayer(void)
 	if (CameraPosRX > 0.0f || CameraPosRX < -0.0f)
 	{
 		m_rot.y += (MOUSE_ROT_SPEED / 3) * CameraPosRX;
+	}
+
+	//****************************//
+	//	　	マウスでのズーム	  //
+	//****************************//
+	// カメラを近づける
+	if (MouseWheel > 0.0f)
+	{
+		m_fLong -= LONG_SPEED * LONG_SPEED;
+		if (m_fLong <= CAMERA_DISTANCE_MIN)
+		{
+			m_fLong = CAMERA_DISTANCE_MIN;
+		}
+	}
+
+	// カメラを遠ざける
+	else if (MouseWheel < 0.0f)
+	{
+		m_fLong += LONG_SPEED * LONG_SPEED;
+		if (m_fLong >= CAMERA_DISTANCE_MAX)
+		{
+			m_fLong = CAMERA_DISTANCE_MAX;
+		}
 	}
 
 #if(1)

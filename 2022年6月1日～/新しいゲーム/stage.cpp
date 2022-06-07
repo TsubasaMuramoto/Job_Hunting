@@ -21,6 +21,7 @@
 //========================================
 // マクロ定義
 //========================================
+#define PLAYER_POS (D3DXVECTOR3(-1000.0f, 50.0f, 0.0f))
 
 //========================================
 // 静的メンバ変数の初期化
@@ -216,6 +217,9 @@ void CStage::SetStage(const char *aStageFileName)
 				}
 			}
 			
+			//--------------------------------------------------------------
+			// プレイヤー設置処理
+			//--------------------------------------------------------------
 			while (strcmp(aStr[0], "PLAYER_SET") == 0)
 			{
 				if (CManager::GetInstance()->GetLoadX()->GetNumAll() > 0)	// サイズチェック
@@ -224,7 +228,8 @@ void CStage::SetStage(const char *aStageFileName)
 					if (strcmp(aStr[1], "END_PLAYER_SET") == 0)		// オブジェクトの生成
 					{
 						// プレイヤーの読み込み
-						CPlayer::Create({ 0.0f,50.0f,0.0f }, { 0.0f,0.0f,0.0f }, 0);		// プレイヤー生成
+						CPlayer::Create(PLAYER_POS, { 0.0f,0.0f,0.0f }, 0);	
+						CModel_Spawner::Create({ PLAYER_POS.x - 100.0f,0.0f,PLAYER_POS.z }, { 0.0f,0.0f,0.0f }, { 2.0f,3.0f,3.0f }, 9);
 						break;
 					}
 				}

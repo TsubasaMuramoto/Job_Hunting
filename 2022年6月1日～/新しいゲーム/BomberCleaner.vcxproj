@@ -177,6 +177,7 @@
     <ClCompile Include="RemainCount.cpp" />
     <ClCompile Include="SaveLoad.cpp" />
     <ClCompile Include="shadow.cpp" />
+    <ClCompile Include="StringManager.cpp" />
     <ClCompile Include="Target.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="keyboard.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="RemainCount.h" />
     <ClInclude Include="SaveLoad.h" />
     <ClInclude Include="shadow.h" />
+    <ClInclude Include="StringManager.h" />
     <ClInclude Include="Target.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="keyboard.h" />

@@ -357,6 +357,8 @@ void CManager::Update(void)
 
 					if (m_bPause)
 					{
+						ShowCursor(true);
+
 						// ポーズの生成
 						if (!m_pPause)
 						{
@@ -366,7 +368,9 @@ void CManager::Update(void)
 
 					else
 					{
-						// ポーズの生成
+						ShowCursor(false);
+
+						// ポーズの破棄
 						if (m_pPause)
 						{
 							// deleteはSceneで行う
@@ -504,7 +508,7 @@ void CManager::SetMode(MODE mode)
 			m_pGame = new CGame;
 			if (m_pGame)
 			{
-				//カメラの生成
+				// カメラの生成
 				for (int nCnt = 0; nCnt < MAX_CAMERA; nCnt++)
 				{
 					m_apCamera[nCnt] = CCamera::Create(
@@ -513,6 +517,7 @@ void CManager::SetMode(MODE mode)
 										(float)(SCREEN_WIDTH / MAX_CAMERA), (float)SCREEN_HEIGHT, nCnt);
 				}
 				m_pGame->Init();
+				ShowCursor(false);
 			}
 		}
 		break;
@@ -524,6 +529,7 @@ void CManager::SetMode(MODE mode)
 			if (m_pResult)
 			{
 				m_pResult->Init();
+				ShowCursor(true);
 			}
 		}
 		break;

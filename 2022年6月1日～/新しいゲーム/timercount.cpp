@@ -99,24 +99,25 @@ void CTimerCount::Update(void)
 		for (int nCnt = 0; nCnt < MAX_TIME; nCnt++)
 		{
 			m_apNumber[nCnt]->SetNumber(m_nTimerCount % (int)pow(10, MAX_TIME - nCnt) / (int)pow(10, (MAX_TIME - 1) - nCnt));
-		}
-		// 時間切れになったら
-		if (m_nTimerCount == 0)
-		{
-			m_bLimit = true;
 
-			if (!m_bFade)
+			// 時間切れになったら
+			if (m_nTimerCount == 0)
 			{
-				// 画面遷移 / フェード処理
-				//pFade->SetFade(CManager::MODE::RESULT);
-				m_bFade = true;
+				m_bLimit = true;
+
+				if (!m_bFade)
+				{
+					// 画面遷移 / フェード処理
+					//pFade->SetFade(CManager::MODE::RESULT);
+					m_bFade = true;
+				}
+
 			}
 
-		}
+			if (m_bLimit)
+			{
 
-		if (m_bLimit)
-		{
-
+			}
 		}
 	}
 }

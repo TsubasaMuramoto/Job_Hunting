@@ -139,7 +139,6 @@ void CPause::Update(void)
 	// オブジェクト取得
 	CXInput *pXInput = CManager::GetInstance()->GetXInput();
 	CInputkeyboard *pKey = CManager::GetInstance()->GetKeyboard();
-	//CSound *pSound = CManager::GetInstance()->GetSound();
 
 	// 上に行く
 	if (pKey->GetTrigger(DIK_W) || pXInput->GetButtonTrigger(XINPUT_GAMEPAD_DPAD_UP))

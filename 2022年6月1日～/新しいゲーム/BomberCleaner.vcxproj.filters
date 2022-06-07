@@ -216,6 +216,9 @@
     <ClCompile Include="RemainCount.cpp">
       <Filter>ソース ファイル\親クラス\シーンの継承\2Dポリゴン系</Filter>
     </ClCompile>
+    <ClCompile Include="StringManager.cpp">
+      <Filter>ソース ファイル\親クラス\シーンの継承\2Dポリゴン系</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stage.h">
@@ -381,6 +384,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="RemainCount.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="StringManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

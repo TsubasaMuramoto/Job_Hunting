@@ -113,6 +113,7 @@ public:
 	D3DXMATRIX	GetMtxWorld(void)		{ return m_mtxWorld; }				// ワールドマトリックス取得
 	D3DXMATRIX *GetVtxMtxWorld(void)	{ return &m_vtx[0].mtxWorld; }		// 頂点ワールドマトリックス取得
 	bool		GetHitBool()			{ return m_bHit; }					// 当たった情報を取得
+	bool		GetPlayerHitBool()		{ return m_bPlayerHit; }			// プレイヤーが当たった情報を取得
 
 private:
 	LPD3DXMESH					m_pMesh;					// メッシュ（頂点情報）へのポインタ
@@ -138,6 +139,7 @@ private:
 	bool						m_bDoOnce;					// 一回だけ通る
 	bool						m_bCollision;				// 当たり判定を行うか
 	bool						m_bHit;						// 当たったか
+	bool						m_bPlayerHit;				// プレイヤー当たり判定
 };
 
 

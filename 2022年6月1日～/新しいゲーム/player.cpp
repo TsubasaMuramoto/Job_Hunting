@@ -14,7 +14,7 @@
 #include "model_spawner.h"
 #include "meshfield.h"
 #include "shadow.h"
-#include "billboard.h"
+#include "mouse.h"
 #include <assert.h>
 
 //=============================================================================
@@ -157,7 +157,9 @@ void CPlayer::Update()
 	 m_Oldpos = m_pos;
 	 CScene::SetPosOld(m_Oldpos);
 
+	 //------------------------------------------
 	// カメラ追従関数の呼び出し
+	//------------------------------------------
 	if (m_bSwitch)
 	{
 		 CManager::GetInstance()->GetCamera(0)->SetPlayerCamera(this);
@@ -172,6 +174,7 @@ void CPlayer::Update()
 	{
 		 m_bSwitch = !m_bSwitch;
 	}
+
 	//------------------------------------------
 	// プレイヤー制御系関数
 	//------------------------------------------
@@ -208,9 +211,6 @@ void CPlayer::Draw()
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
-	// 向きを反映
-	//D3DXMatrixRotationYawPitchRoll(&mtxRotModel, m_rot.y, m_rot.x, m_rot.z);
-	//D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRotModel);
 	
 	// クォータニオンで生成した回転行列を掛ける
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxRot, &m_mtxWorld);
@@ -285,8 +285,9 @@ void CPlayer::Inertia(D3DXVECTOR3 &speed)
 //-----------------------------------------------------------------
 void CPlayer::Move(void)
 {
+#if(1)
 	m_Speed.x += ACCELERATION;
-
+#endif
 	//=============================================================================
 	// 移動する(座標・回転更新)
 	//=============================================================================
@@ -447,8 +448,10 @@ void CPlayer::SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot,const float 
 //-----------------------------------------------------------------------------------------------
 void CPlayer::Action(void)
 {
+	CMouse *pMouse = CManager::GetInstance()->GetMouse();
+
 	// ジャンプ
-	if (CInput::PressAnyAction(CInput::ACTION_SPACE) && !m_bJump)	// Aボタン
+	if ((pMouse->GetTrigger(pMouse->MOUSE_LEFT) || CInput::PressAnyAction(CInput::ACTION_SPACE)) && !m_bJump)	// Aボタン
 	{
 		m_fGravity = JUMP;
 		m_bJump = true;

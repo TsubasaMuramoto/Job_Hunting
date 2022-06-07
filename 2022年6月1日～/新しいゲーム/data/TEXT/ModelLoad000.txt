@@ -24,8 +24,8 @@ NUM_MODEL = 12
 	PAS = data/MODEL/Belt002.x				# [3]ベルト2
 	NAME = MODTYPE_BELT_TWO
 	
-	PAS = data/MODEL/Bomb001.x				# [4]爆弾
-	NAME = MODTYPE_BOMB
+	PAS = data/MODEL/Needle.x				# [4]トゲ
+	NAME = MODTYPE_NEEDLE
 	
 	PAS = data/MODEL/Bomb_Spawner.x			# [5]爆弾スポナー
 	NAME = MODTYPE_BOMB_SPN
@@ -39,8 +39,8 @@ NUM_MODEL = 12
 	PAS = data/MODEL/Garbage_Bag.x			# [8]ゴミ袋
 	NAME = MODTYPE_GARBAGE
 	
-	PAS = data/MODEL/Wood_Box.x				# [9]木箱
-	NAME = MODTYPE_WOODBOX
+	PAS = data/MODEL/Goal.x				# [9]木箱
+	NAME = MODTYPE_GOAL
 	
 	PAS = data/MODEL/Field.x				# [10]床
 	NAME = MODTYPE_FIELD

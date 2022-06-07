@@ -13,10 +13,10 @@
 //=============================================================
 // マクロ定義
 //=============================================================
-#define MAX_SPEED			(4.0f)	// 最大速度
+#define MAX_SPEED			(5.0f)	// 最大速度
 #define INERTIA				(0.1f)	// 慣性
 #define ACCELERATION		(0.2f)	// 加速度
-#define GRAVITY_SPEED		(0.8f)	// 重力の強さ
+#define GRAVITY_SPEED		(0.6f)	// 重力の強さ
 #define ROTATING_VELOCITY	(0.001f)// プレイヤーの回転速度
 #define JUMP				(13.0f)	// 重力
 
@@ -78,11 +78,6 @@ public:
 	bool InputDirection(const MOVE_DIRECTION &moveDir);												// 移動方向入力関数
 	void SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot, const float fMaxSpeed);				// 移動・回転限界																			// 爆弾持ち上げ関数
 	void Quaternion(void);
-
-	//---------------------------------------------------
-	// その他関数
-	//---------------------------------------------------
-	void RemainManager(void);
 
 	//---------------------------------------------------
 	// 設定・取得関数

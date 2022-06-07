@@ -130,7 +130,7 @@ HRESULT CMeshSphere::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 			//カラー
 			pVtx[nNum].col = D3DCOLOR_RGBA(255, 255, 255, 255);
 			//テクスチャ
-			pVtx[nNum].tex = D3DXVECTOR2(0.0f + (1.0f * nLine), 0.0f + (1.0f * nVertical));
+			pVtx[nNum].tex = D3DXVECTOR2(0.0f + ((1.0f/m_nLine) * nLine), 0.0f + ((1.0f/m_nVertical) * nVertical));
 
 			// 配列の最後に頂点の位置データを追加
 			m_vtxLocal.emplace_back(pVtx[nNum].pos);

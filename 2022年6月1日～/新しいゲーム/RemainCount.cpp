@@ -136,7 +136,7 @@ void CRemainCount::RemainChange(void)
 		{
 			if (!m_apNumber[nCnt])
 			{
-				m_apNumber[nCnt] = CNumber::Create(D3DXVECTOR3(m_pos.x + (NEXT_NUMBER_SPACE * nCnt), m_pos.y, 0.0f), D3DXVECTOR3(m_size.x, m_size.y, 0.0f));
+				m_apNumber[nCnt] = CNumber::Create(D3DXVECTOR3(m_pos.x + (m_size.x * nCnt), m_pos.y, 0.0f), D3DXVECTOR3(m_size.x, m_size.y, 0.0f));
 				m_apNumber[nCnt]->SetNumber((m_nRemain) % (int)pow(10, MAX_REMAIN_DIGIT - nCnt) / (int)pow(10, (MAX_REMAIN_DIGIT - 1) - nCnt));
 			}
 		}
