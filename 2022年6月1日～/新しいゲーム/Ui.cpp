@@ -74,7 +74,8 @@ void CUi::Update(void)
 
 	if (m_pVtxBuff)
 	{
-		CScene2D::SetPos(m_pos, m_size);
+		CScene::SetPos(m_pos);
+		CScene::SetSize(m_size);
 	}
 
 	if (m_pControl)

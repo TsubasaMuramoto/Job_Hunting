@@ -38,14 +38,20 @@ public:
 	//------------------------------------
 	// プロトタイプ宣言
 	//------------------------------------
-	HRESULT Init(void);								// 初期化
-	void Uninit(void);								// 終了
-	void Update(void);								// 更新
-	void SetStage(const char *aStageFileName);		// モデルテキストを読み込む関数
+	HRESULT Init(void);											// 初期化
+	void Uninit(void);											// 終了
+	void Update(void);											// 更新
+	void SetStage(const char *aStageFileName);					// モデルテキストを読み込む関数
+
+	static CGoal *GetGoal()				{ return m_pGoal; }			// ゴールの取得
+	static D3DXVECTOR3 GetStartPos()	{ return m_StartPos; }		// スタート位置の取得
+	static D3DXVECTOR3 GetGoalPos()		{ return m_GoalPos; }		// ゴール位置の取得
 
 private:
 	vector<CPlayer>		m_pPlayer;
-	vector<CGoal>		m_pGoal;
 	vector<CObstacle>	m_pObstacle;
+	static CGoal		*m_pGoal;
+	static D3DXVECTOR3	m_StartPos;
+	static D3DXVECTOR3	m_GoalPos;
 };
 #endif

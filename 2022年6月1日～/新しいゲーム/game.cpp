@@ -24,6 +24,7 @@
 #include "Goal.h"
 #include "RemainCount.h"
 #include "StringManager.h"
+#include "ClearGauge.h"
 
 //=========================================================
 // マクロ定義
@@ -31,12 +32,13 @@
 #define SKY_SIZE (D3DXVECTOR3())
 #define COUNT_DOWN_FRAME (60)
 #define UI_SIZE (D3DXVECTOR3(1.0f,1.0f,0.0f))
-#define LETTER_SPACE (50.0f)
+#define FONT_SIZE (32)
 
 //=========================================================
 // 静的メンバ変数の初期化
 //=========================================================
 CScore *CGame::m_pScore = nullptr;
+CStage *CGame::m_pStage = nullptr;
 bool	CGame::m_bRetry = false;
 
 //=========================================================
@@ -100,20 +102,12 @@ HRESULT CGame::Init(void)
 	// 残機カウント生成
 	CRemainCount::Create(SCREEN_CENTER, REMAIN_SIZE);
 
-	// テクスチャフォント
-	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 0),FONT_POS.y ,FONT_POS.z }, 64, "Q");
-	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 1),FONT_POS.y ,FONT_POS.z }, 64, "で");
-	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 2),FONT_POS.y ,FONT_POS.z }, 64, "カ");
-	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 3),FONT_POS.y ,FONT_POS.z }, 64, "メ");
-	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 4),FONT_POS.y ,FONT_POS.z }, 64, "ラ");
-	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 5),FONT_POS.y ,FONT_POS.z }, 64, "追");
-	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 6),FONT_POS.y ,FONT_POS.z }, 64, "従");
-	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 7),FONT_POS.y ,FONT_POS.z }, 64, "切");
-	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 8),FONT_POS.y ,FONT_POS.z }, 64, "り");
-	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 9),FONT_POS.y ,FONT_POS.z }, 64, "替");
-	//CFont::Create({FONT_POS.x + (LETTER_SPACE * 10),FONT_POS.y,FONT_POS.z }, 64, "え");
+	// クリアゲージ
+	CClearGauge::Create(GAUGE_POS, GAUGE_SIZE);
 
-	CStringManager::Create(FONT_POS, LETTER_SPACE, 64, "Qでカメラ切り替え");
+	// テクスチャフォント
+	CStringManager::Create(FONT_POS, (float)FONT_SIZE, FONT_SIZE, "Ｑでカメラ切り替え","ＭＳゴシック");
+	CStringManager::Create({ FONT_POS.x,FONT_POS.y + FONT_SIZE,FONT_POS.z }, (float)FONT_SIZE, FONT_SIZE, "テクスチャフォント" );
 
 	return S_OK;
 }
@@ -202,13 +196,6 @@ void CGame::Update(void)
 void CGame::Draw(void)
 {
 
-}
-
-bool CGame::GetStart(void) {
-	return m_bStart;
-}
-bool CGame::GetEnd(void) {
-	return m_bEnd;
 }
 
 void CGame::SetUiDelete(void)

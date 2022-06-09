@@ -23,7 +23,6 @@ public:
 	{
 		OBJTYPE_NONE = 0,		// 無し
 		OBJTYPE_BG,				// 背景
-		OBJTYPE_NUMBER,			// ナンバー
 		OBJTYPE_POLYGON2D,		// 2Dポリゴン
 		OBJTYPE_POLYGON3D,		// 3Dポリゴン
 		OBJTYPE_MESH,			// メッシュ
@@ -34,6 +33,7 @@ public:
 		OBJTYPE_BILLBOARD,		// ビルボード
 		OBJTYPE_SHADOW,			// シャドウ
 		OBJTYPE_UI,				// UI
+		OBJTYPE_NUMBER,			// ナンバー
 		OBJTYPE_PAUSE,			// ポーズ
 		OBJTYPE_FADE,			// フェード
 		OBJTYPE_MAX				
@@ -94,7 +94,7 @@ public:
 
 	static int	GetNumObj(int nPriority)	{ return m_nNumAll[nPriority]; }		// オブジェクト数の取得
 	D3DXVECTOR3 GetPos(void)				{ return m_pos; }						// 位置の取得
-	D3DXVECTOR3 GetPosOld(void)				{ return m_posOld; }
+	D3DXVECTOR3 GetPosOld(void)				{ return m_posOld; }					// 最後の位置取得
 	D3DXVECTOR3 GetSize(void)				{ return m_size; }						// 大きさの取得
 	D3DXVECTOR2 GetTex(void)				{ return m_Tex; }						// テクスチャの大きさ取得
 	OBJTYPE		GetObjType(void)			{ return m_objType; }					// オブジェクトタイプの取得

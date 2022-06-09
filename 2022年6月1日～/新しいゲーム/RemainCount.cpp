@@ -12,6 +12,7 @@
 #include "number.h"
 #include "fade.h"
 #include "Ui.h"
+#include "StringManager.h"
 
 //=============================================================================
 // マクロ定義
@@ -85,7 +86,7 @@ void CRemainCount::Uninit(void)
 //=============================================================================
 void CRemainCount::Update(void)
 {
-	// 残機が0になる(ゲームオーバー)
+	// 残機が減る
 	if (m_bChange)
 	{
 		RemainChange();
@@ -93,7 +94,7 @@ void CRemainCount::Update(void)
 }
 
 //=============================================================================
-//描画処理
+// 描画処理
 //=============================================================================
 void CRemainCount::Draw(void)
 {
@@ -131,12 +132,15 @@ void CRemainCount::RemainChange(void)
 {
 	if (m_nFrame == 0)
 	{
+		// 文字列生成
+		CStringManager::Create({ m_pos.x - m_size.x, m_pos.y - (m_size.y / 2), 0.0f }, m_size.y, (int)m_size.y, "残機", "HGP創英ﾌﾟﾚｾﾞﾝｽEB");
+
 		// 変化前の残機
 		for (int nCnt = 0; nCnt < MAX_REMAIN_DIGIT; nCnt++)
 		{
 			if (!m_apNumber[nCnt])
 			{
-				m_apNumber[nCnt] = CNumber::Create(D3DXVECTOR3(m_pos.x + (m_size.x * nCnt), m_pos.y, 0.0f), D3DXVECTOR3(m_size.x, m_size.y, 0.0f));
+				m_apNumber[nCnt] = CNumber::Create({ m_pos.x + (m_size.x * nCnt), m_pos.y, 0.0f }, { m_size.x, m_size.y, 0.0f });
 				m_apNumber[nCnt]->SetNumber((m_nRemain) % (int)pow(10, MAX_REMAIN_DIGIT - nCnt) / (int)pow(10, (MAX_REMAIN_DIGIT - 1) - nCnt));
 			}
 		}

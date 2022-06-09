@@ -32,11 +32,12 @@ public:
 	void Update(void);											// XVˆ—
 	void Draw(void);											// •`‰æˆ—
 
-	static CFont *Create(D3DXVECTOR3 pos, int nfontSize,const char* str);	// ¶¬ŠÖ”
+	static CFont *Create(D3DXVECTOR3 pos, int nfontSize,const char* str, const char* font = "‚l‚r –¾’©");	// ¶¬ŠÖ”
 
 private:
 	int m_nFontSize;
 	const char* m_str;
+	const char* m_font;
 	D3DXVECTOR3 m_pos;
 	
 };

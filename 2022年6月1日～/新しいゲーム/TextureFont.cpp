@@ -28,7 +28,7 @@ CFont::~CFont()
 //=============================================================================
 //　数字の生成
 //=============================================================================
-CFont *CFont::Create(D3DXVECTOR3 pos, int nfontSize, const char* str)
+CFont *CFont::Create(D3DXVECTOR3 pos, int nfontSize, const char* str, const char* font)
 {
 	// インスタンス生成
 	CFont *pFont = new CFont;
@@ -36,6 +36,7 @@ CFont *CFont::Create(D3DXVECTOR3 pos, int nfontSize, const char* str)
 	// 数字の準備
 	if (pFont)
 	{
+		pFont->m_font = font;
 		pFont->m_str = str;
 		pFont->m_pos = pos;
 		pFont->m_nFontSize = nfontSize;
@@ -60,20 +61,20 @@ HRESULT CFont::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	//------------------------------------
 	HFONT hFont = CreateFont
 	(
-		m_nFontSize,
-		0,
-		0,
-		0,
-		0,
-		FALSE,
-		FALSE,
-		FALSE,
-		SHIFTJIS_CHARSET,
-		OUT_TT_ONLY_PRECIS,
-		CLIP_DEFAULT_PRECIS,
-		PROOF_QUALITY,
-		FIXED_PITCH | FF_MODERN,
-		"ＭＳ 明朝"
+		m_nFontSize,				// 文字の高さ(フォントサイズ)
+		0,							// 文字の横幅
+		0,							// 文字送りの方向と角度指定(10分の1角度)
+		0,							// 各文字の回転角度
+		0,							// 文字の太さ(FW_BOLDで太字になる)
+		FALSE,						// イタリック体(斜体)にするか
+		TRUE,						// 下線をつけるか
+		FALSE,						// 
+		SHIFTJIS_CHARSET,			// キャラクタセット
+		OUT_TT_ONLY_PRECIS,			// 出力精度
+		CLIP_DEFAULT_PRECIS,		// クリッピング精度
+		PROOF_QUALITY,				// 出力品質
+		FIXED_PITCH | FF_MODERN,	// フォントのピッチ・ファミリ
+		m_font						// フォント名
 	);
 	//------------------------------------
 	// デバイスコンテキスト取得

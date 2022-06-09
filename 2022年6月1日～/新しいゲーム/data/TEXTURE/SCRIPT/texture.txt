@@ -4,7 +4,7 @@
 //==================================================
 
 // テクスチャ最大数
-TEX_NUM = 22
+TEX_NUM = 25
 
 // 空
 PAS = data/TEXTURE/sky.jpg
@@ -38,6 +38,8 @@ NAME = TEX_TYPE_RETURN_TITLE
 // 数字
 PAS = data/TEXTURE/Number000.png
 NAME = TEX_TYPE_NUMBER
+PAS = data/TEXTURE/Number001.png
+NAME = TEX_TYPE_NUMBER2
 PAS = data/TEXTURE/Number3.png
 NAME = TEX_TYPE_NUMBER_THREE
 PAS = data/TEXTURE/Number2.png
@@ -66,3 +68,9 @@ PAS = data/TEXTURE/4th.png
 NAME = TEX_TYPE_4TH
 PAS = data/TEXTURE/5th.png
 NAME = TEX_TYPE_5TH
+
+// ゲージ
+PAS = data/TEXTURE/Gauge002.png
+NAME = TEX_TYPE_GAUGE01
+PAS = data/TEXTURE/GaugeFrame000.png
+NAME = TEX_TYPE_GAUGE_FRAME01

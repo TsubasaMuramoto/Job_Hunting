@@ -1,4 +1,3 @@
-﻿  StringManager.cpp
-c:\users\oc\desktop\翼のgit\job_hunting\2022年6月1日～\新しいゲーム\stringmanager.cpp(36): warning C4101: 'nLen': ローカル変数は 1 度も使われていません。
+﻿  ClearGauge.cpp
   BomberCleaner.vcxproj -> C:\Users\OC\Desktop\翼のgit\Job_Hunting\2022年6月1日～\新しいゲーム\Debug\BomberCleaner.exe
   BomberCleaner.vcxproj -> C:\Users\OC\Desktop\翼のgit\Job_Hunting\2022年6月1日～\新しいゲーム\Debug\BomberCleaner.pdb (Full PDB)

@@ -123,10 +123,6 @@ HRESULT CRenderer::Init(HWND hWnd, bool bWindow)
 //=============================================================================
 void CRenderer::Uninit(void)
 {
-	//---------------------------------
-	// 全ての終了処理
-	//---------------------------------
-	//CScene::ReleaseAll();
 
 #ifdef _DEBUG
 	// デバッグ情報表示用フォントの破棄
@@ -174,7 +170,7 @@ void CRenderer::Draw(void)
 		0,
 		NULL,
 		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
-		D3DCOLOR_RGBA(0, 255, 255, 0), 1.0f, 0
+		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0
 	);
 
 	// Direct3Dによる描画の開始

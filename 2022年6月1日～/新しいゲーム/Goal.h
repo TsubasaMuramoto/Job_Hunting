@@ -31,10 +31,12 @@ public:
 
 	// 生成
 	static CGoal *Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, int nXType);
+	D3DXVECTOR3 GetScale() { return m_scale; }
 
 private:
-	CUi		*m_pUI;					// 終了UI
-	int		m_nFrame;				// フレーム数
+	D3DXVECTOR3 m_scale;			// スケール
+	CUi			*m_pUI;				// 終了UI
+	int			m_nFrame;			// フレーム数
 
 };
 #endif

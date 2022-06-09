@@ -21,11 +21,14 @@
 //========================================
 // マクロ定義
 //========================================
-#define PLAYER_POS (D3DXVECTOR3(-1000.0f, 50.0f, 0.0f))
+#define PLAYER_POS (D3DXVECTOR3(-1000.0f, 50.0f, 100.0f))
 
 //========================================
 // 静的メンバ変数の初期化
 //========================================
+D3DXVECTOR3 CStage::m_StartPos = { 0.0f,0.0f,0.0f };
+D3DXVECTOR3 CStage::m_GoalPos = { 0.0f,0.0f,0.0f };
+CGoal *CStage::m_pGoal = nullptr;
 
 //========================================
 // コンストラクタ
@@ -190,7 +193,8 @@ void CStage::SetStage(const char *aStageFileName)
 							break;
 
 						case CScene::MODTYPE_GOAL:			// ゴールモデル
-							CGoal::Create(pos, rot, scale, nType);
+							m_pGoal = CGoal::Create(pos, rot, scale, nType);
+							m_GoalPos = pos;
 							break;
 
 						case CScene::MODTYPE_OBSTACLE:		// 障害物モデル
@@ -224,10 +228,11 @@ void CStage::SetStage(const char *aStageFileName)
 			{
 				if (CManager::GetInstance()->GetLoadX()->GetNumAll() > 0)	// サイズチェック
 				{
-					fscanf(pFile, "%s", &aStr[1]);					// 文字列読み込み
-					if (strcmp(aStr[1], "END_PLAYER_SET") == 0)		// オブジェクトの生成
+					fscanf(pFile, "%s", &aStr[1]);							// 文字列読み込み
+					if (strcmp(aStr[1], "END_PLAYER_SET") == 0)				// オブジェクトの生成
 					{
 						// プレイヤーの読み込み
+						m_StartPos = PLAYER_POS;
 						CPlayer::Create(PLAYER_POS, { 0.0f,0.0f,0.0f }, 0);	
 						CModel_Spawner::Create({ PLAYER_POS.x - 100.0f,0.0f,PLAYER_POS.z }, { 0.0f,0.0f,0.0f }, { 2.0f,3.0f,3.0f }, 9);
 						break;

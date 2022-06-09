@@ -13,6 +13,7 @@
 //===========================================
 CGoal::CGoal(OBJTYPE nPriority) : CModel_Spawner(nPriority)
 {
+	m_scale = { 0.0f,0.0f,0.0f };
 	m_pUI = nullptr;
 	m_nFrame = 0;
 }
@@ -35,13 +36,13 @@ CGoal *CGoal::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, int nX
 
 	// インスタンス生成
 	CGoal *pGoal = nullptr;
-
 	if (!pGoal)
 	{
 		pGoal = new CGoal();
 		// NULLチェック
 		if (pGoal)
 		{
+			pGoal->m_scale = scale;
 			pGoal->Init(pos, rot);		// 初期化
 
 			// 角度をラジアンに変換

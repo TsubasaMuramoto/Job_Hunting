@@ -157,6 +157,7 @@
     <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="BombSpawner.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="ClearGauge.cpp" />
     <ClCompile Include="control.cpp" />
     <ClCompile Include="control_blink.cpp" />
     <ClCompile Include="control_spread.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="Bomb.h" />
     <ClInclude Include="BombSpawner.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="ClearGauge.h" />
     <ClInclude Include="control.h" />
     <ClInclude Include="control_blink.h" />
     <ClInclude Include="control_spread.h" />

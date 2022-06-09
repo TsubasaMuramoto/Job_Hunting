@@ -46,18 +46,17 @@ public:
 	static CScore *GetScore()	{ return m_pScore; }
 	void SetUiDelete(void);				// UIのみ削除するときの関数
 
-	bool GetStart(void);
-	bool GetEnd(void);
+	static CStage *GetStage() { return m_pStage; }
 
 private:
 	//メンバ変数
 	CTimerCount			*m_pTimer;			// タイマークラス
 	CUi					*m_pUI;				// UIクラス
-	CStage				*m_pStage;			// ステージクラス
 	CMeshField			*m_pMeshField;		// メッシュフィールドクラス
 	CMeshField			*m_pMeshWall;		// メッシュウォールクラス
 	CMeshCylinder		*m_pMeshCylinder;	// メッシュシリンダークラス
 	CMeshSphere			*m_pMeshSphere;		// メッシュスフィアクラス
+	static CStage		*m_pStage;			// ステージクラス
 	static CScore		*m_pScore;			// スコアクラス
 	D3DXVECTOR3			m_CameraRot;		// カメラ回転
 	bool				m_bOnce;			// 一度のみ通る処理
