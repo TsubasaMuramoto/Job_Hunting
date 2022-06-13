@@ -13,13 +13,9 @@
 CMeshSphere::CMeshSphere(OBJTYPE nPriority) :CScene(nPriority)
 {
 	// 各種初期化
-	m_pTexture = nullptr;						// テクスチャポインタ
-	m_pVtxBuff = nullptr;						// 頂点バッファポインタ
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 位置
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 回転
-	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// サイズ
-	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);	// スケール
-	objtype = nPriority;
+	m_bInsideDraw	= false;
+	m_scale			= D3DXVECTOR3(1.0f, 1.0f, 1.0f);	// スケール
+	objtype			= nPriority;
 }
 
 //=============================================================================
@@ -45,7 +41,7 @@ CMeshSphere *CMeshSphere::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 
 		// NULLチェック
 		if (pMeshSphere)
 		{
-			pMeshSphere->m_rot = rot;					// 回転
+			pMeshSphere->m_rotMS = rot;					// 回転
 			pMeshSphere->m_nLine = nLine;				// 横ポリゴン数
 			pMeshSphere->m_nVertical = nVertical;		// 縦ポリゴン数
 			pMeshSphere->m_bInsideDraw = bInsideDraw;	// 裏描画にするか
@@ -64,12 +60,12 @@ HRESULT CMeshSphere::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();	// デバイスのポインタ
 
 	// 位置・サイズ
-	m_pos = pos;
-	m_size = size;
+	m_posMS = pos;
+	m_sizeMS = size;
 
 	// 位置・サイズ・カラー設定処理
-	CScene::SetPos(m_pos);
-	CScene::SetSize(m_size);
+	CScene::SetPos(m_posMS);
+	CScene::SetSize(m_sizeMS);
 	CScene::SetCol({ 1.0f,1.0f,1.0f,1.0f });
 
 	// 頂点情報を設定
@@ -107,26 +103,24 @@ HRESULT CMeshSphere::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 		for (int nLine = 0; nLine < m_nLine + 1; nLine++, nNum++)
 		{
 			// フィールド
-			if (m_size.y <= 0)
+			if (m_sizeMS.y <= 0)
 			{
 				// 頂点位置
-				pVtx[nNum].pos.x = cosf((-D3DX_PI / 2) + (D3DX_PI / m_nLine) * (nLine * 2)) * (m_size.x / 2.0f);
-				pVtx[nNum].pos.y = sinf((-D3DX_PI / 2) + (D3DX_PI / m_nLine) * (nLine * 2)) * (m_size.x / 2.0f);
-				pVtx[nNum].pos.z = m_size.z / 2.0f - (m_size.z / m_nVertical) * nVertical;
+				pVtx[nNum].pos.x = cosf((-D3DX_PI / 2) + (D3DX_PI / m_nLine) * (nLine * 2)) * (m_sizeMS.x / 2.0f);
+				pVtx[nNum].pos.y = sinf((-D3DX_PI / 2) + (D3DX_PI / m_nLine) * (nLine * 2)) * (m_sizeMS.x / 2.0f);
+				pVtx[nNum].pos.z = m_sizeMS.z / 2.0f - (m_sizeMS.z / m_nVertical) * nVertical;
 			}
 
 			// ウォール
-			else if (m_size.y > 0)
+			else if (m_sizeMS.y > 0)
 			{
-				pVtx[nNum].pos.x = cosf((-D3DX_PI / 2) + (D3DX_PI / m_nLine) * (nLine * 2)) * sinf((-D3DX_PI * m_bInsideDraw) + (D3DX_PI / m_nVertical) * (nVertical)) * (m_size.x / 2.0f);
-				pVtx[nNum].pos.y = cosf((-D3DX_PI * m_bInsideDraw) + (D3DX_PI / m_nVertical) * (nVertical)) * (m_size.y / 2.0f);
-				pVtx[nNum].pos.z = sinf((-D3DX_PI / 2) + (D3DX_PI / m_nLine) * (nLine * 2)) * sinf((-D3DX_PI * m_bInsideDraw) + (D3DX_PI / m_nVertical) * (nVertical)) * (m_size.z / 2.0f);
+				pVtx[nNum].pos.x = cosf((-D3DX_PI / 2) + (D3DX_PI / m_nLine) * (nLine * 2)) * sinf((-D3DX_PI * m_bInsideDraw) + (D3DX_PI / m_nVertical) * (nVertical)) * (m_sizeMS.x / 2.0f);
+				pVtx[nNum].pos.y = cosf((-D3DX_PI * m_bInsideDraw) + (D3DX_PI / m_nVertical) * (nVertical)) * (m_sizeMS.y / 2.0f);
+				pVtx[nNum].pos.z = sinf((-D3DX_PI / 2) + (D3DX_PI / m_nLine) * (nLine * 2)) * sinf((-D3DX_PI * m_bInsideDraw) + (D3DX_PI / m_nVertical) * (nVertical)) * (m_sizeMS.z / 2.0f);
 			}
 
 			// 法線
 			pVtx[nNum].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-
-
 			//カラー
 			pVtx[nNum].col = D3DCOLOR_RGBA(255, 255, 255, 255);
 			//テクスチャ
@@ -197,7 +191,7 @@ void CMeshSphere::Uninit(void)
 //=============================================================================
 void CMeshSphere::Update(void)
 {
-	m_size = CScene::GetSize();
+	m_sizeMS = CScene::GetSize();
 }
 
 //=============================================================================
@@ -222,11 +216,11 @@ void CMeshSphere::Draw(void)
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxScale);
 
 	// 向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rotMS.y, m_rotMS.x, m_rotMS.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
 	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixTranslation(&mtxTrans, m_posMS.x, m_posMS.y, m_posMS.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	// ワールドマトリックスの設定
@@ -285,7 +279,7 @@ void CMeshSphere::Draw(void)
 			// 親子関係付け処理
 			//*****************************************************************************
 			// 各頂点の親のマトリックスを設定
-			if (m_mtxWorld != nullptr)
+			if (m_mtxWorld)
 			{
 				mtxParent = m_mtxWorld;
 			}
@@ -317,75 +311,11 @@ void CMeshSphere::Draw(void)
 	}
 }
 
-//------------------------------------------------------------
-// 頂点座標の設定
-//------------------------------------------------------------
-void CMeshSphere::SetPos(D3DXVECTOR3 pos, D3DXVECTOR3 scale)
-{
-	CScene::SetPos(pos);
-	CScene::SetSize(scale);
-	m_pos = pos;
-	m_size = scale;
-}
-
-//------------------------------------------------------------
-//テクスチャの設定
-//------------------------------------------------------------
-void CMeshSphere::SetTex(int nAnim, int nPartU)
-{
-	VERTEX_3D *pVtx;
-
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	pVtx[0].tex = D3DXVECTOR2(0.0f + (1.0f / nPartU)*nAnim, 0.0);
-	pVtx[1].tex = D3DXVECTOR2((1.0f / nPartU)*(nAnim + 1), 0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f + (1.0f / nPartU)*nAnim, 1.0f);
-	pVtx[3].tex = D3DXVECTOR2((1.0f / nPartU)*(nAnim + 1), 1.0f);
-
-	m_pVtxBuff->Unlock();
-
-}
-void CMeshSphere::SetTex(float fSpeedX, float fSpeedY)
-{
-	VERTEX_3D *pVtx;
-
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	pVtx[0].tex = D3DXVECTOR2(0.0f + fSpeedX, 0.0f + fSpeedY);
-	pVtx[1].tex = D3DXVECTOR2(1.0f + fSpeedX, 0.0f + fSpeedY);
-	pVtx[2].tex = D3DXVECTOR2(0.0f + fSpeedX, 1.0f + fSpeedY);
-	pVtx[3].tex = D3DXVECTOR2(1.0f + fSpeedX, 1.0f + fSpeedY);
-
-	m_pVtxBuff->Unlock();
-}
-
-void CMeshSphere::SetCol(D3DXCOLOR col)
-{
-	CScene::SetCol(col);
-
-	VERTEX_3D *pVtx;
-
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	// 頂点座標
-	int nNum = 0;
-	for (int nVertical = 0; nVertical < m_nVertical + 1; nVertical++)
-	{
-		for (int nLine = 0; nLine < m_nLine + 1; nLine++, nNum++)
-		{
-			pVtx[nNum].col = D3DXCOLOR(col.r, col.g, col.b, col.a);
-		}
-	}
-
-	m_pVtxBuff->Unlock();
-}
-
 //=============================================================================
 // モデルの当たり判定(球と球)
 //=============================================================================
 bool CMeshSphere::SphereCollisionSphere(float fRadius, CScene *pScene)
 {
-
 	D3DXVECTOR3 pos1 = pScene->GetPos();
 	D3DXVECTOR3 pos2;
 	pos2.x = m_mtxWorld._41;
@@ -456,7 +386,7 @@ bool CMeshSphere::LineCollisionMesh(CScene *pScene, const int *nVtx)
 	//***************************************************************************************
 	// 床の当たり判定
 	//***************************************************************************************
-	if (m_size.y <= 0)
+	if (m_sizeMS.y <= 0)
 	{
 		// ポリゴンの範囲内にいるかの計算(4つの2D外積結果が0より下なら)
 		if (crossXZ[0] < 0.0f && crossXZ[1] < 0.0f &&
@@ -513,9 +443,9 @@ bool CMeshSphere::LineCollisionMesh(CScene *pScene, const int *nVtx)
 	// 壁の当たり判定
 	//***************************************************************************************
 	// 壁の向きが-90 <= x < 90 の時のみ それ以外はif文の符号が逆になる 
-	else if (m_size.y > 0)
+	else if (m_sizeMS.y > 0)
 	{
-		if (m_rot.y >= -D3DX_PI / 2 && m_rot.y < D3DX_PI / 2)
+		if (m_rotMS.y >= -D3DX_PI / 2 && m_rotMS.y < D3DX_PI / 2)
 		{
 
 		}

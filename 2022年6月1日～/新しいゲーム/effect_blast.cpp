@@ -11,7 +11,6 @@
 #include "meshsphere.h"
 #include "score.h"
 #include "game.h"
-#include "Bomb.h"
 
 //===========================================
 // マクロ定義
@@ -83,39 +82,31 @@ void CBlast::Update(void)
 	// 爆発中の処理
 	if (m_pSphere)
 	{
-		CScene *pScene = CScene::GetScene(OBJTYPE_MODEL);
+		//CScene *pScene = CScene::GetScene(OBJTYPE_MODEL);
 
-		// シーンがnullになるまで通る
-		while (pScene)
-		{
-			// 次のシーンを取得
-			CScene *pSceneNext = CScene::GetSceneNext(pScene);
+		//// シーンがnullになるまで通る
+		//while (pScene)
+		//{
+		//	// 次のシーンを取得
+		//	CScene *pSceneNext = CScene::GetSceneNext(pScene);
 
-			CScene::MODTYPE modtype = pScene->GetModelType();
-			switch(modtype)
-			{
-			case MODTYPE_TARGET:
-				if (m_pSphere->SphereCollisionSphere((m_pSphere->GetSize().x * m_scale) / 2, pScene))
-				{
-					CScore *pScore = CGame::GetScore();
-					pScore->AddScore(EXPLOSION_SCORE);
-					pScene->Uninit();
-				}
-				break;
-				
-			case MODTYPE_NORMAL:
-				if (m_pSphere->SphereCollisionSphere((m_pSphere->GetSize().y * m_scale) / 2, pScene))
-				{
-					CBomb *pBomb = (CBomb*)pScene;
-					pBomb->Explosion();
-				}
-				break;
-			}
-			
+		//	CScene::MODTYPE modtype = pScene->GetModelType();
+		//	switch(modtype)
+		//	{
+		//	case MODTYPE_TARGET:
+		//		if (m_pSphere->SphereCollisionSphere((m_pSphere->GetSize().x * m_scale) / 2, pScene))
+		//		{
+		//			CScore *pScore = CGame::GetScore();
+		//			pScore->AddScore(EXPLOSION_SCORE);
+		//			pScene->Uninit();
+		//		}
+		//		break;
+		//	}
+		//	
 
-			// 次のシーンを現在のシーンにする
-			pScene = pSceneNext;
-		}
+		//	// 次のシーンを現在のシーンにする
+		//	pScene = pSceneNext;
+		//}
 
 		Spread();	// 爆風広がり
 	}
@@ -150,7 +141,7 @@ void CBlast::Spread(void)
 	m_rot.y += BLAST_ROLLING_SPEED;
 	m_pSphere->SetRot(m_rot);
 	m_pSphere->SetScale({ m_scale,m_scale ,m_scale });
-	m_pSphere->SetCol(m_col);
+	m_pSphere->CMesh::SetCol(m_pSphere,m_col);
 
 	if (m_col.a <= 0.0f)	// 完全に透明になるまで終了しない
 	{

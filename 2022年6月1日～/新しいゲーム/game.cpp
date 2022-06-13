@@ -16,8 +16,6 @@
 #include "keyboard.h"
 #include "XInput.h"
 #include "DirectInput.h"
-#include "Bomb.h"
-#include "BombSpawner.h"
 #include "LoadX.h"
 #include "Ui.h"
 #include "TextureFont.h"
@@ -25,14 +23,16 @@
 #include "RemainCount.h"
 #include "StringManager.h"
 #include "ClearGauge.h"
+#include "player.h"
 
 //=========================================================
 // マクロ定義
 //=========================================================
-#define SKY_SIZE (D3DXVECTOR3())
-#define COUNT_DOWN_FRAME (60)
-#define UI_SIZE (D3DXVECTOR3(1.0f,1.0f,0.0f))
-#define FONT_SIZE (32)
+#define START_FRAME		(60)
+#define FONT_SIZE		(32)
+#define UI_SIZE			(D3DXVECTOR3(1.0f,1.0f,0.0f))
+#define SKY_SIZE		(D3DXVECTOR3(6000.0f,20000.0f,6000.0f))
+#define CYLINDER_ROT	(0.003f)
 
 //=========================================================
 // 静的メンバ変数の初期化
@@ -46,16 +46,16 @@ bool	CGame::m_bRetry = false;
 //=========================================================
 CGame::CGame()
 {
-	m_nFrame = 0;
-	m_CameraRot = { 0.0f,0.0f,0.0f };
-	m_pTimer = nullptr;
+	m_nFrame		= 0;
+	m_CameraRot		= { 0.0f,0.0f,0.0f };
+	m_pTimer		= nullptr;
 	m_pMeshCylinder = nullptr;
-	m_pMeshField = nullptr;
-	m_pMeshSphere = nullptr;
-	m_pMeshWall = nullptr;
-	m_pStage = nullptr;
-	m_pUI = nullptr;
-	m_bOnce = false;
+	m_pMeshField	= nullptr;
+	m_pMeshSphere	= nullptr;
+	m_pMeshWall		= nullptr;
+	m_pStage		= nullptr;
+	m_pUI			= nullptr;
+	m_bOnce			= false;
 }
 
 //=========================================================
@@ -75,8 +75,11 @@ HRESULT CGame::Init(void)
 	CManager::GetInstance()->SetStop(false);
 
 	// 空生成
-	m_pMeshSphere = CMeshSphere::Create({ 0.0f,0.0f,0.0f }, { 10000.0f,10000.0f,10000.0f }, { 0.0f,0.0f,0.0f }, 10, 10, true, CScene::OBJTYPE_MESH);
-	m_pMeshSphere->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_SKY"));
+	//m_pMeshSphere = CMeshSphere::Create({ 0.0f,0.0f,0.0f }, SKY_SIZE, { 0.0f,0.0f,0.0f }, 10, 10, true, CScene::OBJTYPE_MESH);
+	//m_pMeshSphere->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_FLOOR"));
+
+	m_pMeshCylinder = CMeshCylinder::Create({ 0.0f,0.0f,0.0f }, SKY_SIZE, { 0.0f,0.0f,0.0f }, 12, 12,CMeshCylinder::CYLINDER_TYPE::STAND_INSIDE);
+	m_pMeshCylinder->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_CYBER"));
 
 	// ステージ生成
 	if (!m_pStage)
@@ -125,14 +128,25 @@ void CGame::Uninit(void)
 //=========================================================
 void CGame::Update(void)
 {
+	if (m_pMeshSphere)
+	{
+		m_pMeshSphere->AddRot({ 0.0f,-CYLINDER_ROT,0.0f });
+		m_pMeshSphere->CMesh::SetPos(m_pMeshSphere,m_pStage->GetPlayer()->GetPos(), m_pMeshSphere->GetSize());
+	}
+
+	// 背景シリンダーの回転・移動
+	if (m_pMeshCylinder)
+	{
+		m_pMeshCylinder->AddRot({ 0.0f,-CYLINDER_ROT,0.0f });
+		if (!m_pStage->GetPlayer()->GetDeath())
+		{
+			m_pMeshCylinder->CMesh::SetPos(m_pMeshCylinder, m_pStage->GetPlayer()->GetPos(), m_pMeshCylinder->GetSize());
+		}
+	}
+
 #if (0)
 	if (!m_bStart && !m_bEnd)
 	{
-		//CCamera *pCamera = CManager::GetInstance()->GetCamera(0);
-		//m_CameraRot = pCamera->GetRot();
-		//m_CameraRot.y += 0.1f;
-		//pCamera->SetRot(m_CameraRot);
-
 		if (m_nFrame == 0)
 		{
 			CManager::GetInstance()->SetStop(true);
@@ -140,37 +154,23 @@ void CGame::Update(void)
 
 		m_nFrame++;
 
-		if (m_nFrame == COUNT_DOWN_FRAME) 
+		if (m_nFrame == START_FRAME)
 		{
-			m_pUI = CUi::Create(SCREEN_CENTER, UI_SIZE, CUi::UI_TYPE_ZOOM);
-			m_pUI->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_NUMBER_THREE"));
-		}
-		else if (m_nFrame == COUNT_DOWN_FRAME * 2) 
-		{
-			SetUiDelete();
-			m_pUI = CUi::Create(SCREEN_CENTER, UI_SIZE, CUi::UI_TYPE_ZOOM);
-			m_pUI->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_NUMBER_TWO"));
-		}
-		else if (m_nFrame == COUNT_DOWN_FRAME * 3) 
-		{
-			SetUiDelete();
-			m_pUI = CUi::Create(SCREEN_CENTER, UI_SIZE, CUi::UI_TYPE_ZOOM);
-			m_pUI->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_NUMBER_ONE"));
-		}
-		else if (m_nFrame == COUNT_DOWN_FRAME * 4) 
-		{
-			SetUiDelete();
-			m_pUI = CUi::Create(SCREEN_CENTER, {UI_SIZE.x * 3,UI_SIZE.y,0.0f}, CUi::UI_TYPE_ZOOM);
+			m_pUI = CUi::Create(SCREEN_CENTER, { UI_SIZE.x * 3,UI_SIZE.y,0.0f }, CUi::UI_TYPE_ZOOM);
 			m_pUI->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_GAMESTART"));
 		}
-		else if (m_nFrame == COUNT_DOWN_FRAME * 5)
+		else if (m_nFrame == START_FRAME * 2)
 		{
 			SetUiDelete();
 			m_nFrame = 0;
 			m_bStart = true;
 			CManager::GetInstance()->SetStop(false);
 		}
+		
 	}
+#endif
+
+#if(0)
 	if (m_pTimer->GetLimit())
 	{
 		if (!m_bOnce)

@@ -9,7 +9,9 @@
 //==============================================================================
 // マクロ定義
 //==============================================================================
-#define MAX_CAMERA		(1)		// カメラの最大数
+#define MAX_CAMERA				(1)								// カメラの最大数
+#define CAMERA_DISTANCE			(600.0f)						// ゲームのカメラ距離 
+#define CAMERA_ROT				(D3DXVECTOR3(1.8f,0.6f,0.0f))	// ゲームのカメラ回転
 
 //==============================================================================
 // 前方宣言
@@ -36,11 +38,12 @@ public:
 	//--------------------------------------------------
 	// 設定・取得関数
 	//--------------------------------------------------
-	void SetRot(D3DXVECTOR3 rot)	{ m_rot = rot; }		// 回転セット
-	D3DXVECTOR3 GetPosV(void)		{ return m_posV; }		// 視点
-	D3DXVECTOR3 GetPosR(void)		{ return m_posR; }		// 注視点
-	D3DXVECTOR3 GetRot(void)		{ return m_rot; }		// 回転
-	float		GetLong(void)		{ return m_fLong; }		// 視点注視点の距離
+	void SetRot(D3DXVECTOR3 rot)	{ m_rot = rot; }		// 回転の設定
+	void SetLong(float fLong)		{ m_fLong = fLong; }	// 視点注視点の距離の設定
+	D3DXVECTOR3 GetPosV(void)		{ return m_posV; }		// 視点の取得
+	D3DXVECTOR3 GetPosR(void)		{ return m_posR; }		// 注視点の取得
+	D3DXVECTOR3 GetRot(void)		{ return m_rot; }		// 回転の取得
+	float		GetLong(void)		{ return m_fLong; }		// 視点注視点の距離の取得
 
 	void SetPlayerCamera(CPlayer *pPlayer);					// カメラがプレイヤーに追従する関数
 	void NoFollowingPlayer(void);							// カメラがプレイヤーに追従していない時の処理

@@ -43,13 +43,14 @@ public:
 	void Update(void);											// 更新
 	void SetStage(const char *aStageFileName);					// モデルテキストを読み込む関数
 
-	static CGoal *GetGoal()				{ return m_pGoal; }			// ゴールの取得
-	static D3DXVECTOR3 GetStartPos()	{ return m_StartPos; }		// スタート位置の取得
-	static D3DXVECTOR3 GetGoalPos()		{ return m_GoalPos; }		// ゴール位置の取得
+	static CPlayer		*GetPlayer()		{ return m_pPlayer; }		// プレイヤーの取得
+	static CGoal		*GetGoal()			{ return m_pGoal; }			// ゴールの取得
+	static D3DXVECTOR3	GetStartPos()		{ return m_StartPos; }		// スタート位置の取得
+	static D3DXVECTOR3	GetGoalPos()		{ return m_GoalPos; }		// ゴール位置の取得
 
 private:
-	vector<CPlayer>		m_pPlayer;
 	vector<CObstacle>	m_pObstacle;
+	static CPlayer		*m_pPlayer;
 	static CGoal		*m_pGoal;
 	static D3DXVECTOR3	m_StartPos;
 	static D3DXVECTOR3	m_GoalPos;

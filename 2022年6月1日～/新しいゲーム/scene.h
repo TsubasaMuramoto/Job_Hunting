@@ -48,7 +48,6 @@ public:
 		MODTYPE_NORMAL = 0,			// 通常
 		MODTYPE_GOAL,				// ゴール
 		MODTYPE_OBSTACLE,			// 障害物
-		MODTYPE_TARGET,				// 対象
 		MODTYPE_PLAYER,				// プレイヤー
 		MODTYPE_MAX					
 
@@ -87,14 +86,16 @@ public:
 	void SetPos(D3DXVECTOR3 pos)			{ m_pos = pos; }					// 位置の設定
 	void SetPosOld(D3DXVECTOR3 posOld)		{ m_posOld = posOld; }				// 最後の位置の設定
 	void SetSize(D3DXVECTOR3 size)			{ m_size = size; }					// 大きさの設定
+	void SetRot(D3DXVECTOR3 rot)			{ m_rot = rot; }					// 回転の設定
 	void SetObjType(OBJTYPE objType)		{ m_objType = objType; }			// オブジェクトタイプの設定
 	void SetTex(D3DXVECTOR2 tex)			{ m_Tex = tex; }					// テクスチャの大きさ設定
 	void SetCol(D3DXCOLOR col)				{ m_col = col; }					// カラーの設定
-	void SetModelType(MODTYPE ModTp)		{ m_ModelType = ModTp; }	// モデルタイプ設定
+	void SetModelType(MODTYPE ModTp)		{ m_ModelType = ModTp; }			// モデルタイプ設定
 
 	static int	GetNumObj(int nPriority)	{ return m_nNumAll[nPriority]; }		// オブジェクト数の取得
 	D3DXVECTOR3 GetPos(void)				{ return m_pos; }						// 位置の取得
 	D3DXVECTOR3 GetPosOld(void)				{ return m_posOld; }					// 最後の位置取得
+	D3DXVECTOR3 GetRot(void)				{ return m_rot; }						// 回転の取得
 	D3DXVECTOR3 GetSize(void)				{ return m_size; }						// 大きさの取得
 	D3DXVECTOR2 GetTex(void)				{ return m_Tex; }						// テクスチャの大きさ取得
 	OBJTYPE		GetObjType(void)			{ return m_objType; }					// オブジェクトタイプの取得
@@ -117,10 +118,10 @@ private:
 	// ↑を追加することで↓のm_apScene(配列)が必要なくなる
 	// static CScene *m_apScene[MAX_POLYGON];				// オブジェクトの格納場所
 	static int		m_nNumAll[OBJTYPE_MAX];					// オブジェクトの最大数(オブジェクトの数分)
-
 	int				m_nPriority;							// 優先順位
 	bool			m_bDeath;								// 死亡フラグ
 	D3DXVECTOR3		m_pos,m_posOld;							// 位置
+	D3DXVECTOR3		m_rot;									// 回転
 	D3DXVECTOR3		m_size;									// スケール
 	D3DXCOLOR		m_col;									// カラー
 	D3DXVECTOR2		m_Tex;									// テクスチャ

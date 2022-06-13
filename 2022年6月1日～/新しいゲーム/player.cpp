@@ -10,7 +10,6 @@
 #include "XInput.h"
 #include "DirectInput.h"
 #include "effect.h"
-#include "Bomb.h"
 #include "model_spawner.h"
 #include "meshfield.h"
 #include "shadow.h"
@@ -47,7 +46,7 @@ CPlayer::CPlayer(OBJTYPE nPriority) : CScene(nPriority)
 	m_fAngle		= 0.0f;
 	m_bJump			= false;
 	m_bUninit		= false;
-	m_bSwitch		= false;
+	m_bSwitch		= true;
 	m_state			= STATE_NORMAL;
 }
 
@@ -157,23 +156,41 @@ void CPlayer::Update()
 	 m_Oldpos = m_pos;
 	 CScene::SetPosOld(m_Oldpos);
 
-	 //------------------------------------------
+	 // カメラの取得
+	 CCamera *pCamera = CManager::GetInstance()->GetCamera(0);
+#ifdef _DEBUG
+	//-------------------------------------------
 	// カメラ追従関数の呼び出し
-	//------------------------------------------
+	//-------------------------------------------
 	if (m_bSwitch)
 	{
-		 CManager::GetInstance()->GetCamera(0)->SetPlayerCamera(this);
+		pCamera->SetPlayerCamera(this);
 	}
 	else
 	{
-		 CManager::GetInstance()->GetCamera(0)->NoFollowingPlayer();
+		pCamera->NoFollowingPlayer();
 	}
 
+	//-------------------------------------------
 	// カメラ追従切り替え
+	//-------------------------------------------
 	if (CManager::GetInstance()->GetKeyboard()->GetTrigger(DIK_Q))
 	{
 		 m_bSwitch = !m_bSwitch;
+		 if (m_bSwitch)
+		 {
+			 pCamera->SetLong(CAMERA_DISTANCE);
+			 pCamera->SetRot(CAMERA_ROT);
+		 }
+		 else
+		 {
+			 
+		 }
 	}
+
+#else
+	 CManager::GetInstance()->GetCamera(0)->SetPlayerCamera(this);
+#endif
 
 	//------------------------------------------
 	// プレイヤー制御系関数
@@ -288,16 +305,12 @@ void CPlayer::Move(void)
 #if(1)
 	m_Speed.x += ACCELERATION;
 #endif
+
 	//=============================================================================
 	// 移動する(座標・回転更新)
 	//=============================================================================
 	if (m_Speed.x != 0.0f || m_Speed.z != 0.0f)
 	{
-		//float fLength = sqrtf((m_Speed.x * m_Speed.x) + (m_Speed.z * m_Speed.z));
-		//float move_x = m_Speed.x / fLength;
-		//float move_z = m_Speed.z / fLength;
-		//move_x *= m_Speed.x;
-		//move_z *= m_Speed.z;
 		m_fAngle -= 0.005f;
 
 		//---------------------------------------------------
@@ -305,33 +318,11 @@ void CPlayer::Move(void)
 		//---------------------------------------------------
 		if (m_Speed.x != 0.0f)
 		{
-			//m_fAngle -= move_x * ROTATING_VELOCITY;
-			//m_pos.x += move_x * sinf(m_rot.y);					// 移動はプレイヤーの向きに影響する
-			//m_pos.z += move_x * cosf(m_rot.y);
 			m_pos.x += m_Speed.x;
 		}
 
 		// 移動のエフェクト
 		CEffect::Create(m_pos, MOVE_EFFECTSIZE, { 1.0f, 1.0f, 1.0f ,1.0f }, 0.1f, 1);
-
-		////---------------------------------------------------
-		//// Z移動(縦移動)
-		////---------------------------------------------------
-		//if (m_Speed.z != 0.0f)
-		//{
-		//	//m_fAngle -= move_z * ROTATING_VELOCITY;
-		//	m_pos.x += move_z * sinf(m_rot.y);
-		//	m_pos.z += move_z * cosf(m_rot.y);
-		//}
-
-
-
-		//// プレイヤーの角度を移動量の大きさで計算
-		//float Ang = atan2f(m_Speed.x, m_Speed.z);
-		//// カメラの向いてる方向に向かってまっすぐになるようにカメラの向きをアングルに足す
-		//CCamera *pCamera = CManager::GetInstance()->GetCamera(0);
-		//Ang = Ang + pCamera->GetRot().y;
-		//m_rot.y = Ang;
 	}
 
 #if (0)
@@ -413,6 +404,7 @@ void CPlayer::SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot,const float 
 	{
 		rot.z = -D3DX_PI;
 	}
+
 	if (m_fAngle > D3DX_PI)
 	{
 		m_fAngle = -D3DX_PI;

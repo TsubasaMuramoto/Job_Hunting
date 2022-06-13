@@ -14,7 +14,6 @@
 //==============================================================================
 // マクロ定義
 //==============================================================================
-#define CAMERA_DISTANCE			(2000.0f)	// カメラ距離
 #define CAMERA_DISTANCE_MIN		(50.0f)		// カメラ距離最小
 #define CAMERA_DISTANCE_MAX		(5000.0f)	// カメラ距離最大
 #define CAMERA_MOVE_SPEED		(10.0f)		// カメラ移動速度
@@ -67,10 +66,10 @@ CCamera *CCamera::Create(D3DXVECTOR3 m_pos, D3DXVECTOR3 rot, float viewportX, fl
 HRESULT CCamera::Init(void)
 {
 	m_fLong = CAMERA_DISTANCE;						// 視点注視点の距離
-	m_posV = D3DXVECTOR3(0.0f, 100.0f, -m_fLong);	// カメラ視点
-	m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// カメラ注視点
-	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);			// カメラベクトル
-	m_rot = D3DXVECTOR3(2.0f, 0.0f, 0.0f);			// カメラ回転
+	m_rot	= CAMERA_ROT;							// カメラ回転
+	m_posV	= D3DXVECTOR3(0.0f, 100.0f, -m_fLong);	// カメラ視点
+	m_posR	= D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// カメラ注視点
+	m_vecU	= D3DXVECTOR3(0.0f, 1.0f, 0.0f);		// カメラベクトル
 	m_bPosR_Move = false;
 	return S_OK;
 }
@@ -197,7 +196,7 @@ void CCamera::SetPlayerCamera(CPlayer *pPlayer)
 		//----------------------------------------------------------
 		float fLong = pPlayer->GetPos().y - m_posR.y;
 
-		if (m_bPosR_Move)	// 追従する状態
+		if (m_bPosR_Move)			// 追従する状態
 		{
 			float fMove = (fLong / 20.0f);
 			if (fMove <= 0.01f && fMove >= -0.01f)
@@ -209,10 +208,9 @@ void CCamera::SetPlayerCamera(CPlayer *pPlayer)
 			{
 				m_posR.y += fMove;	// Y座標を動かす
 			}
-
 		}
 
-		else	// 追従しない状態
+		else						// 追従しない状態
 		{
 			if (fLong != 0.0f && !pPlayer->GetJump())
 			{

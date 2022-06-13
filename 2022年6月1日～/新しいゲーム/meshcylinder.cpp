@@ -10,15 +10,10 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CMeshCylinder::CMeshCylinder(OBJTYPE nPriority) :CScene(nPriority)
+CMeshCylinder::CMeshCylinder(OBJTYPE nPriority) : CScene(nPriority)
 {
 	// 各種初期化
-	m_pTexture = nullptr;						// テクスチャポインタ
-	m_pVtxBuff = nullptr;						// 頂点バッファポインタ
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 位置
-	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// サイズ
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 回転
-
+	m_Type = CYLINDER_TYPE::STAND;
 }
 
 //=============================================================================
@@ -32,22 +27,23 @@ CMeshCylinder::~CMeshCylinder()
 //---------------------------------------------------------------
 // インスタンス生成処理
 //---------------------------------------------------------------
-CMeshCylinder *CMeshCylinder::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int nLine, int nVertical)
+CMeshCylinder *CMeshCylinder::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int nLine, int nVertical, CYLINDER_TYPE type)
 {
 	// インスタンス生成
 	CMeshCylinder *pMeshCylinder = nullptr;
-	if (pMeshCylinder == nullptr)
+	if (!pMeshCylinder)
 	{
 		// 動的メモリ確保
 		pMeshCylinder = new CMeshCylinder();
 
 		// NULLチェック
-		if (pMeshCylinder != nullptr)
+		if (pMeshCylinder)
 		{
-			pMeshCylinder->m_rot = rot;			// 回転
-			pMeshCylinder->m_nLine = nLine;		// 横ポリゴン数
-			pMeshCylinder->m_nVertical = nVertical;// 縦ポリゴン数
-			pMeshCylinder->Init(pos, size);		// 初期化
+			pMeshCylinder->m_rotMS = rot;		// 回転
+			pMeshCylinder->m_nLine = nLine;			// 横ポリゴン数
+			pMeshCylinder->m_nVertical = nVertical;	// 縦ポリゴン数
+			pMeshCylinder->m_Type = type;			// タイプ
+			pMeshCylinder->Init(pos, size);			// 初期化
 		}
 	}
 
@@ -62,12 +58,12 @@ HRESULT CMeshCylinder::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();	// デバイスのポインタ
 
 	// 位置・サイズ
-	m_pos = pos;
-	m_size = size;
+	m_posMS = pos;
+	m_sizeMS = size;
 
 	// 位置・サイズ設定処理
-	CScene::SetPos(m_pos);
-	CScene::SetSize(m_size);
+	CScene::SetPos(m_posMS);
+	CScene::SetSize(m_sizeMS);
 
 	// 頂点情報を設定
 	pDevice->CreateVertexBuffer
@@ -99,25 +95,40 @@ HRESULT CMeshCylinder::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 
 	// 頂点座標
 	int nNum = 0;
+	float fLineForm, fVerticalForm;
+	D3DXVECTOR3 Rad = { m_sizeMS.x / 2,m_sizeMS.y / 2 ,m_sizeMS.z / 2 };
+
 	for (int nVertical = 0; nVertical < m_nVertical + 1; nVertical++)
 	{
 		for (int nLine = 0; nLine < m_nLine + 1; nLine++, nNum++)
 		{
-			// フィールド
-			if (m_size.y <= 0)
+			fLineForm		= -D3DX_PI / 2 + (D3DX_PI / m_nLine) * (nLine * 2);				// 円周頂点位置の計算式
+			fVerticalForm	= m_sizeMS.y / 2.0f - (m_sizeMS.y / m_nVertical) * nVertical;	// 高さ(長さ)頂点位置の計算式
+			switch (m_Type)
 			{
-				// 頂点位置
-				pVtx[nNum].pos.x = cosf(-D3DX_PI / 2 + (D3DX_PI / m_nLine) * (nLine * 2)) * (m_size.x / 2.0f);
-				pVtx[nNum].pos.y = sinf(-D3DX_PI / 2 + (D3DX_PI / m_nLine) * (nLine * 2)) * (m_size.x / 2.0f);
-				pVtx[nNum].pos.z = m_size.z / 2.0f - (m_size.z / m_nVertical) * nVertical;
-			}
+			case CYLINDER_TYPE::STAND:			// 立てる
+				pVtx[nNum].pos.x = cosf(fLineForm) * Rad.x;
+				pVtx[nNum].pos.y = fVerticalForm;
+				pVtx[nNum].pos.z = sinf(fLineForm) * Rad.z;
+				break;
 
-			// ウォール
-			else if (m_size.y > 0)
-			{
-				pVtx[nNum].pos.x = cosf(-D3DX_PI / 2 + (D3DX_PI / m_nLine) * (nLine * 2)) * (m_size.x / 2.0f);
-				pVtx[nNum].pos.y = m_size.y - (m_size.y / m_nVertical) * nVertical;
-				pVtx[nNum].pos.z = sinf(-D3DX_PI / 2 + (D3DX_PI / m_nLine) * (nLine * 2)) * (m_size.x / 2.0f);
+			case CYLINDER_TYPE::STAND_INSIDE:	// 立てる(内側に描画)
+				pVtx[nNum].pos.x = sinf(fLineForm) * Rad.x;
+				pVtx[nNum].pos.y = fVerticalForm;
+				pVtx[nNum].pos.z = cosf(fLineForm) * Rad.z;
+				break;
+
+			case CYLINDER_TYPE::LIE:			// 寝かせる
+				pVtx[nNum].pos.x = sinf(fLineForm) * Rad.x;
+				pVtx[nNum].pos.y = cosf(fLineForm) * Rad.z;
+				pVtx[nNum].pos.z = fVerticalForm;
+				break;
+
+			case CYLINDER_TYPE::LIE_INSIDE:		// 寝かせる(内側に描画)
+				pVtx[nNum].pos.x = sinf(fLineForm) * Rad.x;
+				pVtx[nNum].pos.y = cosf(fLineForm) * Rad.z;
+				pVtx[nNum].pos.z = fVerticalForm;
+				break;
 			}
 
 			// 法線
@@ -164,25 +175,20 @@ HRESULT CMeshCylinder::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	return S_OK;
 }
 
-HRESULT CMeshCylinder::Init(void)
-{
-	return S_OK;
-}
-
 //=============================================================================
 // ポリゴンの終了処理
 //=============================================================================
 void CMeshCylinder::Uninit(void)
 {
 	// 頂点バッファの破棄
-	if (m_pVtxBuff != nullptr)
+	if (m_pVtxBuff)
 	{
 		m_pVtxBuff->Release();
 		m_pVtxBuff = nullptr;
 	}
 
 	// インデックスバッファの破棄
-	if (m_pVtxIndexBuff != nullptr)
+	if (m_pVtxIndexBuff)
 	{
 		m_pVtxIndexBuff->Release();
 		m_pVtxIndexBuff = nullptr;
@@ -197,11 +203,13 @@ void CMeshCylinder::Uninit(void)
 //=============================================================================
 void CMeshCylinder::Update(void)
 {
+	CMesh::SetPos(this, m_posMS, m_sizeMS);
+#if(0)
 	// プレイヤーのシーン取得
 	CScene *pScene = CScene::GetScene(OBJTYPE_PLAYER);
 
 	// シーンがnullになるまで通る
-	while (pScene != nullptr && !m_vtxWorld.empty())
+	while (pScene && !m_vtxWorld.empty())
 	{
 		// 次のシーンを取得
 		CScene *pSceneNext = CScene::GetSceneNext(pScene);
@@ -220,9 +228,6 @@ void CMeshCylinder::Update(void)
 				// 当たり判定
 				if (LineCollisionMesh(pScene, &nID[0]) == true)
 				{
-
-					// 重力をつけるとトランポリンになる
-					//pPlayer->SetGravity(20.0f, true);
 				}
 			}
 		}
@@ -230,6 +235,7 @@ void CMeshCylinder::Update(void)
 		// 次のシーンを現在のシーンにする
 		pScene = pSceneNext;
 	}
+#endif
 }
 
 //=============================================================================
@@ -243,11 +249,11 @@ void CMeshCylinder::Draw(void)
 	D3DXMatrixIdentity(&m_mtxWorld);		// ワールドマトリックスの初期化
 
 											// 向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rot.y, m_rot.x, m_rot.z);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_rotMS.y, m_rotMS.x, m_rotMS.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
 	// 位置を反映
-	D3DXMatrixTranslation(&mtxTrans, m_pos.x, m_pos.y, m_pos.z);
+	D3DXMatrixTranslation(&mtxTrans, m_posMS.x, m_posMS.y, m_posMS.z);
 	D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
 	// ワールドマトリックスの設定
@@ -262,7 +268,7 @@ void CMeshCylinder::Draw(void)
 
 	pDevice->SetTexture(0, m_pTexture);				// テクスチャの設定
 
-													// ポリゴンの描画
+	// ポリゴンの描画
 	pDevice->DrawIndexedPrimitive
 	(
 		D3DPT_TRIANGLESTRIP,
@@ -276,7 +282,7 @@ void CMeshCylinder::Draw(void)
 
 	D3DXMATRIX mtxParent;	// 親のマトリックス
 
-							// 配列サイズを設定
+	// 配列サイズを設定
 	m_mtxVec.resize((m_nLine + 1) * (m_nVertical + 1));
 	m_vtxWorld.resize((m_nLine + 1) * (m_nVertical + 1));
 
@@ -327,62 +333,7 @@ void CMeshCylinder::Draw(void)
 		}
 	}
 
-}
-
-//------------------------------------------------------------
-// 頂点座標の設定
-//------------------------------------------------------------
-void CMeshCylinder::SetPos(D3DXVECTOR3 pos, D3DXVECTOR3 scale)
-{
-	CScene::SetPos(pos);
-	CScene::SetSize(scale);
-	m_pos = pos;
-	m_size = scale;
-}
-
-//------------------------------------------------------------
-//テクスチャの設定
-//------------------------------------------------------------
-void CMeshCylinder::SetTex(int nAnim, int nPartU)
-{
-	VERTEX_3D *pVtx;
-
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	pVtx[0].tex = D3DXVECTOR2(0.0f + (1.0f / nPartU)*nAnim, 0.0);
-	pVtx[1].tex = D3DXVECTOR2((1.0f / nPartU)*(nAnim + 1), 0.0f);
-	pVtx[2].tex = D3DXVECTOR2(0.0f + (1.0f / nPartU)*nAnim, 1.0f);
-	pVtx[3].tex = D3DXVECTOR2((1.0f / nPartU)*(nAnim + 1), 1.0f);
-
-	m_pVtxBuff->Unlock();
-
-}
-void CMeshCylinder::SetTex(float fSpeedX, float fSpeedY)
-{
-	VERTEX_3D *pVtx;
-
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	pVtx[0].tex = D3DXVECTOR2(0.0f + fSpeedX, 0.0f + fSpeedY);
-	pVtx[1].tex = D3DXVECTOR2(1.0f + fSpeedX, 0.0f + fSpeedY);
-	pVtx[2].tex = D3DXVECTOR2(0.0f + fSpeedX, 1.0f + fSpeedY);
-	pVtx[3].tex = D3DXVECTOR2(1.0f + fSpeedX, 1.0f + fSpeedY);
-
-	m_pVtxBuff->Unlock();
-}
-void CMeshCylinder::SetCol(D3DXCOLOR col)
-{
-	VERTEX_3D *pVtx;
-
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-
-	pVtx[0].col = D3DXCOLOR(col.r, col.g, col.b, col.a);
-	pVtx[1].col = D3DXCOLOR(col.r, col.g, col.b, col.a);
-	pVtx[2].col = D3DXCOLOR(col.r, col.g, col.b, col.a);
-	pVtx[3].col = D3DXCOLOR(col.r, col.g, col.b, col.a);
-
-	m_pVtxBuff->Unlock();
-}
+} 
 
 //=============================================================================
 // ポリゴン(フィールド)と線の当たり判定
@@ -437,7 +388,7 @@ bool CMeshCylinder::LineCollisionMesh(CScene *pScene, const int *nVtx)
 	//***************************************************************************************
 	// 床の当たり判定
 	//***************************************************************************************
-	if (m_size.y <= 0)
+	if (m_sizeMS.y <= 0)
 	{
 		// ポリゴンの範囲内にいるかの計算(4つの2D外積結果が0より下なら)
 		if (crossXZ[0] < 0.0f && crossXZ[1] < 0.0f &&
@@ -494,9 +445,9 @@ bool CMeshCylinder::LineCollisionMesh(CScene *pScene, const int *nVtx)
 	// 壁の当たり判定
 	//***************************************************************************************
 	// 壁の向きが-90 <= x < 90 の時のみ それ以外はif文の符号が逆になる 
-	else if (m_size.y > 0)
+	else if (m_sizeMS.y > 0)
 	{
-		if (m_rot.y >= -D3DX_PI / 2 && m_rot.y < D3DX_PI / 2)
+		if (m_rotMS.y >= -D3DX_PI / 2 && m_rotMS.y < D3DX_PI / 2)
 		{
 
 		}

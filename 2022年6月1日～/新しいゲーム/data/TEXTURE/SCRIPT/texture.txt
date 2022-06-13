@@ -4,11 +4,15 @@
 //==================================================
 
 // テクスチャ最大数
-TEX_NUM = 25
+TEX_NUM = 26
 
 // 空
 PAS = data/TEXTURE/sky.jpg
 NAME = TEX_TYPE_SKY
+
+// 背景
+PAS = data/TEXTURE/Cyber000.png
+NAME = TEX_TYPE_CYBER
 
 // 床
 PAS = data/TEXTURE/floor_000.jpg

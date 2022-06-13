@@ -36,7 +36,7 @@ public:
 	void Uninit(void);
 
 	//-------------------------------
-	// Getter
+	// 取得関数
 	//-------------------------------
 	static XData GetXData(string xName);						// Xファイルを文字列検索で取得
 	static XData GetXData(int nNum)	{ return m_vDataX[nNum]; }	// Xファイルデータ取得

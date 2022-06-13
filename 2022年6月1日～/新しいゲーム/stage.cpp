@@ -6,36 +6,34 @@
 #include "model.h"
 #include "texture.h"
 #include "model_spawner.h"
-#include "BombSpawner.h"
-#include "Bomb.h"
 #include "player.h"
 #include "meshfield.h"
 #include "meshcylinder.h"
 #include "LoadX.h"
 #include "manager.h"
 #include "meshsphere.h"
-#include "Target.h"
 #include "Goal.h"
 #include "Obstacle.h"
 
 //========================================
 // マクロ定義
 //========================================
-#define PLAYER_POS (D3DXVECTOR3(-1000.0f, 50.0f, 100.0f))
+#define PLAYER_POS (D3DXVECTOR3(-1000.0f, 50.0f, 0.0f))
 
 //========================================
 // 静的メンバ変数の初期化
 //========================================
-D3DXVECTOR3 CStage::m_StartPos = { 0.0f,0.0f,0.0f };
-D3DXVECTOR3 CStage::m_GoalPos = { 0.0f,0.0f,0.0f };
-CGoal *CStage::m_pGoal = nullptr;
+D3DXVECTOR3 CStage::m_StartPos	= { 0.0f,0.0f,0.0f };
+D3DXVECTOR3 CStage::m_GoalPos	= { 0.0f,0.0f,0.0f };
+CGoal	*CStage::m_pGoal		= nullptr;
+CPlayer *CStage::m_pPlayer		= nullptr;
 
 //========================================
 // コンストラクタ
 //========================================
 CStage::CStage()
 {
-
+	m_StartPos = PLAYER_POS;
 }
 
 //------------------------------------
@@ -138,7 +136,7 @@ void CStage::SetStage(const char *aStageFileName)
 						break;
 
 					case CScene::MESH_CYLINDER:
-						CMeshCylinder::Create(pos, size, rot, nBlockX, nBlockY);
+						CMeshCylinder::Create(pos, size, rot, nBlockX, nBlockY,CMeshCylinder::CYLINDER_TYPE::STAND);
 						break;
 
 					case CScene::MESH_SPHERE:
@@ -201,16 +199,10 @@ void CStage::SetStage(const char *aStageFileName)
 							CObstacle::Create(pos, rot, scale, nType);
 							break;
 
-						case CScene::MODTYPE_TARGET:		// ターゲットモデル
-							CTarget::Create(pos, rot, scale, nType);
-							break;
-
-						default :							// ただのモデル
+						default :							// 通常モデル
 							CModel_Spawner::Create(pos, rot, scale, nType);
 							break;
 						}
-
-
 						break;
 					}
 				}
@@ -232,9 +224,8 @@ void CStage::SetStage(const char *aStageFileName)
 					if (strcmp(aStr[1], "END_PLAYER_SET") == 0)				// オブジェクトの生成
 					{
 						// プレイヤーの読み込み
-						m_StartPos = PLAYER_POS;
-						CPlayer::Create(PLAYER_POS, { 0.0f,0.0f,0.0f }, 0);	
-						CModel_Spawner::Create({ PLAYER_POS.x - 100.0f,0.0f,PLAYER_POS.z }, { 0.0f,0.0f,0.0f }, { 2.0f,3.0f,3.0f }, 9);
+						m_pPlayer = CPlayer::Create(m_StartPos, { 0.0f,0.0f,0.0f }, 0);
+						CModel_Spawner::Create({ PLAYER_POS.x - 100.0f,0.0f,PLAYER_POS.z }, { 0.0f,0.0f,0.0f }, { 2.0f,3.0f,3.0f }, CManager::GetInstance()->GetLoadX()->GetNum("MODTYPE_GOAL"));
 						break;
 					}
 				}

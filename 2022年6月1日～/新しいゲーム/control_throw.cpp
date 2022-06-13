@@ -3,7 +3,6 @@
 // Author : ムラモトツバサ
 //=============================================================================
 #include "control_throw.h"
-#include "bomb.h"
 
 //=============================================================================
 // マクロ定義
@@ -49,36 +48,36 @@ void CControlThrow::Uninit()
 //=============================================================================
 void CControlThrow::Update(CScene *pObject)
 {
-	// インスタンス
-	CBomb *pBomb = nullptr;
-	if (!pBomb)
-	{
-		// オブジェクトをBillboardクラスにキャスト
-		pBomb = (CBomb*)pObject;
+	//// インスタンス
+	//CBomb *pBomb = nullptr;
+	//if (!pBomb)
+	//{
+	//	// オブジェクトをBillboardクラスにキャスト
+	//	pBomb = (CBomb*)pObject;
 
-		if (pBomb)
-		{
-			// なげたときの処理
-			D3DXVECTOR3 pos = pBomb->GetPos();
+	//	if (pBomb)
+	//	{
+	//		// なげたときの処理
+	//		D3DXVECTOR3 pos = pBomb->GetPos();
 
-			pos += m_move;
+	//		pos += m_move;
 
-			if (m_bDoOnce)
-			{
-				m_move.y += m_fGravity;
-			}
-			else			// 最初だけ重力 / 2
-			{
-				m_move.x = pBomb->GetThrowDir().x * THROW_POWER;
-				m_move.z = pBomb->GetThrowDir().z * THROW_POWER;
-				m_move.y = THROW_POWER;
-				m_move.y += m_fGravity / 2;
-				m_bDoOnce = true;
-			}
+	//		if (m_bDoOnce)
+	//		{
+	//			m_move.y += m_fGravity;
+	//		}
+	//		else			// 最初だけ重力 / 2
+	//		{
+	//			m_move.x = pBomb->GetThrowDir().x * THROW_POWER;
+	//			m_move.z = pBomb->GetThrowDir().z * THROW_POWER;
+	//			m_move.y = THROW_POWER;
+	//			m_move.y += m_fGravity / 2;
+	//			m_bDoOnce = true;
+	//		}
 
-			pBomb->SetPos(pos);
-		}
-	}
+	//		pBomb->SetPos(pos);
+	//	}
+	//}
 }
 
 //=============================================================================

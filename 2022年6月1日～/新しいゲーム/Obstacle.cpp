@@ -9,6 +9,7 @@
 #include "fade.h"
 #include "Ui.h"
 #include "RemainCount.h"
+#include "effect_blast.h"
 
 //===========================================
 // コンストラクタ
@@ -112,6 +113,7 @@ void CObstacle::Update()
 			if (pPlayer)
 			{
 				pPlayer->SetUninit();
+				CBlast::Create(pPlayer->GetPos(), pPlayer->GetSize(), { 0.0f,1.0f,1.0f,1.0f }, 20, 20);
 				CRemainCount::SetRemainChange();
 			}
 		}
