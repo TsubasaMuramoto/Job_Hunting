@@ -15,7 +15,7 @@
 //===========================================
 // マクロ定義
 //===========================================
-#define BLAST_SCALE_SPEED		(1.6f)	// 爆風スケール速度
+#define BLAST_SCALE_SPEED		(1.1f)	// 爆風スケール速度
 #define BLAST_ROLLING_SPEED		(0.5f)	// 爆風回転速度
 #define EXPLOSION_SCORE			(100)	// 爆破スコア
 #define START_TRANSPARENT_FRAME (60)	// 透明になり始めるフレーム数

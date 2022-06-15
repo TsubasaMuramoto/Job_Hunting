@@ -1,7 +1,2 @@
-﻿  TextureFont.cpp
-  Goal.cpp
-  Bomb.cpp
-  コードを生成中...
-  LINK : 前回のインクリメンタル リンクで C:\Users\OC\Desktop\翼のgit\Job_Hunting\2022年4月11日～\BomberCleaner\Debug\BomberCleaner.exe が見つからなかったか、ビルドされませんでした。フル リンクを行います。
-  BomberCleaner.vcxproj -> C:\Users\OC\Desktop\翼のgit\Job_Hunting\2022年4月11日～\BomberCleaner\Debug\BomberCleaner.exe
+﻿  BomberCleaner.vcxproj -> C:\Users\OC\Desktop\翼のgit\Job_Hunting\2022年4月11日～\BomberCleaner\Debug\BomberCleaner.exe
   BomberCleaner.vcxproj -> C:\Users\OC\Desktop\翼のgit\Job_Hunting\2022年4月11日～\BomberCleaner\Debug\BomberCleaner.pdb (Full PDB)

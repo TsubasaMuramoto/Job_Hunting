@@ -28,7 +28,7 @@ END_MESH_SET
 //-----------------------------------
 MODEL_SET
 	FUNC = 2
-	TYPE = 1
+	TYPE = MODTYPE_NEEDLE
 	POS = 650.0 0.0 0.0
 	ROT = 0.0 0.0 0.0
 	SCALE = 1.0 1.0 1.0
@@ -36,7 +36,7 @@ END_MODEL_SET
 
 MODEL_SET
 	FUNC = 2
-	TYPE = 1
+	TYPE = MODTYPE_NEEDLE
 	POS = 600.0 0.0 0.0
 	ROT = 0.0 0.0 0.0
 	SCALE = 1.0 1.0 1.0
@@ -44,7 +44,7 @@ END_MODEL_SET
 
 MODEL_SET
 	FUNC = 2
-	TYPE = 1
+	TYPE = MODTYPE_NEEDLE
 	POS = 300.0 0.0 0.0
 	ROT = 0.0 0.0 0.0
 	SCALE = 1.0 1.0 1.0
@@ -52,7 +52,7 @@ END_MODEL_SET
 
 MODEL_SET
 	FUNC = 2
-	TYPE = 1
+	TYPE = MODTYPE_NEEDLE
 	POS = 000.0 0.0 0.0
 	ROT = 0.0 0.0 0.0
 	SCALE = 1.0 1.0 1.0
@@ -60,7 +60,7 @@ END_MODEL_SET
 
 MODEL_SET
 	FUNC = 2
-	TYPE = 1
+	TYPE = MODTYPE_NEEDLE
 	POS = -400.0 0.0 0.0
 	ROT = 0.0 0.0 0.0
 	SCALE = 1.0 1.0 1.0
@@ -71,7 +71,7 @@ END_MODEL_SET
 //-----------------------------------
 MODEL_SET
 	FUNC = 1
-	TYPE = 2
+	TYPE = MODTYPE_GOAL
 	POS = 8000.0 0.0 0.0
 	ROT = 0.0 0.0 0.0
 	SCALE = 3.0 3.0 3.0
@@ -82,7 +82,7 @@ END_MODEL_SET
 //-----------------------------------
 MODEL_SET
 	FUNC = 2
-	TYPE = 4
+	TYPE = MODTYPE_WOOD_BOX
 	POS = 5000.0 0.0 0.0
 	ROT = 0.0 0.0 0.0
 	SCALE = 1.0 1.0 1.0
@@ -90,7 +90,7 @@ END_MODEL_SET
 
 MODEL_SET
 	FUNC = 2
-	TYPE = 4
+	TYPE = MODTYPE_WOOD_BOX
 	POS = 5050.0 0.0 0.0
 	ROT = 0.0 0.0 0.0
 	SCALE = 1.0 1.0 1.0

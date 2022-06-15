@@ -59,6 +59,12 @@ HRESULT CRemainCount::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	CScene::SetPos(m_pos);
 	CScene::SetSize(m_size);
 
+	// Žc‹@‚Í100‚æ‚è‚Í’´‚¦‚È‚¢
+	if (m_nRemain > 100)
+	{
+		m_nRemain = 99;
+	}
+
 	return S_OK;
 }
 

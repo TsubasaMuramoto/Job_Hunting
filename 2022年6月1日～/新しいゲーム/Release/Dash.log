@@ -1,62 +1,10 @@
-﻿  bg.cpp
-  billboard.cpp
-  camera.cpp
-  ClearGauge.cpp
-  control.cpp
-  control_blink.cpp
-  control_spread.cpp
-  control_fade.cpp
-  control_rise.cpp
-  control_throw.cpp
-  control_zoom.cpp
-  DirectInput.cpp
-  effect.cpp
-  fade.cpp
-  field.cpp
-  game.cpp
-  effect_blast.cpp
-  Goal.cpp
-  mouse.cpp
-  Obstacle.cpp
-  コンパイル中...
-  pause.cpp
-  RemainCount.cpp
-  SaveLoad.cpp
-  shadow.cpp
+﻿  RemainCount.cpp
   StringManager.cpp
-  input.cpp
-  keyboard.cpp
-  light.cpp
-  LoadX.cpp
-  main.cpp
-  manager.cpp
-  mesh.cpp
-  meshcylinder.cpp
-  meshfield.cpp
-  meshsphere.cpp
-  model.cpp
-  model_spawner.cpp
-  number.cpp
-  playdata.cpp
-  player.cpp
-  コンパイル中...
-  ranking.cpp
-  renderer.cpp
-  result.cpp
-  scene.cpp
-  scene2D.cpp
-  Scene3D.cpp
-  score.cpp
   stage.cpp
-  texture.cpp
-  TextureFont.cpp
-  timercount.cpp
-  title.cpp
-  Ui.cpp
-  XInput.cpp
-XInput.cpp(58): warning C4800: 'int': ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
   コード生成しています。
-  All 1245 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  50 of 1244 functions ( 4.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    62 functions had inline decision re-evaluated but remain unchanged
   コード生成が終了しました。
   Dash.vcxproj -> C:\Users\OC\Desktop\翼のgit\Job_Hunting\2022年6月1日～\新しいゲーム\Release\Dash.exe
   Dash.vcxproj -> C:\Users\OC\Desktop\翼のgit\Job_Hunting\2022年6月1日～\新しいゲーム\Release\Dash.pdb (Full PDB)

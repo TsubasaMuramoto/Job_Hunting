@@ -78,6 +78,7 @@ HRESULT CGame::Init(void)
 	//m_pMeshSphere = CMeshSphere::Create({ 0.0f,0.0f,0.0f }, SKY_SIZE, { 0.0f,0.0f,0.0f }, 10, 10, true, CScene::OBJTYPE_MESH);
 	//m_pMeshSphere->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_FLOOR"));
 
+	// ‹ó¶¬
 	m_pMeshCylinder = CMeshCylinder::Create({ 0.0f,0.0f,0.0f }, SKY_SIZE, { 0.0f,0.0f,0.0f }, 12, 12,CMeshCylinder::CYLINDER_TYPE::STAND_INSIDE);
 	m_pMeshCylinder->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_CYBER"));
 

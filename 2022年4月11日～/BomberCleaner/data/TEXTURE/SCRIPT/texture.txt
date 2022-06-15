@@ -4,7 +4,7 @@
 //==================================================
 
 // テクスチャ最大数
-TEX_NUM = 22
+TEX_NUM = 23
 
 // 空
 PAS = data/TEXTURE/sky.jpg
@@ -66,3 +66,6 @@ PAS = data/TEXTURE/4th.png
 NAME = TEX_TYPE_4TH
 PAS = data/TEXTURE/5th.png
 NAME = TEX_TYPE_5TH
+
+PAS = data/TEXTURE/Caution.png
+NAME = TEX_TYPE_CAUTION

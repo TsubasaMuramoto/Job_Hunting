@@ -4,27 +4,33 @@
 //-------------------
 // モデル数
 //-------------------
-NUM_MODEL = 5
+NUM_MODEL = 7
 
 	//-------------------
 	// プレイヤー
 	//-------------------
-	PAS = data/MODEL/Player000.x			# [0]プレイヤー
+	PAS = data/MODEL/Player000.x			# [0]プレイヤー1
 	NAME = PLAYER_ONE
+	
+	PAS = data/MODEL/Player001.x			# [1]プレイヤー2
+	NAME = PLAYER_TWO
+	
+	PAS = data/MODEL/Player002.x			# [2]プレイヤー3
+	NAME = PLAYER_THREE
 
 	//-------------------
 	// オブジェクト
 	//-------------------
-	PAS = data/MODEL/Needle.x				# [1]トゲ
+	PAS = data/MODEL/Needle.x				# [3]トゲ
 	NAME = MODTYPE_NEEDLE
 	
-	PAS = data/MODEL/Goal.x					# [2]ゴール
+	PAS = data/MODEL/Goal.x					# [4]ゴール
 	NAME = MODTYPE_GOAL
 	
-	PAS = data/MODEL/Field.x				# [3]床
+	PAS = data/MODEL/Field.x				# [5]床
 	NAME = MODTYPE_FIELD
 	
-	PAS = data/MODEL/wood_box.x				# [4]木箱
+	PAS = data/MODEL/wood_box.x				# [6]木箱
 	NAME = MODTYPE_WOOD_BOX
 	
 END_SCRIPT		// 読み込み終了

@@ -20,10 +20,10 @@
 // マクロ定義
 //=============================================================================
 #define PLAYER_SHADOWSIZE	(D3DXVECTOR3(m_size.x * 1.5f,0.0f,m_size.z * 1.5f))	// プレイヤー影サイズ
-#define MOVE_EFFECTSIZE		(D3DXVECTOR3(5.0f,5.0f,0.0f))
-#define CARRY_RANGE			(600.0f)											// 持ち運べる範囲
-#define CARRY_RANGE_DIST	(10000.0f)											// 持ち運べる範囲(2点間の距離と比較する)
+#define MOVE_EFFECTSIZE		(D3DXVECTOR3(10.0f,10.0f,0.0f))
 #define MARK_SIZE			(D3DXVECTOR3(10.0f,40.0f,0.0f))						// 目印のサイズ
+#define ROTATE_POWER		(0.005f)											// 回転量
+#define CUBE_ROTATE_POWER	(0.002f)											// キューブ状態時の回転量
 
 //=============================================================================
 // 静的メンバ変数の初期化
@@ -47,7 +47,7 @@ CPlayer::CPlayer(OBJTYPE nPriority) : CScene(nPriority)
 	m_bJump			= false;
 	m_bUninit		= false;
 	m_bSwitch		= true;
-	m_state			= STATE_NORMAL;
+	m_state			= PLAYER_STATE::BALL;
 }
 
 //=============================================================================
@@ -126,12 +126,7 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 void CPlayer::Uninit()
 {
 	// プレイヤーモデル破棄
-	if (m_pModel)
-	{
-		m_pModel->Uninit();
-		delete m_pModel;
-		m_pModel = nullptr;
-	}
+	ModelDelete();
 
 	// 影の破棄
 	if (m_pShadow)
@@ -218,9 +213,9 @@ void CPlayer::Update()
 	}
 }
 
-//=============================================================================
+//==========================================================================================================
 // 描画
-//=============================================================================
+//==========================================================================================================
 void CPlayer::Draw()
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice(); // デバイスのポインタ
@@ -243,63 +238,9 @@ void CPlayer::Draw()
 	m_pModel->Draw();
 }
 
-//=============================================================================
-// プレイヤーの慣性
-//=============================================================================
-void CPlayer::Inertia(D3DXVECTOR3 &speed)
-{
-	//------------------------------------------------
-	// 左右入力していない状態
-	//------------------------------------------------
-	// 0に戻り続ける処理
-	if (speed.x > 0.0f)
-	{
-		speed.x -= INERTIA;
-
-		if (speed.x <= 0.0f)
-		{
-			speed.x = 0.0f;
-		}
-	}
-
-	else if (speed.x < 0.0f)
-	{
-		speed.x += INERTIA;
-
-		if (speed.x >= 0.0f)
-		{
-			speed.x = 0.0f;
-		}
-	}
-
-	//------------------------------------------------
-	// 上下入力していない状態
-	//------------------------------------------------
-		// 0に戻り続ける処理
-	if (speed.z > 0.0f)
-	{
-		speed.z -= INERTIA;
-
-		if (speed.z <= 0.0f)
-		{
-			speed.z = 0.0f;
-		}
-	}
-
-	else if (speed.z < 0.0f)
-	{
-		speed.z += INERTIA;
-
-		if (speed.z >= 0.0f)
-		{
-			speed.z = 0.0f;
-		}
-	}
-}
-
-//-----------------------------------------------------------------
+//==========================================================================================================
 // 移動処理
-//-----------------------------------------------------------------
+//==========================================================================================================
 void CPlayer::Move(void)
 {
 #if(1)
@@ -309,17 +250,9 @@ void CPlayer::Move(void)
 	//=============================================================================
 	// 移動する(座標・回転更新)
 	//=============================================================================
-	if (m_Speed.x != 0.0f || m_Speed.z != 0.0f)
+	if (m_Speed.x != 0.0f)
 	{
-		m_fAngle -= 0.005f;
-
-		//---------------------------------------------------
-		// X移動(横移動)
-		//---------------------------------------------------
-		if (m_Speed.x != 0.0f)
-		{
-			m_pos.x += m_Speed.x;
-		}
+		m_pos.x += m_Speed.x;
 
 		// 移動のエフェクト
 		CEffect::Create(m_pos, MOVE_EFFECTSIZE, { 1.0f, 1.0f, 1.0f ,1.0f }, 0.1f, 1);
@@ -355,9 +288,43 @@ void CPlayer::Move(void)
 	}
 #endif
 
+	//=============================================================================
+	// 状態別移動処理
+	//=============================================================================
+	switch (m_state)
+	{
+	case PLAYER_STATE::BALL:
+		m_fAngle -= ROTATE_POWER;					// 回転量を足す(引く)
+		Quaternion();								// クォータニオン回転
+		break;
+
+	case PLAYER_STATE::CUBE:
+		if (m_bJump)
+		{
+			m_fAngle -= CUBE_ROTATE_POWER;			// キューブ時の回転
+			Quaternion();							// クォータニオン回転
+		}
+		else
+		{
+			D3DXMatrixIdentity(&m_mtxRot);			// 回転初期化
+		}
+		break;
+
+	case PLAYER_STATE::AIRSHIP:
+		if (m_bJump)
+		{
+			m_fAngle = D3DX_PI / 4;					// 飛行船時の回転
+			Quaternion();							// クォータニオン回転
+		}
+		else
+		{
+			D3DXMatrixIdentity(&m_mtxRot);			// 回転初期化
+		}
+		break;
+	}
+
 	Inertia(m_Speed);								// 慣性
 	SpeedAndRotLimit(m_Speed, m_rot, m_fMaxSpeed);	// 速度と回転限界
-	Quaternion();									// クォータニオン回転
 }
 
 //==========================================================================================================
@@ -380,9 +347,87 @@ void CPlayer::Quaternion(void)
 	}
 }
 
-//-----------------------------------------------------------------------------------------------
+//==========================================================================================================
+// プレイヤーの慣性
+//==========================================================================================================
+void CPlayer::Inertia(D3DXVECTOR3 &speed)
+{
+	//------------------------------------------------
+	// 左右入力していない状態
+	//------------------------------------------------
+	// 0に戻り続ける処理
+	if (speed.x > 0.0f)
+	{
+		speed.x -= INERTIA;
+
+		if (speed.x <= 0.0f)
+		{
+			speed.x = 0.0f;
+		}
+	}
+
+	else if (speed.x < 0.0f)
+	{
+		speed.x += INERTIA;
+
+		if (speed.x >= 0.0f)
+		{
+			speed.x = 0.0f;
+		}
+	}
+
+	//------------------------------------------------
+	// 上下入力していない状態
+	//------------------------------------------------
+	// 0に戻り続ける処理
+	if (speed.z > 0.0f)
+	{
+		speed.z -= INERTIA;
+
+		if (speed.z <= 0.0f)
+		{
+			speed.z = 0.0f;
+		}
+	}
+
+	else if (speed.z < 0.0f)
+	{
+		speed.z += INERTIA;
+
+		if (speed.z >= 0.0f)
+		{
+			speed.z = 0.0f;
+		}
+	}
+
+	//------------------------------------------------
+	// ジャンプを押していない場合
+	//------------------------------------------------
+	// 0に戻り続ける処理
+	if (speed.y > 0.0f)
+	{
+		speed.y -= INERTIA;
+
+		if (speed.y <= 0.0f)
+		{
+			speed.y = 0.0f;
+		}
+	}
+
+	else if (speed.y < 0.0f)
+	{
+		speed.y += INERTIA;
+
+		if (speed.y >= 0.0f)
+		{
+			speed.y = 0.0f;
+		}
+	}
+}
+
+//==========================================================================================================
 // 速度 ＆ 回転の限界
-//-----------------------------------------------------------------------------------------------
+//==========================================================================================================
 void CPlayer::SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot,const float fMaxSpeed)
 {
 	//==========================================================================================================
@@ -425,6 +470,14 @@ void CPlayer::SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot,const float 
 	{
 		speed.x = -fMaxSpeed;
 	}
+	if (speed.y >= fMaxSpeed)
+	{
+		speed.y = fMaxSpeed;
+	}
+	else if (speed.y <= -fMaxSpeed)
+	{
+		speed.y = -fMaxSpeed;
+	}
 	if (speed.z >= fMaxSpeed)
 	{
 		speed.z = fMaxSpeed;
@@ -435,25 +488,103 @@ void CPlayer::SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot,const float 
 	}
 }
 
-//-----------------------------------------------------------------------------------------------
+//==========================================================================================================
 // プレイヤーアクション
-//-----------------------------------------------------------------------------------------------
+//==========================================================================================================
 void CPlayer::Action(void)
 {
 	CMouse *pMouse = CManager::GetInstance()->GetMouse();
+	CInputkeyboard *pKey = CManager::GetInstance()->GetKeyboard();
 
-	// ジャンプ
-	if ((pMouse->GetTrigger(pMouse->MOUSE_LEFT) || CInput::PressAnyAction(CInput::ACTION_SPACE)) && !m_bJump)	// Aボタン
+	switch (m_state)
 	{
-		m_fGravity = JUMP;
-		m_bJump = true;
+	case PLAYER_STATE::BALL:
+	case PLAYER_STATE::CUBE:
+		// ジャンプ
+		if ((pMouse->GetTrigger(pMouse->MOUSE_LEFT) || CInput::PressAnyAction(CInput::ACTION_SPACE)) && !m_bJump)	// Aボタン
+		{
+			m_fGravity = JUMP;
+			m_bJump = true;
+		}
+		break;
+
+	case PLAYER_STATE::AIRSHIP:
+		if (pMouse->GetPress(pMouse->MOUSE_LEFT))
+		{
+			m_Speed.y += ACCELERATION;
+			m_fGravity = m_Speed.y;
+			m_bJump = true;
+		}
+		break;
 	}
+
+
+
+#ifdef _DEBUG
+	// モード切替
+	if (pKey->GetTrigger(DIK_0))
+	{
+		SetState(PLAYER_STATE::BALL);
+	}
+	else if (pKey->GetTrigger(DIK_1))
+	{
+		SetState(PLAYER_STATE::CUBE);
+	}
+	else if (pKey->GetTrigger(DIK_2))
+	{
+		SetState(PLAYER_STATE::AIRSHIP);
+	}
+#endif
 }
 
-//-----------------------------------------------------------------------------------------------
+//==========================================================================================================
+// プレイヤー状態設定関数
+//==========================================================================================================
+void CPlayer::SetState(PLAYER_STATE state)
+{
+	// モデル終了
+	ModelDelete();
+
+	// モデルを切り替える
+	if (!m_pModel)
+	{
+		CLoadX *pLoad = CManager::GetInstance()->GetLoadX();
+
+		switch (state)
+		{
+		case PLAYER_STATE::BALL:
+			m_nType = pLoad->GetNum("PLAYER_ONE");
+			break;
+
+		case PLAYER_STATE::CUBE:
+			m_nType = pLoad->GetNum("PLAYER_TWO");			
+			break;
+
+		case PLAYER_STATE::AIRSHIP:
+			m_nType = pLoad->GetNum("PLAYER_THREE");
+			break;
+		}
+
+		// モデル生成
+		m_pModel = CModel::Create({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }, m_nType, false);
+
+		// プレイヤーサイズの設定
+		CScene::SetSize(m_pModel->GetSize());
+
+		// 
+		m_pos.y = m_pModel->GetSize().y / 2;
+
+		// 回転用マトリックスの初期化
+		D3DXMatrixIdentity(&m_mtxRot);
+	}
+
+	m_state = state;
+}
+
+//==========================================================================================================
 // 重力の処理(プレイヤーに重力を減らす値(初期値は減らしたい正の数)を持たして、第三引数に入れて)
-//-----------------------------------------------------------------------------------------------
-void CPlayer::Gravity(D3DXVECTOR3& pos, float& fGravity, const float& fGravitySpeed, bool&bJump)
+//==========================================================================================================
+void CPlayer::Gravity(D3DXVECTOR3& pos, float& fGravity, const float& fGravitySpeed, bool& bJump)
 {
 	// 重力加算
 	if (fGravitySpeed > 0.0f)
@@ -472,9 +603,22 @@ void CPlayer::Gravity(D3DXVECTOR3& pos, float& fGravity, const float& fGravitySp
 	}
 }
 
-//-----------------------------------------------------------------------------------------------
+//==========================================================================================================
+// モデル終了処理
+//==========================================================================================================
+void CPlayer::ModelDelete(void)
+{
+	if (m_pModel)
+	{
+		m_pModel->Uninit();
+		delete m_pModel;
+		m_pModel = nullptr;
+	}
+}
+
+//==========================================================================================================
 // 移動方向入力関数
-//-----------------------------------------------------------------------------------------------
+//==========================================================================================================
 bool CPlayer::InputDirection(const MOVE_DIRECTION &moveDir)
 {
 	// クラスの取得

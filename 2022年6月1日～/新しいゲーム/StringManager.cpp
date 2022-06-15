@@ -46,7 +46,7 @@ HRESULT CStringManager::Init(D3DXVECTOR3 pos, float fSpace, int nfontSize, const
 		if (_mbclen((BYTE*)&str[nCnt]) == 2)
 		{
 			nCnt++;		// ”z—ñ‚ğ2‚Âi‚ß‚é
-			nFill++;
+			nFill++;	// ‹ó‚¢‚½Œ„ŠÔ‚ğ–„‚ß‚é‚½‚ß‚Ì•Ï”
 		}
 	}
 

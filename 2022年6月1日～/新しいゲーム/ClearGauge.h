@@ -54,6 +54,7 @@ public:
 
 	// 生成
 	static CClearGauge *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size);
+	static bool GetClear() { return m_bClear; }
 
 	void SetPercent(void);	// パーセント設定
 
@@ -64,5 +65,6 @@ private:
 	int				m_nPercent;							// クリアパーセントの数字
 	CNumber			*m_apPercent[MAX_PERCENT_DIGIT];	// クリアパーセントのポリゴン
 	GAUGE_UI_INFO	m_GaugeUI;							// ゲージUI
+	static bool		m_bClear;							// クリアまでゲージが達したか
 };
 #endif

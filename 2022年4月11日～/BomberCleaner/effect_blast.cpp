@@ -108,6 +108,7 @@ void CBlast::Update(void)
 				{
 					CBomb *pBomb = (CBomb*)pScene;
 					pBomb->Explosion();
+					pBomb->Uninit();
 				}
 				break;
 			}

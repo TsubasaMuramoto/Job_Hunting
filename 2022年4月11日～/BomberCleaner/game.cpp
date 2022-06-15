@@ -95,6 +95,9 @@ HRESULT CGame::Init(void)
 	// タイマーカウント生成
 #ifdef _DEBUG
 	m_pTimer = CTimerCount::Create(D3DXVECTOR3(SCREEN_WIDTH - 250.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 30.0f, 0.0f), 10, true);
+
+	m_pMeshField = CMeshField::Create({ 100.0f,100.0f,100.0f }, { 300.0f,0.0f,300.0f }, { 40.0f,0.0f,0.0f }, 6, 6);
+	m_pMeshField->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_CAUTION"));
 #else
 	m_pTimer = CTimerCount::Create(D3DXVECTOR3(SCREEN_WIDTH - 250.0f, 50.0f, 0.0f), D3DXVECTOR3(50.0f, 30.0f, 0.0f), 60, false);
 #endif
@@ -102,7 +105,9 @@ HRESULT CGame::Init(void)
 	// スコア生成
 	m_pScore = CScore::Create(D3DXVECTOR3(SCREEN_WIDTH - 300.0f, SCREEN_HEIGHT - 50.0f, 0.0f), D3DXVECTOR3(50.0f, 30.0f, 0.0f));
 
-	CFont::Create({ 500.0f,400.0f,0.0f }, 128,"あ");
+
+
+	//CFont::Create({ 500.0f,400.0f,0.0f }, 128,"あ");
 
 	return S_OK;
 }

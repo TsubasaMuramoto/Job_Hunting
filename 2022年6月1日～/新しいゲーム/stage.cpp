@@ -18,7 +18,7 @@
 //========================================
 // マクロ定義
 //========================================
-#define PLAYER_POS (D3DXVECTOR3(-1000.0f, 50.0f, 0.0f))
+#define PLAYER_POS (D3DXVECTOR3(-1000.0f, 50.0f, 100.0f))
 
 //========================================
 // 静的メンバ変数の初期化
@@ -77,7 +77,19 @@ void CStage::SetStage(const char *aStageFileName)
 	// NULLチェック
 	if (pFile = fopen(aStageFileName, "r"))
 	{
-		char aStr[6][255] = { NULL };		// 読み込みに使う変数
+		// 読み込みに使う変数
+		char aStr[6][255] = { NULL };		
+
+		// 取得に使うローカル変数
+		int nFunc;							// モデルに付ける機能
+		int nTexType, nMeshType;			// メッシュとテクスチャのタイプ
+		int nBlockX, nBlockY;				// 横分割数・縦分割数
+		string sType;						// モデルの名前(ModelLoad000.txtで付けた名前)
+		D3DXVECTOR3 pos, rot, scale, size;	// 位置・回転・スケール・サイズ
+
+		bool bInSide = false;
+
+		CLoadX *pLoadX = CManager::GetInstance()->GetLoadX();
 
 		// END_SCRIPTが呼ばれるまでループする
 		// １単語を読み込む
@@ -88,12 +100,6 @@ void CStage::SetStage(const char *aStageFileName)
 			//--------------------------------------------------------------
 			while (strcmp(aStr[0], "MESH_SET") == 0)
 			{
-				// ローカルメッシュ情報
-				int nTexType,nMeshType;
-				int nBlockX, nBlockY;
-				bool bInSide = false;
-				D3DXVECTOR3 pos, rot, size;
-
 				fscanf(pFile, "%s", &aStr[1]);				// 文字列読み込み
 				if (strcmp(aStr[1], "MESH_TYPE") == 0)		// メッシュタイプ取得
 				{
@@ -155,12 +161,8 @@ void CStage::SetStage(const char *aStageFileName)
 			//--------------------------------------------------------------
 			while (strcmp(aStr[0], "MODEL_SET") == 0)
 			{
-				if (CManager::GetInstance()->GetLoadX()->GetNumAll() > 0)	// サイズチェック
+				if (pLoadX->GetNumAll() > 0)	// サイズチェック
 				{
-					// ローカルモデル情報
-					int nType, nFunc;
-					D3DXVECTOR3 pos, rot, scale;
-
 					fscanf(pFile, "%s", &aStr[1]);					// 文字列読み込み
 					if (strcmp(aStr[1], "FUNC") == 0)				// モデル機能取得
 					{
@@ -168,7 +170,7 @@ void CStage::SetStage(const char *aStageFileName)
 					}
 					if (strcmp(aStr[1], "TYPE") == 0)				// タイプ取得
 					{
-						fscanf(pFile, "%*s%d", &nType);
+						fscanf(pFile, "%*s%s", sType.c_str());
 					}
 					if (strcmp(aStr[1], "POS") == 0)				// 位置取得
 					{
@@ -184,23 +186,25 @@ void CStage::SetStage(const char *aStageFileName)
 					}
 					if (strcmp(aStr[1], "END_MODEL_SET") == 0)		// オブジェクトの生成
 					{
+						int nNumX = pLoadX->GetNum(sType.c_str());
+
 						switch (nFunc)
 						{
 						case CScene::MODTYPE_NORMAL:		// 通常モデル
-							CModel_Spawner::Create(pos, rot, scale, nType);
+							CModel_Spawner::Create(pos, rot, scale, nNumX);
 							break;
 
 						case CScene::MODTYPE_GOAL:			// ゴールモデル
-							m_pGoal = CGoal::Create(pos, rot, scale, nType);
+							m_pGoal = CGoal::Create(pos, rot, scale, nNumX);
 							m_GoalPos = pos;
 							break;
 
 						case CScene::MODTYPE_OBSTACLE:		// 障害物モデル
-							CObstacle::Create(pos, rot, scale, nType);
+							CObstacle::Create(pos, rot, scale, nNumX);
 							break;
 
 						default :							// 通常モデル
-							CModel_Spawner::Create(pos, rot, scale, nType);
+							CModel_Spawner::Create(pos, rot, scale, nNumX);
 							break;
 						}
 						break;
@@ -225,7 +229,7 @@ void CStage::SetStage(const char *aStageFileName)
 					{
 						// プレイヤーの読み込み
 						m_pPlayer = CPlayer::Create(m_StartPos, { 0.0f,0.0f,0.0f }, 0);
-						CModel_Spawner::Create({ PLAYER_POS.x - 100.0f,0.0f,PLAYER_POS.z }, { 0.0f,0.0f,0.0f }, { 2.0f,3.0f,3.0f }, CManager::GetInstance()->GetLoadX()->GetNum("MODTYPE_GOAL"));
+						//CModel_Spawner::Create({ PLAYER_POS.x - 100.0f,0.0f,PLAYER_POS.z }, { 0.0f,0.0f,0.0f }, { 2.0f,3.0f,3.0f }, CManager::GetInstance()->GetLoadX()->GetNum("MODTYPE_GOAL"));
 						break;
 					}
 				}

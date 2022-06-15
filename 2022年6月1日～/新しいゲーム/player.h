@@ -17,7 +17,6 @@
 #define INERTIA				(0.1f)	// 慣性
 #define ACCELERATION		(0.2f)	// 加速度
 #define GRAVITY_SPEED		(0.6f)	// 重力の強さ
-#define ROTATING_VELOCITY	(0.001f)// プレイヤーの回転速度
 #define JUMP				(13.0f)	// 重力
 
 //=============================================================
@@ -49,13 +48,13 @@ public:
 	//------------------------------------
 	// プレイヤー状態構造体
 	//------------------------------------
-	typedef enum
+	enum class PLAYER_STATE
 	{
-		STATE_NORMAL = 0,	// ノーマル
-		STATE_HOLD,			// 何かを持っている
-		STATE_MAX
-
-	}PLAYER_STATE;
+		BALL = 0,		// ボール
+		CUBE,			// キューブ
+		AIRSHIP,		// 飛行機
+		MAX
+	};
 
 	CPlayer(OBJTYPE nPriority = CScene::OBJTYPE_PLAYER);		// コンストラクタ
 	~CPlayer();													// デストラクタ
@@ -73,11 +72,12 @@ public:
 	//---------------------------------------------------
 	void Move(void);																				// 移動
 	void Inertia(D3DXVECTOR3 &speed);																// 慣性
-	void Gravity(D3DXVECTOR3& pos, float& fGravity, const float& fGravitySpeed, bool & bJump);		// 重力
+	void Gravity(D3DXVECTOR3& pos, float& fGravity, const float& fGravitySpeed, bool &bJump);		// 重力
 	void Action(void);																				// アクション
 	bool InputDirection(const MOVE_DIRECTION &moveDir);												// 移動方向入力関数
 	void SpeedAndRotLimit(D3DXVECTOR3 &speed, D3DXVECTOR3 &rot, const float fMaxSpeed);				// 移動・回転限界																			// 爆弾持ち上げ関数
-	void Quaternion(void);
+	void Quaternion(void);																			// クォータニオン回転関数
+	void ModelDelete(void);
 
 	//---------------------------------------------------
 	// 設定・取得関数
@@ -90,6 +90,7 @@ public:
 	void SetSpeed(D3DXVECTOR3 speed)			{ m_Speed = speed; }
 	void SetJump(bool bJump)					{ m_bJump = bJump; }
 	void SetGravity(float fGravity,bool bJump)	{ m_fGravity = fGravity , m_bJump = bJump; }
+	void SetState(PLAYER_STATE state);
 
 private:
 	const static float	m_fMaxSpeed;					// 最大スピード
@@ -110,4 +111,30 @@ private:
 	D3DXMATRIX			m_mtxRot;						// クォータニオンの計算に使うマトリックス
 	PLAYER_STATE		m_state;						// プレイヤーの状態
 };
+
+//=============================================================
+// 演算子のオーバーロード
+//=============================================================
+//CPlayer::PLAYER_STATE& operator++(CPlayer::PLAYER_STATE& State)
+//{
+//	switch (State)
+//	{
+//	case CPlayer::PLAYER_STATE::BALL:		return State = CPlayer::PLAYER_STATE::CUBE;
+//	case CPlayer::PLAYER_STATE::CUBE:		return State = CPlayer::PLAYER_STATE::AIRPLANE;
+//	case CPlayer::PLAYER_STATE::AIRPLANE:	return State = CPlayer::PLAYER_STATE::BALL;
+//	default:								return State = CPlayer::PLAYER_STATE::BALL;
+//	}
+//}
+//
+//CPlayer::PLAYER_STATE& operator--(CPlayer::PLAYER_STATE& State)
+//{
+//	switch (State)
+//	{
+//	case CPlayer::PLAYER_STATE::BALL:		return State = CPlayer::PLAYER_STATE::AIRPLANE;
+//	case CPlayer::PLAYER_STATE::CUBE:		return State = CPlayer::PLAYER_STATE::BALL;
+//	case CPlayer::PLAYER_STATE::AIRPLANE:	return State = CPlayer::PLAYER_STATE::CUBE;
+//	default:								return State = CPlayer::PLAYER_STATE::BALL;
+//	}
+//}
+
 #endif 

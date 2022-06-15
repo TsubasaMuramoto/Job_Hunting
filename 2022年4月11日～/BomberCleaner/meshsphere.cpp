@@ -392,7 +392,6 @@ void CMeshSphere::SetCol(D3DXCOLOR col)
 //=============================================================================
 bool CMeshSphere::SphereCollisionSphere(float fRadius, CScene *pScene)
 {
-
 	D3DXVECTOR3 pos1 = pScene->GetPos();
 	D3DXVECTOR3 pos2;
 	pos2.x = m_mtxWorld._41;
