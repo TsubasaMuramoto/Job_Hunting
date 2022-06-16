@@ -94,7 +94,6 @@ HRESULT CLoadX::Init(void)
 
 								if (m_vDataX[nMod].m_pMat[nMat].pTextureFilename)
 								{
-
 									// テクスチャの読み込み
 									D3DXCreateTextureFromFile
 									(

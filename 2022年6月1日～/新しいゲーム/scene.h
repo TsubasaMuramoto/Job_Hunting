@@ -47,7 +47,8 @@ public:
 	{
 		MODTYPE_NORMAL = 0,			// 通常
 		MODTYPE_GOAL,				// ゴール
-		MODTYPE_OBSTACLE,			// 障害物
+		MODTYPE_NEEDLE,				// 針
+		MODTYPE_OBSCUBE,			// 障害物用キューブ
 		MODTYPE_PLAYER,				// プレイヤー
 		MODTYPE_MAX					
 

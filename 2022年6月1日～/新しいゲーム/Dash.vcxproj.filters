@@ -213,6 +213,9 @@
     <ClCompile Include="ClearGauge.cpp">
       <Filter>ソース ファイル\親クラス\シーンの継承\2Dポリゴン系</Filter>
     </ClCompile>
+    <ClCompile Include="Gate.cpp">
+      <Filter>ソース ファイル\親クラス\モデル系</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stage.h">
@@ -375,6 +378,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="ClearGauge.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

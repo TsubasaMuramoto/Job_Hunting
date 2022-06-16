@@ -33,7 +33,7 @@ CObstacle::~CObstacle()
 //===========================================
 // 生成
 //===========================================
-CObstacle *CObstacle::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, int nXType)
+CObstacle *CObstacle::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, int nXType, OBSTACLE obstype)
 {
 	// デバイスのポインタ
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
@@ -47,6 +47,7 @@ CObstacle *CObstacle::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale
 		// NULLチェック
 		if (pObstacle)
 		{
+			pObstacle->m_ObsType = obstype;	// 障害物タイプ
 			pObstacle->Init(pos, rot);		// 初期化
 
 			// 角度をラジアンに変換
@@ -106,16 +107,23 @@ void CObstacle::Update()
 	{
 		m_pModel->Update();
 
-		if (m_pModel->GetPlayerHitBool() && !m_bDoOnce)
+		switch(m_ObsType)
 		{
-			m_bDoOnce = true;
-			CPlayer *pPlayer = (CPlayer*)CScene::GetScene(OBJTYPE_PLAYER);
-			if (pPlayer)
+		case OBSTACLE::NEEDLE:
+			if (m_pModel->GetPlayerHitBool() && !m_bDoOnce)
 			{
-				pPlayer->SetUninit();
-				CBlast::Create(pPlayer->GetPos(), pPlayer->GetSize(), { 0.0f,1.0f,1.0f,1.0f }, 20, 20);
-				CRemainCount::SetRemainChange();
+				m_bDoOnce = true;
+				DeletePlayer();
 			}
+			break;
+
+		case OBSTACLE::CUBE:
+			if (m_pModel->GetPlayerHitBool()  && !m_bDoOnce && m_pModel->GetHitFromLeft())
+			{
+				m_bDoOnce = true;
+				DeletePlayer();
+			}
+			break;
 		}
 	}
 }
@@ -152,3 +160,19 @@ void CObstacle::Draw()
 		m_pModel->Draw();
 	}
 }
+
+//===========================================
+// プレイヤー消去関数
+//===========================================
+void CObstacle::DeletePlayer(void)
+{
+	CPlayer *pPlayer = (CPlayer*)CScene::GetScene(OBJTYPE_PLAYER);
+	if (pPlayer)
+	{
+		float fRad = pPlayer->GetSize().y;
+		pPlayer->SetUninit();																	// プレイヤーの終了
+		CBlast::Create(pPlayer->GetPos(), { fRad,fRad,fRad }, { 0.0f,1.0f,1.0f,1.0f }, 20, 20);	// 爆発生成
+		CRemainCount::SetRemainChange();														// 残機を減らす
+	}
+}
+

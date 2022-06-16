@@ -20,15 +20,21 @@
 // マクロ定義
 //=============================================================================
 #define PLAYER_SHADOWSIZE	(D3DXVECTOR3(m_size.x * 1.5f,0.0f,m_size.z * 1.5f))	// プレイヤー影サイズ
-#define MOVE_EFFECTSIZE		(D3DXVECTOR3(10.0f,10.0f,0.0f))
+#define MOVE_EFFECTSIZE		(D3DXVECTOR3(10.0f,10.0f,0.0f))						// 移動エフェクトサイズ
 #define MARK_SIZE			(D3DXVECTOR3(10.0f,40.0f,0.0f))						// 目印のサイズ
 #define ROTATE_POWER		(0.005f)											// 回転量
 #define CUBE_ROTATE_POWER	(0.002f)											// キューブ状態時の回転量
+#define INERTIA				(0.1f)												// 慣性
+#define ACCELERATION		(0.2f)												// 加速度
+#define JUMP				(13.0f)												// 重力
+#define BOUNCE				(8.0f)												// 
 
 //=============================================================================
 // 静的メンバ変数の初期化
 //=============================================================================
-const float CPlayer::m_fMaxSpeed = MAX_SPEED;
+const float CPlayer::m_fMaxSpeed = 5.0f;			// 最大速度
+const float CPlayer::m_fGravitySpeed = 0.6f;		// 重力の強さ
+const float CPlayer::m_fFallSpeed = 0.4f;			// 落下速度
 
 //=============================================================================
 // コンストラクタ
@@ -42,7 +48,6 @@ CPlayer::CPlayer(OBJTYPE nPriority) : CScene(nPriority)
 	m_Oldpos		= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Speed			= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_fGravity		= 0.0f;
-	m_fGravitySpeed = GRAVITY_SPEED;
 	m_fAngle		= 0.0f;
 	m_bJump			= false;
 	m_bUninit		= false;
@@ -192,7 +197,6 @@ void CPlayer::Update()
 	//------------------------------------------
 	Move();														// 移動
 	Action();													// アクション
-	Gravity(m_pos, m_fGravity, m_fGravitySpeed, m_bJump);		// 重力
 
 	// シーンに位置を設定する
 	CScene::SetPos(m_pos);
@@ -258,93 +262,39 @@ void CPlayer::Move(void)
 		CEffect::Create(m_pos, MOVE_EFFECTSIZE, { 1.0f, 1.0f, 1.0f ,1.0f }, 0.1f, 1);
 	}
 
-#if (0)
-	//==========================================================================================================
-	// 移動入力判定
-	//==========================================================================================================
-	if (InputDirection(DIRECTION_FORWARD) || InputDirection(DIRECTION_BACK) || InputDirection(DIRECTION_RIGHT) || InputDirection(DIRECTION_LEFT))
-	{
-		//  奥
-		if (InputDirection(DIRECTION_FORWARD))
-		{
-			m_Speed.z += ACCELERATION;
-		}
-		// 手前
-		else if (InputDirection(DIRECTION_BACK))
-		{
-			m_Speed.z -= ACCELERATION;
-		}
-		// 右
-		if (InputDirection(DIRECTION_RIGHT))
-		{
-			m_Speed.x += ACCELERATION;
-		}
-		// 左
-		else if (InputDirection(DIRECTION_LEFT))
-		{
-			m_Speed.x -= ACCELERATION;
-		}
-
-	}
-#endif
-
 	//=============================================================================
 	// 状態別移動処理
 	//=============================================================================
 	switch (m_state)
 	{
 	case PLAYER_STATE::BALL:
-		m_fAngle -= ROTATE_POWER;					// 回転量を足す(引く)
-		Quaternion();								// クォータニオン回転
+		m_fAngle -= ROTATE_POWER;					// 常に回転させる
+		Quaternion();					
 		break;
 
 	case PLAYER_STATE::CUBE:
 		if (m_bJump)
 		{
-			m_fAngle -= CUBE_ROTATE_POWER;			// キューブ時の回転
-			Quaternion();							// クォータニオン回転
+			m_fAngle -= CUBE_ROTATE_POWER;			// ジャンプ時に回転
+			Quaternion();
 		}
 		else
 		{
-			D3DXMatrixIdentity(&m_mtxRot);			// 回転初期化
+			D3DXMatrixIdentity(&m_mtxRot);			// 着地時に回転初期化
 		}
 		break;
 
 	case PLAYER_STATE::AIRSHIP:
-		if (m_bJump)
-		{
-			m_fAngle = D3DX_PI / 4;					// 飛行船時の回転
-			Quaternion();							// クォータニオン回転
-		}
-		else
-		{
-			D3DXMatrixIdentity(&m_mtxRot);			// 回転初期化
-		}
+		m_fAngle = D3DXToRadian(atan2(m_Speed.y, m_Speed.x));	// 縦横の移動量から角度を求める
+		Quaternion();											// クォータニオン回転
+		break;
+
+	case PLAYER_STATE::UFO:
 		break;
 	}
 
 	Inertia(m_Speed);								// 慣性
 	SpeedAndRotLimit(m_Speed, m_rot, m_fMaxSpeed);	// 速度と回転限界
-}
-
-//==========================================================================================================
-// クォータニオン回転処理関数
-//==========================================================================================================
-void CPlayer::Quaternion(void)
-{
-	D3DXVECTOR3 moveVec = { m_pos - m_Oldpos };			// 移動ベクトル
-
-	// 軸ベクトル(移動ベクトルと垂直のベクトル)
-	D3DXVECTOR3 Axis = {0.0f,0.0f,0.0f};
-	Axis.x = -moveVec.z;
-	Axis.z = moveVec.x;
-
-	if (m_Speed.x != 0.0f || m_Speed.z != 0.0f)
-	{
-		D3DXQUATERNION QuaAns = { 0.0f,0.0f,0.0f,1.0f };	// 単位クォータニオン
-		D3DXQuaternionRotationAxis(&QuaAns, &Axis, D3DXToDegree(m_fAngle));
-		D3DXMatrixRotationQuaternion(&m_mtxRot, &QuaAns);
-	}
 }
 
 //==========================================================================================================
@@ -404,24 +354,44 @@ void CPlayer::Inertia(D3DXVECTOR3 &speed)
 	// ジャンプを押していない場合
 	//------------------------------------------------
 	// 0に戻り続ける処理
-	if (speed.y > 0.0f)
+	//if (speed.y > 0.0f)
+	//{
+	//	speed.y -= INERTIA;
+
+	//	if (speed.y <= 0.0f)
+	//	{
+	//		speed.y = 0.0f;
+	//	}
+	//}
+
+	//else if (speed.y < 0.0f)
+	//{
+	//	speed.y += INERTIA;
+
+	//	if (speed.y >= 0.0f)
+	//	{
+	//		speed.y = 0.0f;
+	//	}
+	//}
+}
+
+//==========================================================================================================
+// クォータニオン回転処理関数
+//==========================================================================================================
+void CPlayer::Quaternion(void)
+{
+	D3DXVECTOR3 moveVec = { m_pos - m_Oldpos };			// 移動ベクトル
+
+	// 軸ベクトル(移動ベクトルと垂直のベクトル)
+	D3DXVECTOR3 Axis = {0.0f,0.0f,0.0f};
+	Axis.x = -moveVec.z;
+	Axis.z = moveVec.x;
+
+	if (m_Speed.x != 0.0f || m_Speed.z != 0.0f)
 	{
-		speed.y -= INERTIA;
-
-		if (speed.y <= 0.0f)
-		{
-			speed.y = 0.0f;
-		}
-	}
-
-	else if (speed.y < 0.0f)
-	{
-		speed.y += INERTIA;
-
-		if (speed.y >= 0.0f)
-		{
-			speed.y = 0.0f;
-		}
+		D3DXQUATERNION QuaAns = { 0.0f,0.0f,0.0f,1.0f };	// 単位クォータニオン
+		D3DXQuaternionRotationAxis(&QuaAns, &Axis, D3DXToDegree(m_fAngle));
+		D3DXMatrixRotationQuaternion(&m_mtxRot, &QuaAns);
 	}
 }
 
@@ -506,33 +476,58 @@ void CPlayer::Action(void)
 			m_fGravity = JUMP;
 			m_bJump = true;
 		}
+		Gravity(m_pos, m_fGravity, m_fGravitySpeed, m_bJump);		// 重力
 		break;
 
 	case PLAYER_STATE::AIRSHIP:
-		if (pMouse->GetPress(pMouse->MOUSE_LEFT))
+		if (pMouse->GetPress(pMouse->MOUSE_LEFT) || pKey->GetPress(DIK_SPACE))
 		{
-			m_Speed.y += ACCELERATION;
-			m_fGravity = m_Speed.y;
+			m_Speed.y += ACCELERATION;	// 上昇する
+			m_bJump = true;				// ジャンプ状態にする
+		}
+		else
+		{
+			m_Speed.y -= ACCELERATION;	// 落ちる
+		}
+
+		if (!m_bJump)
+		{
+			m_Speed.y = 0.0f;	// 着地中は下を向かないようにスピード0にする
+		}
+
+		m_fGravity = m_Speed.y;										// 重力にスピードを代入
+		Gravity(m_pos, m_fGravity, m_fGravitySpeed, m_bJump);		// 重力関数
+		break;
+
+	case PLAYER_STATE::UFO:
+		// 跳ねる
+		if ((pMouse->GetTrigger(pMouse->MOUSE_LEFT) || CInput::PressAnyAction(CInput::ACTION_SPACE)))
+		{
+			m_fGravity = BOUNCE;
 			m_bJump = true;
 		}
+		Gravity(m_pos, m_fGravity, m_fFallSpeed, m_bJump);		// 重力
 		break;
 	}
-
 
 
 #ifdef _DEBUG
 	// モード切替
-	if (pKey->GetTrigger(DIK_0))
+	if (pKey->GetTrigger(DIK_1))
 	{
 		SetState(PLAYER_STATE::BALL);
 	}
-	else if (pKey->GetTrigger(DIK_1))
+	else if (pKey->GetTrigger(DIK_2))
 	{
 		SetState(PLAYER_STATE::CUBE);
 	}
-	else if (pKey->GetTrigger(DIK_2))
+	else if (pKey->GetTrigger(DIK_3))
 	{
 		SetState(PLAYER_STATE::AIRSHIP);
+	}
+	else if (pKey->GetTrigger(DIK_4))
+	{
+		SetState(PLAYER_STATE::UFO);
 	}
 #endif
 }
@@ -548,37 +543,42 @@ void CPlayer::SetState(PLAYER_STATE state)
 	// モデルを切り替える
 	if (!m_pModel)
 	{
-		CLoadX *pLoad = CManager::GetInstance()->GetLoadX();
+		char *pStr = nullptr;
 
 		switch (state)
 		{
 		case PLAYER_STATE::BALL:
-			m_nType = pLoad->GetNum("PLAYER_ONE");
+			pStr = "PLAYER_ONE";
 			break;
 
 		case PLAYER_STATE::CUBE:
-			m_nType = pLoad->GetNum("PLAYER_TWO");			
+			pStr = "PLAYER_TWO";
 			break;
 
 		case PLAYER_STATE::AIRSHIP:
-			m_nType = pLoad->GetNum("PLAYER_THREE");
+			pStr = "PLAYER_THREE";
+			break;
+
+		case PLAYER_STATE::UFO:
+			pStr = "PLAYER_FOUR";
 			break;
 		}
 
+		// Xファイルの種類設定
+		CLoadX *pLoad = CManager::GetInstance()->GetLoadX();
+		m_nType = pLoad->GetNum(pStr);
+
 		// モデル生成
 		m_pModel = CModel::Create({ 0.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }, m_nType, false);
-
 		// プレイヤーサイズの設定
 		CScene::SetSize(m_pModel->GetSize());
-
-		// 
-		m_pos.y = m_pModel->GetSize().y / 2;
-
+		// 位置調整
+		//m_pos.y += m_pModel->GetSize().y / 2;
 		// 回転用マトリックスの初期化
 		D3DXMatrixIdentity(&m_mtxRot);
 	}
 
-	m_state = state;
+	m_state = state;	// 状態設定
 }
 
 //==========================================================================================================
@@ -590,7 +590,7 @@ void CPlayer::Gravity(D3DXVECTOR3& pos, float& fGravity, const float& fGravitySp
 	if (fGravitySpeed > 0.0f)
 	{
 		fGravity -= fGravitySpeed;
-		pos.y += m_fGravity;
+		pos.y += fGravity;
 	}
 
 	// 床についたかどうか

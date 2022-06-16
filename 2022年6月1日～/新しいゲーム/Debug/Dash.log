@@ -1,7 +1,3 @@
-﻿  game.cpp
-  Goal.cpp
-  ClearGauge.cpp
-  コードを生成中...
-cl : コマンド ライン warning D9028: 簡易リビルド時のエラーです、通常のビルドに戻します
+﻿  LoadX.cpp
   Dash.vcxproj -> C:\Users\OC\Desktop\翼のgit\Job_Hunting\2022年6月1日～\新しいゲーム\Debug\Dash.exe
   Dash.vcxproj -> C:\Users\OC\Desktop\翼のgit\Job_Hunting\2022年6月1日～\新しいゲーム\Debug\Dash.pdb (Full PDB)

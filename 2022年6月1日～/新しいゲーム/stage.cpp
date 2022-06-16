@@ -199,8 +199,12 @@ void CStage::SetStage(const char *aStageFileName)
 							m_GoalPos = pos;
 							break;
 
-						case CScene::MODTYPE_OBSTACLE:		// 障害物モデル
-							CObstacle::Create(pos, rot, scale, nNumX);
+						case CScene::MODTYPE_NEEDLE:		// 針(障害物)モデル
+							CObstacle::Create(pos, rot, scale, nNumX,CObstacle::OBSTACLE::NEEDLE);
+							break;
+
+						case CScene::MODTYPE_OBSCUBE:		// キューブ(障害物)モデル
+							CObstacle::Create(pos, rot, scale, nNumX, CObstacle::OBSTACLE::CUBE);
 							break;
 
 						default :							// 通常モデル
@@ -229,7 +233,6 @@ void CStage::SetStage(const char *aStageFileName)
 					{
 						// プレイヤーの読み込み
 						m_pPlayer = CPlayer::Create(m_StartPos, { 0.0f,0.0f,0.0f }, 0);
-						//CModel_Spawner::Create({ PLAYER_POS.x - 100.0f,0.0f,PLAYER_POS.z }, { 0.0f,0.0f,0.0f }, { 2.0f,3.0f,3.0f }, CManager::GetInstance()->GetLoadX()->GetNum("MODTYPE_GOAL"));
 						break;
 					}
 				}

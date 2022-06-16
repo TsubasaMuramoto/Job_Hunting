@@ -13,11 +13,7 @@
 //=============================================================
 // マクロ定義
 //=============================================================
-#define MAX_SPEED			(5.0f)	// 最大速度
-#define INERTIA				(0.1f)	// 慣性
-#define ACCELERATION		(0.2f)	// 加速度
-#define GRAVITY_SPEED		(0.6f)	// 重力の強さ
-#define JUMP				(13.0f)	// 重力
+
 
 //=============================================================
 // 前方宣言
@@ -53,6 +49,7 @@ public:
 		BALL = 0,		// ボール
 		CUBE,			// キューブ
 		AIRSHIP,		// 飛行機
+		UFO,			// UFO
 		MAX
 	};
 
@@ -94,6 +91,8 @@ public:
 
 private:
 	const static float	m_fMaxSpeed;					// 最大スピード
+	const static float	m_fGravitySpeed;				// 重力加速度
+	const static float  m_fFallSpeed;					// 落下速度
 	CBillboard			*m_pBillboard;					// ビルボードクラス
 	CShadow				*m_pShadow;						// シャドウクラス
 	CModel				*m_pModel;						// モデルクラス
@@ -101,7 +100,7 @@ private:
 	D3DXVECTOR3			m_rot;							// 回転
 	D3DXVECTOR3			m_size;							// サイズ
 	D3DXVECTOR3			m_Speed, m_Direction;			// 速度・向き			
-	float				m_fGravitySpeed, m_fGravity;	// 重力加速度・重力
+	float				m_fGravity;						// 重力
 	float				m_fAngle;						// 回転する角度
 	int					m_nType;						// タイプ
 	bool				m_bJump;						// ジャンプ判定

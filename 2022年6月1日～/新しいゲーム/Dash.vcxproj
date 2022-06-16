@@ -169,6 +169,7 @@
     <ClCompile Include="field.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="effect_blast.cpp" />
+    <ClCompile Include="Gate.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="Obstacle.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="field.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="effect_blast.h" />
+    <ClInclude Include="Gate.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="Obstacle.h" />

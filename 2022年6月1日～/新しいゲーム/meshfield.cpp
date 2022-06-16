@@ -44,7 +44,7 @@ CMeshField *CMeshField::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 ro
 			pMeshField->m_nLine = nLine;					// ‰¡ƒ|ƒŠƒSƒ“”
 			pMeshField->m_nVertical = nVertical;			// cƒ|ƒŠƒSƒ“”
 			pMeshField->Init(pos, size);					// ‰Šú‰»
-			pMeshField->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_FLOOR"));
+			pMeshField->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_FLOOR2"));
 		}
 	}
 

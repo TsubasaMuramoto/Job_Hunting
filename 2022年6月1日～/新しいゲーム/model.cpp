@@ -194,6 +194,7 @@ void CModel::Update(void)
 	if (m_bCollision)
 	{
 		m_bHit = false;
+		m_bHitLeft = false;
 
 		if (m_bDoOnce)
 		{
@@ -240,7 +241,7 @@ void CModel::Update(void)
 							m_bHit = true;	// 一回でも当たればヒット判定とする
 							if (objtype == CScene::OBJTYPE_PLAYER)
 							{
-								m_bPlayerHit = true;
+								m_bHitPlayer = true;
 							}
 						}
 					}
@@ -316,14 +317,11 @@ void CModel::Draw(void)
 
 	if (!m_bDraw)
 	{
-		// マテリアルデータ編のポインタを取得
+		// マテリアルデータのポインタを取得
 		m_pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
 
 		for (int nCntMat = 0; nCntMat < (int)m_nNumMat; nCntMat++)
 		{
-			//m_pMat[nCntMat].MatD3D.Ambient = m_SaveEmissive;
-			//m_pMat[nCntMat].MatD3D.Diffuse = m_SaveEmissive;
-			//m_pMat[nCntMat].MatD3D.Specular = m_SaveEmissive;
 			 m_pMat[nCntMat].MatD3D.Emissive = m_SaveEmissive;
 
 			// マテリアルの設定
@@ -723,6 +721,7 @@ bool CModel::LineCollisionCube(CScene *pScene,const HIT_TYPE &hit_type)
 		const D3DXVECTOR3 PushVec = PushDistanceSide(moveVec, normalVec[3]);
 		pos += PushVec;
 		pScene->SetPos(pos);
+		m_bHitLeft = true;
 
 		return true;
 	}

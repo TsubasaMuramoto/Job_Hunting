@@ -18,7 +18,7 @@
 #define GAUGE_UI_SIZE			(D3DXVECTOR3(m_size.x * 8.0f,m_size.y * 2.0f,0.0f))
 #define GAUGE_MAX_LENGTH		(m_GaugeUI.size.x - 30.0f)
 #define GAUGE_OFFSET_X			(10.0f)
-#define MESH_SPLIT_SIZE			(500.0f)
+#define MESH_SPLIT_SIZE			(250.0f)
 
 //============================================================
 // 静的メンバ変数の初期化
@@ -116,8 +116,8 @@ HRESULT CClearGauge::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	}
 
 	// スタートからゴールまでのフィールドを生成する
-	CMeshField::Create({ m_ClearLength.x / 2 + pStage->GetStartPos().x ,0.0f,0.0f }, { m_ClearLength.x - (pStage->GetStartPos().x/2),0.0f,500.0f }, { 0.0f,0.0f,0.0f }, nLine, 1);
-	CMeshField::Create({ m_ClearLength.x / 2 + pStage->GetStartPos().x ,1000.0f,0.0f }, { m_ClearLength.x - (pStage->GetStartPos().x / 2),0.0f,500.0f }, { 180.0f,0.0f,0.0f }, nLine, 1);
+	CMeshField::Create({ m_ClearLength.x / 2 + pStage->GetStartPos().x ,0.0f,0.0f }, { m_ClearLength.x - (pStage->GetStartPos().x/2),0.0f,1000.0f }, { 0.0f,0.0f,0.0f }, nLine, 3);
+	//CMeshField::Create({ m_ClearLength.x / 2 + pStage->GetStartPos().x ,1000.0f,0.0f }, { m_ClearLength.x - (pStage->GetStartPos().x / 2),0.0f,500.0f }, { 180.0f,0.0f,0.0f }, nLine, 1);
 
 	return S_OK;
 }

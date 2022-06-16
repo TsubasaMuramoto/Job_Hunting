@@ -37,12 +37,12 @@ CTexture::~CTexture()
 //=============================================================================
 void CTexture::Init(void)
 {
-	LPDIRECT3DDEVICE9 pDevice; //デバイスのポインタ
+	LPDIRECT3DDEVICE9 pDevice;										// デバイスのポインタ
 	pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();	// デバイスを取得する
 
 	// textファイル読み込み
 	FILE *pFile;
-	if (pFile = fopen("data/TEXTURE/SCRIPT/texture.txt", "r"))
+	if (pFile = fopen("data/TEXT/texture.txt", "r"))
 	{
 		char cString[128];
 		// 一行ずつ保存
