@@ -46,9 +46,7 @@ public:
 	static CMeshField *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int nLine, int nVertical);	// 生成
 	void AllCollision(void);																					// 当たり判定管理
 	bool LineCollisionMesh(CScene *pScene, const int *pnVtx);													// 線とメッシュの当たり判定
-	bool ShadowCollisionMesh(CScene *pScene, const int *pnVtx);													// 影との当たり判定
 	void ProcessByObjtype(CScene *pScene,D3DXVECTOR3 &pos);
-
 
 private:
 	vector<D3DXVECTOR3>			m_vtxLocal;								// ローカル頂点座標

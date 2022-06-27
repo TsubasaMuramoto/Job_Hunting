@@ -44,8 +44,7 @@ public:
 	D3DXVECTOR3 GetLocalVtx(int nID)				{ return m_vtxLocal[nID]; }			// ローカル頂点座標の取得
 
 	bool SphereCollisionSphere(float fRadius, CScene *pScene);																							// 球と球の当たり判定
-	static CMeshSphere *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int nLine, int nVertical,bool bInsideDraw, CScene::OBJTYPE objtype);	// 生成
-	bool LineCollisionMesh(CScene *pScene, const int *nVtx);																							// 線と直方体の当たり判定
+	static CMeshSphere *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, D3DXVECTOR3 rot, int nLine, int nVertical,bool bInsideDraw, CScene::OBJTYPE objtype);	// 生成																						// 線と直方体の当たり判定
 
 private:
 	vector<D3DXVECTOR3> m_vtxLocal;								// ローカル頂点座標

@@ -203,10 +203,10 @@ void CMeshSphere::Update(void)
 void CMeshSphere::Draw(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();	// デバイスのポインタ
+
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);										// ライティング有効
-	CManager::GetInstance()->GetRenderer()->SetZTest(true, pDevice);		// Ztest
-	CManager::GetInstance()->GetRenderer()->SetAddSynthesis(true, pDevice);	// 加算合成
-	//CManager::GetInstance()->GetRenderer()->SetAlphaTest(true, pDevice);	// 加算合成
+	CManager::GetInstance()->GetRenderer()->SetZTest(true, pDevice);					// Ztest
+	CManager::GetInstance()->GetRenderer()->SetAddSynthesis(true, pDevice);				// 加算合成
 
 	D3DXMATRIX mtxRot, mtxTrans, mtxScale;	// 計算用マトリックス
 	D3DXMatrixIdentity(&m_mtxWorld);		// ワールドマトリックスの初期化
@@ -247,8 +247,6 @@ void CMeshSphere::Draw(void)
 																// ↑1フィールドに2プリミティブ	↑縮退ポリゴンの分(Z方向に1フィールド伸ばす分4つ生成するから)
 	);
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);						// ライティング有効
-	//CManager::GetInstance()->GetRenderer()->SetAlphaTest(false, pDevice);	// 加算合成
-
 	CManager::GetInstance()->GetRenderer()->SetAddSynthesis(false, pDevice);// 加算合成
 	CManager::GetInstance()->GetRenderer()->SetZTest(false, pDevice);		// Ztest
 
@@ -393,190 +391,4 @@ bool CMeshSphere::SphereCollisionSphere(float fRadius, CScene *pScene)
 	}
 
 	return false;
-}
-
-//=============================================================================
-// ポリゴン(フィールド)と線の当たり判定
-//=============================================================================
-bool CMeshSphere::LineCollisionMesh(CScene *pScene, const int *nVtx)
-{
-	// 板ポリゴンの0,1,2,3番目をそれぞれA,B,C,Dとし
-	// pSceneの位置をPとする
-	// pSceneの最後の位置をQとする
-
-	// Oldposからposの位置を結ぶベクトル(これが線分になる(進行ベクトル))
-	const D3DXVECTOR3 vecQP = pScene->GetPos() - pScene->GetPosOld();
-
-	// 各頂点の外周を沿うベクトル
-	const D3DXVECTOR3 vecAB = m_vtxWorld[nVtx[1]] - m_vtxWorld[nVtx[0]];
-	const D3DXVECTOR3 vecBD = m_vtxWorld[nVtx[3]] - m_vtxWorld[nVtx[1]];
-	const D3DXVECTOR3 vecDC = m_vtxWorld[nVtx[2]] - m_vtxWorld[nVtx[3]];
-	const D3DXVECTOR3 vecCA = m_vtxWorld[nVtx[0]] - m_vtxWorld[nVtx[2]];
-
-	// 各頂点とシーンの位置を結ぶベクトル
-	const D3DXVECTOR3 vecAP = pScene->GetPos() - m_vtxWorld[nVtx[0]];
-	const D3DXVECTOR3 vecBP = pScene->GetPos() - m_vtxWorld[nVtx[1]];
-	const D3DXVECTOR3 vecCP = pScene->GetPos() - m_vtxWorld[nVtx[2]];
-	const D3DXVECTOR3 vecDP = pScene->GetPos() - m_vtxWorld[nVtx[3]];
-
-	// 各頂点とシーンの最後の位置を結ぶベクトル
-	const D3DXVECTOR3 vecAQ = pScene->GetPosOld() - m_vtxWorld[nVtx[0]];
-	const D3DXVECTOR3 vecBQ = pScene->GetPosOld() - m_vtxWorld[nVtx[1]];
-	const D3DXVECTOR3 vecCQ = pScene->GetPosOld() - m_vtxWorld[nVtx[2]];
-	const D3DXVECTOR3 vecDQ = pScene->GetPosOld() - m_vtxWorld[nVtx[3]];
-
-	// オブジェクトとポリゴンの2D内積
-	float crossXY[MESH_VTX];		// XY範囲(X方向の壁)
-	float crossZY[MESH_VTX];		// ZY範囲(Z方向の壁)
-	float crossXZ[MESH_VTX];		// XZ範囲(平面)
-
-	crossXY[0] = vecAB.x * vecAP.y - vecAP.x * vecAB.y;
-	crossXY[1] = vecBD.x * vecBP.y - vecBP.x * vecBD.y;
-	crossXY[2] = vecDC.x * vecDP.y - vecDP.x * vecDC.y;
-	crossXY[3] = vecCA.x * vecCP.y - vecCP.x * vecCA.y;
-
-	crossZY[0] = vecAB.z * vecAP.y - vecAP.z * vecAB.y;
-	crossZY[1] = vecBD.z * vecBP.y - vecBP.z * vecBD.y;
-	crossZY[2] = vecDC.z * vecDP.y - vecDP.z * vecDC.y;
-	crossZY[3] = vecCA.z * vecCP.y - vecCP.z * vecCA.y;
-
-	crossXZ[0] = vecAB.x * vecAP.z - vecAP.x * vecAB.z;
-	crossXZ[1] = vecBD.x * vecBP.z - vecBP.x * vecBD.z;
-	crossXZ[2] = vecDC.x * vecDP.z - vecDP.x * vecDC.z;
-	crossXZ[3] = vecCA.x * vecCP.z - vecCP.x * vecCA.z;
-
-	//***************************************************************************************
-	// 床の当たり判定
-	//***************************************************************************************
-	if (m_size.y <= 0)
-	{
-		// ポリゴンの範囲内にいるかの計算(4つの2D外積結果が0より下なら)
-		if (crossXZ[0] < 0.0f && crossXZ[1] < 0.0f &&
-			crossXZ[2] < 0.0f && crossXZ[3] < 0.0f)
-		{
-			// 法線ベクトル
-			D3DXVECTOR3 normalVec;
-			// ポリゴンの法線ベクトルを求める
-			D3DXVec3Cross(&normalVec, &vecAB, &vecBD);
-			// 単位ベクトル化
-			D3DXVec3Normalize(&normalVec, &normalVec);
-
-			// 板ポリゴンの法線ベクトルと、法線とシーンの位置を結ぶベクトルの内積を求める
-			float Dot = D3DXVec3Dot(&normalVec, &vecAP);
-			float DotOld = D3DXVec3Dot(&normalVec, &vecAQ);
-
-			// 2つの内積結果のベクトルの+-が異なると通る処理(排他的論理和)
-			//if(Dot * DotOld < 0)
-			// 上からあたる
-			if ((Dot <= 0.0f && DotOld >= -ALLOWABLE_ERROR))
-			{
-				// 板ポリゴンの高さを計算し、代入
-				D3DXVECTOR3 &pos = pScene->GetPos();
-				pos.y = m_vtxWorld[nVtx[0]].y -
-					(1 / normalVec.y * (normalVec.x * (pos.x - m_vtxWorld[nVtx[0]].x) +
-						normalVec.z * (pos.z - m_vtxWorld[nVtx[0]].z)));
-
-				pScene->SetPos(pos);
-
-				// 重力を0にする
-				CPlayer *pPlayer = (CPlayer*)pScene;
-				pPlayer->SetGravity(0.0f, false);
-
-
-				// 当たった判定を返す
-				return true;
-			}
-
-			else
-			{
-				// 当たり判定処理をやめる
-				return false;
-			}
-		}
-
-		else
-		{
-			// 当たり判定処理をやめる
-			return false;
-		}
-	}
-
-	//***************************************************************************************
-	// 壁の当たり判定
-	//***************************************************************************************
-	// 壁の向きが-90 <= x < 90 の時のみ それ以外はif文の符号が逆になる 
-	else if (m_size.y > 0)
-	{
-		if (m_rot.y >= -D3DX_PI / 2 && m_rot.y < D3DX_PI / 2)
-		{
-
-		}
-
-		else
-		{
-			for (int nCnt = 0; nCnt < MESH_VTX; nCnt++)
-			{
-				crossXY[nCnt] *= -1;
-				crossZY[nCnt] *= -1;
-			}
-		}
-
-
-		if ((crossXY[0] < 0.0f && crossXY[1] < 0.0f && crossXY[2] < 0.0f && crossXY[3] < 0.0f) ||	// X方向の範囲
-			(crossZY[0] < 0.0f && crossZY[1] < 0.0f && crossZY[2] < 0.0f && crossZY[3] < 0.0f))		// Z方向の範囲
-		{
-			// 法線ベクトル
-			D3DXVECTOR3 normalVec;
-			// ポリゴンの法線ベクトルを求める
-			D3DXVec3Cross(&normalVec, &vecAB, &vecBD);
-			// 単位ベクトル化
-			D3DXVec3Normalize(&normalVec, &normalVec);
-
-			// 板ポリゴンの法線ベクトルと、法線とシーンの位置を結ぶベクトルの内積を求める
-			float Dot = D3DXVec3Dot(&normalVec, &vecAP);
-			float DotOld = D3DXVec3Dot(&normalVec, &vecAQ);
-
-			if (Dot <= 0.0f && DotOld > -ALLOWABLE_ERROR)
-			{
-				// 壁ずりベクトルを求め、正規化する
-				//D3DXVECTOR3 SlideVec = vecQP - D3DXVec3Dot(&vecQP, &normalVec) * normalVec;
-				//D3DXVec3Normalize(&SlideVec, &SlideVec);
-
-				// 板ポリゴンの高さを計算し、代入
-				D3DXVECTOR3 &pos = pScene->GetPos();
-				D3DXVECTOR3 &posOld = pScene->GetPosOld();
-
-				if (Dot != 0.0f || DotOld != 0.0f)
-				{
-					// 内分比を求める
-					const float &DividRatio = fabsf(DotOld) / (fabsf(DotOld) + fabsf(Dot));
-					// 頂点から衝突点に向かうベクトル
-					const D3DXVECTOR3 &DividVec = ((1 - DividRatio) * vecAQ) + (DividRatio * vecAP);
-					// 内分点を求める
-					const D3DXVECTOR3 &DividP = m_vtxWorld[nVtx[0]] + DividVec;
-					// プレイヤーがめり込んだ位置から壁の内分点までのベクトルを求める(* PERCENT_EXTRAは壁より少し手前に戻すため )
-					const D3DXVECTOR3 &old = normalVec * D3DXVec3Dot(&normalVec, &((DividP - pos) * PERCENT_EXTRA));
-					pos += old;
-					pScene->SetPos(pos);
-				}
-				// 当たった判定を返す
-				return true;
-			}
-
-			else
-			{
-				return false;
-			}
-		}
-
-		else
-		{
-			return false;
-		}
-	}
-
-	else
-	{
-		return false;
-	}
 }

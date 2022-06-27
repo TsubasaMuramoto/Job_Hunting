@@ -14,11 +14,11 @@
 CShadow::CShadow(OBJTYPE nPriority) : CScene3D(nPriority)
 {
 	// 各種初期化
-	m_pTexture = nullptr;							// テクスチャポインタ
-	m_pVtxBuff = nullptr;							// 頂点バッファポインタ
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 位置
-	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// サイズ
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			// 回転
+	m_pTexture	 = nullptr;							// テクスチャポインタ
+	m_pVtxBuff	 = nullptr;							// 頂点バッファポインタ
+	m_pos		 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 位置
+	m_size		 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// サイズ
+	m_rot		 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 回転
 	m_OriginSize = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 元のサイズ
 }
 

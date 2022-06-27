@@ -96,7 +96,6 @@ public:
 	void SetEmissive(D3DCOLORVALUE Emissive)	{ m_SaveEmissive = Emissive; }	// 拡散設定
 	void SetDraw(bool bDraw)					{ m_bDraw = bDraw; }			// 描画判定
 	void SetNumParent(int Parent)				{ m_nNumParent = Parent; }		// 親番号設定
-	void SetVtxScale(float fScale);												// モデル頂点のスケール変更
 
 	D3DXMATRIX	GetMatrix()				{ return m_mtxWorld; }				// ワールドマトリックスの取得
 	D3DXVECTOR3 GetPos()				{ return m_pos; }					// 位置取得

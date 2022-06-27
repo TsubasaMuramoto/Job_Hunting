@@ -389,7 +389,7 @@ void CModel::Draw(void)
 	}
 }
 
-// モデル平面当たり判定
+// モデルと平面当たり判定
 bool CModel::PlaneCollision(FLOAT r,D3DXVECTOR3 *pPre_pos, D3DXVECTOR3 *pPos,D3DXVECTOR3 *pNormal, D3DXVECTOR3 *pPlane_pos,FLOAT *t,D3DXVECTOR3 *pOut_colli)
 {
 	D3DXVECTOR3 C0 = *pPre_pos - *pPlane_pos;	// 平面上の一点から現在位置へのベクトル
@@ -625,7 +625,6 @@ bool CModel::LineCollisionCube(CScene *pScene,const HIT_TYPE &hit_type)
 		break;
 	}
 
-
 	// 移動ベクトルを求める
 	const D3DXVECTOR3 moveVec = pos - posOld;
 
@@ -751,16 +750,5 @@ bool CModel::HitFrom(const HIT_FROM &hitFrom, const float *fDot, const float *fD
 	default:
 		assert(hitFrom <= -1 || hitFrom >= FROM_MAX);
 		return false;
-	}
-}
-
-//===================================
-// 頂点のスケール設定
-//===================================
-void CModel::SetVtxScale(float fScale)
-{
-	for (int nCnt = 0; nCnt < MAX_MODEL_VTX; nCnt++)
-	{
-		m_vtx[nCnt].vtxWorld *= fScale;
 	}
 }

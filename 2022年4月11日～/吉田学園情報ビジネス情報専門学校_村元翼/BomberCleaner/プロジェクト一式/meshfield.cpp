@@ -299,7 +299,7 @@ void CMeshField::Draw(void)
 //=============================================================================
 // 当たり判定の管理
 //=============================================================================
-void  CMeshField::AllCollision(void)
+void CMeshField::AllCollision(void)
 {
 	// シーン取得
 	for (int nCnt = 0; nCnt < 2; nCnt++)
@@ -345,23 +345,8 @@ void  CMeshField::AllCollision(void)
 
 						if (LineCollisionMesh(pScene, &nID[0]))
 						{
-							// 重力を0にする
-							//CPlayer *pPlay1qaer = (CPlayer*)pScene;
-							//pPlayer->SetGravity(0.0f, false);
 							break;
 						}
-
-						//// 影当たり判定
-						//else if (pScene->GetObjType() == OBJTYPE_SHADOW)
-						//{
-						//	if (ShadowCollisionMesh(pScene, &nID[0]))
-						//	{
-						//		float FieldHeight = GetMatrix()._42;
-						//		CShadow *pShadow = (CShadow*)pScene;
-						//		pShadow->SetHeight(FieldHeight);
-
-						//	}
-						//}
 					}
 				}
 			}
@@ -515,10 +500,6 @@ bool CMeshField::LineCollisionMesh(CScene *pScene,const int *pnVtx)
 
 			if (Dot <= Radius && DotOld > -ALLOWABLE_ERROR)
 			{
-				// 壁ずりベクトルを求め、正規化する
-				//D3DXVECTOR3 SlideVec = vecQP - D3DXVec3Dot(&vecQP, &normalVec) * normalVec;
-				//D3DXVec3Normalize(&SlideVec, &SlideVec);
-
 				// 板ポリゴンの高さを計算し、代入
 				D3DXVECTOR3 &pos = pScene->GetPos();
 				D3DXVECTOR3 &posOld = pScene->GetPosOld();
@@ -528,17 +509,6 @@ bool CMeshField::LineCollisionMesh(CScene *pScene,const int *pnVtx)
 
 				if (Dot != 0.0f || DotOld != 0.0f)
 				{
-					//// 内分比を求める
-					//const float &DividRatio = fabsf(DotOld) / (fabsf(DotOld) + fabsf(Dot));
-					//// 頂点から衝突点に向かうベクトル
-					//const D3DXVECTOR3 &DividVec = ((1 - DividRatio) * vecAQ) + (DividRatio * vecAP);
-					//// 内分点を求める
-					//const D3DXVECTOR3 &DividP = m_vtxWorld[pnVtx[0]] + DividVec;
-					//// プレイヤーがめり込んだ位置から壁の内分点までのベクトルを求める(* PERCENT_EXTRAは壁より少し手前に戻すため )
-					//const D3DXVECTOR3 &old = normalVec * D3DXVec3Dot(&normalVec, &((DividP - pos) * PERCENT_EXTRA));
-					//pos += old;
-					//pScene->SetPos(pos);
-
 					// 対象の押出先を求める
 					// ムーブベクトルと法線の内積を求める
 					const float fDotMoveVec = -D3DXVec3Dot(&moveVec, &normalVec);
@@ -547,6 +517,7 @@ bool CMeshField::LineCollisionMesh(CScene *pScene,const int *pnVtx)
 					pos += Push;
 					pScene->SetPos(pos);
 				}
+
 				// 当たった判定を返す
 				return true;
 			}
@@ -569,82 +540,6 @@ bool CMeshField::LineCollisionMesh(CScene *pScene,const int *pnVtx)
 	}
 }
 
-//=============================================================================
-// ポリゴン(フィールド)と影の当たり判定
-//=============================================================================
-bool CMeshField::ShadowCollisionMesh(CScene *pScene, const int *pnVtx)
-{
-	// 板ポリゴンの0,1,2,3番目をそれぞれA,B,C,Dとし
-	// pSceneの位置をPとする
-	// pSceneの最後の位置をQとする
-
-	// Oldposからposの位置を結ぶベクトル(これが線分になる(進行ベクトル))
-	const D3DXVECTOR3 vecQP = pScene->GetPos() - pScene->GetPosOld();
-
-	// 各頂点の外周を沿うベクトル
-	const D3DXVECTOR3 vecAB = m_vtxWorld[pnVtx[1]] - m_vtxWorld[pnVtx[0]];
-	const D3DXVECTOR3 vecBD = m_vtxWorld[pnVtx[3]] - m_vtxWorld[pnVtx[1]];
-	const D3DXVECTOR3 vecDC = m_vtxWorld[pnVtx[2]] - m_vtxWorld[pnVtx[3]];
-	const D3DXVECTOR3 vecCA = m_vtxWorld[pnVtx[0]] - m_vtxWorld[pnVtx[2]];
-
-	// 各頂点とシーンの位置を結ぶベクトル
-	const D3DXVECTOR3 vecAP = pScene->GetPos() - m_vtxWorld[pnVtx[0]];
-	const D3DXVECTOR3 vecBP = pScene->GetPos() - m_vtxWorld[pnVtx[1]];
-	const D3DXVECTOR3 vecCP = pScene->GetPos() - m_vtxWorld[pnVtx[2]];
-	const D3DXVECTOR3 vecDP = pScene->GetPos() - m_vtxWorld[pnVtx[3]];
-
-	// 各頂点とシーンの最後の位置を結ぶベクトル
-	const D3DXVECTOR3 vecAQ = pScene->GetPosOld() - m_vtxWorld[pnVtx[0]];
-	const D3DXVECTOR3 vecBQ = pScene->GetPosOld() - m_vtxWorld[pnVtx[1]];
-	const D3DXVECTOR3 vecCQ = pScene->GetPosOld() - m_vtxWorld[pnVtx[2]];
-	const D3DXVECTOR3 vecDQ = pScene->GetPosOld() - m_vtxWorld[pnVtx[3]];
-
-	// オブジェクトとポリゴンの2D内積
-	float crossXZ[MESH_VTX];		// XZ範囲(平面)
-
-	crossXZ[0] = vecAB.x * vecAP.z - vecAP.x * vecAB.z;
-	crossXZ[1] = vecBD.x * vecBP.z - vecBP.x * vecBD.z;
-	crossXZ[2] = vecDC.x * vecDP.z - vecDP.x * vecDC.z;
-	crossXZ[3] = vecCA.x * vecCP.z - vecCP.x * vecCA.z;
-
-	// プレイヤーのサイズXを半径として取得
-	CPlayer *pPlayer = (CPlayer*)pScene;
-	float Radius = pPlayer->GetSize().x / 2;
-
-	//***************************************************************************************
-	// 床の当たり判定
-	//***************************************************************************************
-		// ポリゴンの範囲内にいるかの計算(4つの2D外積結果が0より下なら)
-	if (crossXZ[0] < 0.0f && crossXZ[1] < 0.0f &&
-		crossXZ[2] < 0.0f && crossXZ[3] < 0.0f)
-	{
-		//// 法線ベクトル
-		//D3DXVECTOR3 normalVec;
-		//// ポリゴンの法線ベクトルを求める
-		//D3DXVec3Cross(&normalVec, &vecAB, &vecBD);
-		//// 単位ベクトル化
-		//D3DXVec3Normalize(&normalVec, &normalVec);
-
-		//// 板ポリゴンの法線ベクトルと、法線とシーンの位置を結ぶベクトルの内積を求める
-		//float Dot = D3DXVec3Dot(&normalVec, &vecAP);
-		//float DotOld = D3DXVec3Dot(&normalVec, &vecAQ);
-
-		//// 2つの内積結果のベクトルの+-が異なると通る処理(排他的論理和)
-		////if(Dot * DotOld < 0)
-		//// 上からあたる
-		//if (Dot <= Radius && DotOld >= -ALLOWABLE_ERROR)
-		//{
-		//	// 板ポリゴンの高さを計算し、代入
-		//	D3DXVECTOR3 &pos = pScene->GetPos();
-		//	pos.y = m_vtxWorld[pnVtx[0]].y - (1 / normalVec.y * (normalVec.x * (pos.x - m_vtxWorld[pnVtx[0]].x) + normalVec.z * (pos.z - m_vtxWorld[pnVtx[0]].z)));
-			return true;
-		//}
-	}
-
-	return false;
-}
-
-
 //------------------------------------------------------------
 // メッシュフィールドのオブジェクトタイプ別処理
 //------------------------------------------------------------
@@ -655,13 +550,13 @@ void CMeshField::ProcessByObjtype(CScene *pScene,D3DXVECTOR3 &pos)
 	CShadow *pShadow = nullptr;
 	switch(objtype)
 	{
-	case OBJTYPE_PLAYER:	// プレイヤー当たり判定
+	case OBJTYPE_PLAYER:					// プレイヤー当たり判定
 		pPlayer = (CPlayer*)pScene;
 		pPlayer->SetGravity(0.0f, false);	// 重力を0にする
 
 		break;
 		
-	case OBJTYPE_SHADOW:	// 影当たり判定
+	case OBJTYPE_SHADOW:					// 影当たり判定
 		pShadow = (CShadow*)pScene;
 		pShadow->SetHeight(m_pos.y);
 		break;

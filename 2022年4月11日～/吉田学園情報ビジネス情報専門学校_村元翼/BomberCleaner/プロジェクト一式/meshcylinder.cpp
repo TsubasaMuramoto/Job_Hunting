@@ -448,8 +448,6 @@ bool CMeshCylinder::LineCollisionMesh(CScene *pScene, const int *nVtx)
 			float Dot = D3DXVec3Dot(&normalVec, &vecAP);
 			float DotOld = D3DXVec3Dot(&normalVec, &vecAQ);
 
-			// 2つの内積結果のベクトルの+-が異なると通る処理(排他的論理和)
-			//if(Dot * DotOld < 0)
 			// 上からあたる
 			if ((Dot <= 0.0f && DotOld >= -ALLOWABLE_ERROR))
 			{
