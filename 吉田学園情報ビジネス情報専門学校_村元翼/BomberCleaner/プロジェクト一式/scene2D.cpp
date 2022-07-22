@@ -81,10 +81,10 @@ HRESULT CScene2D::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	pVtx[3].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	// テクスチャ
-	pVtx[0].tex = D3DXVECTOR2(0.0, 0.0);
-	pVtx[1].tex = D3DXVECTOR2(1.0, 0.0);
-	pVtx[2].tex = D3DXVECTOR2(0.0, 1.0);
-	pVtx[3].tex = D3DXVECTOR2(1.0, 1.0);
+	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
+	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 
 	pVtx[0].rhw = 1.0f;
 	pVtx[1].rhw = 1.0f;

@@ -24,6 +24,7 @@ public:
 		OBJTYPE_POLYGON3D,		// 3Dポリゴン
 		OBJTYPE_MESH,			// メッシュ
 		OBJTYPE_MODEL,			// モデル
+		OBJTYPE_BOMB,			// モデル爆弾
 		OBJTYPE_PLAYER,			// プレイヤー
 		OBJTYPE_EFFECT,			// エフェクト
 		OBJTYPE_EFFECTMESH,		// エフェクトメッシュ

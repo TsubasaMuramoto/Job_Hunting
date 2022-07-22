@@ -85,6 +85,7 @@ void CShadow::Update(void)
 	CScene3D::Update();							// シーン3D更新
 
 	Y -= GRAVITY;								// 重力加算
+
 	CScene::SetPos({ m_pos.x, Y, m_pos.z });	// 重力加算後の位置の設定
 }
 

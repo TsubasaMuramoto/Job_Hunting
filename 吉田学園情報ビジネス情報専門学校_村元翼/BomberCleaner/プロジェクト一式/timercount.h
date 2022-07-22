@@ -46,6 +46,9 @@ public:
 	// 時間の生成
 	static CTimerCount *Create(D3DXVECTOR3 pos, D3DXVECTOR3 size, int time, bool bStop);
 
+	// ストップ判定の設定
+	void SetStop(bool bStop)	{ m_bStop = bStop; }
+
 private:
 	CNumber		*m_apNumber[MAX_TIME];// 数字のインスタンス
 	int			m_nTimerCount;		  // 時間

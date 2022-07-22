@@ -37,8 +37,11 @@ public:
 	void Update(void);		// 更新
 	void Draw(void);		// 描画
 
-	static CScore *GetScore() { return m_pScore; }	// スコアの取得
-	void SetUiDelete(void);							// UIの削除
+	CScore *GetScore() { return m_pScore; }									// スコアの取得
+	void StartGame(void);													// ゲームスタート
+	void EndGame(void);														// ゲーム終了
+	void SetUiCreate(const char* TexStr = "",float fSizeMulti = 1);	// UIの生成
+	void SetUiDelete(void);													// UIの削除
 
 private:
 	CTimerCount			*m_pTimer;			// タイマークラス
@@ -48,9 +51,12 @@ private:
 	CMeshField			*m_pMeshWall;		// メッシュウォールクラス
 	CMeshCylinder		*m_pMeshCylinder;	// メッシュシリンダークラス
 	CMeshSphere			*m_pMeshSphere;		// メッシュスフィアクラス
-	static CScore		*m_pScore;			// スコアクラス
+	CScore				*m_pScore;			// スコアクラス
+	CScore				*m_pAddScore;		// 追加スコアクラス
 	bool				m_bOnce;			// 一度のみ通る処理に使う変数
 	bool				m_bStart;			// スタート判定
+	bool				m_bEnd;				// エンド判定
+	bool				m_bFrameCount;		// フレームカウント判定
 	int					m_nFrame;			// フレームカウント変数
 };
 #endif

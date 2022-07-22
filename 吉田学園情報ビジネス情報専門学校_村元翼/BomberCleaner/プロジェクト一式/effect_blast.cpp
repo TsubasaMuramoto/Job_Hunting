@@ -89,44 +89,59 @@ void CBlast::Update(void)
 	// 爆発中の処理
 	if (m_pSphere)
 	{
-		CScene *pScene = CScene::GetScene(OBJTYPE_MODEL);
-
-		// シーンがnullになるまで通る
-		while (pScene)
+		for (int nCnt = 0; nCnt < 2; nCnt++)
 		{
-			// 次のシーンを取得
-			CScene *pSceneNext = CScene::GetSceneNext(pScene);
-
-			// モデルタイプの取得
-			CScene::MODTYPE modtype = pScene->GetModelType();
-
-			// タイプ別当たり判定処理
-			switch(modtype)
+			CScene *pScene = nullptr;
+			switch (nCnt)
 			{
-			case MODTYPE_TARGET:	// 木箱やゴミなどの壊す対象
-				if (m_pSphere->SphereCollisionSphere((m_pSphere->GetSize().x * m_scale) / 2, pScene))
-				{
-					CScore *pScore = CGame::GetScore();
-					pScore->AddScore(EXPLOSION_SCORE);		// スコアの加算
-					pScene->Uninit();						// ターゲットの終了
-				}
+			case 0:
+				pScene = CScene::GetScene(OBJTYPE_MODEL);
 				break;
-				
-			case MODTYPE_BOMB:		// 爆弾
-				if (m_pSphere->SphereCollisionSphere((m_pSphere->GetSize().y * m_scale) / 2, pScene))
-				{
-					CBomb *pBomb = (CBomb*)pScene;
-					pBomb->Explosion();				// 爆発する
-					pBomb->Uninit();				// 爆弾の終了
-				}
+
+			case 1:
+				pScene = CScene::GetScene(OBJTYPE_BOMB);
 				break;
 			}
-			
-			// 次のシーンを現在のシーンにする
-			pScene = pSceneNext;
+
+			// シーンがnullになるまで通る
+			while (pScene)
+			{
+				// 次のシーンを取得
+				CScene *pSceneNext = CScene::GetSceneNext(pScene);
+
+				// モデルタイプの取得
+				CScene::MODTYPE modtype = pScene->GetModelType();
+
+				// タイプ別当たり判定処理
+				switch (modtype)
+				{
+				case MODTYPE_TARGET:	// 木箱やゴミなどの壊す対象
+					if (m_pSphere->SphereCollisionSphere((m_pSphere->GetSize().x * m_scale) / 2, pScene))
+					{
+						CGame *pGame = CManager::GetInstance()->GetGame();
+						CScore *pScore = pGame->GetScore();		// ゲームクラスのスコアを取得
+						pScore->AddScore(EXPLOSION_SCORE);		// スコアの加算
+						pScene->Uninit();						// ターゲットの終了
+					}
+					break;
+
+				case MODTYPE_BOMB:		// 爆弾
+					if (m_pSphere->SphereCollisionSphere((m_pSphere->GetSize().y * m_scale) / 2, pScene))
+					{
+						CBomb *pBomb = (CBomb*)pScene;
+						pBomb->Explosion();				// 爆発する
+						pBomb->Uninit();				// 爆弾の終了
+					}
+					break;
+				}
+
+				// 次のシーンを現在のシーンにする
+				pScene = pSceneNext;
+			}
 		}
 
 		Spread();	// 爆風広がり
+
 	}
 }
 

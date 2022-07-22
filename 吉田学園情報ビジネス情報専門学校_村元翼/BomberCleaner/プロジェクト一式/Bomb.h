@@ -21,7 +21,7 @@ class CBomb : public CScene
 {
 public:
 
-	CBomb(OBJTYPE nPriority = OBJTYPE_MODEL);	// コンストラクタ
+	CBomb(OBJTYPE nPriority = OBJTYPE_BOMB);	// コンストラクタ
 	~CBomb();									// デストラクタ
 
 	HRESULT Init(D3DXVECTOR3 pos, D3DXVECTOR3 rot);		// 初期化

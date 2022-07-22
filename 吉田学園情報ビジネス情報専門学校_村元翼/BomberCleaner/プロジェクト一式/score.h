@@ -14,8 +14,8 @@ class CNumber;
 //--------------------------------------------------------------
 // マクロ定義
 //--------------------------------------------------------------
-#define MAX_SCORE (6)			// 最大描画枚数
-#define ADD_SCORE (10)			// 加算スコア
+#define MAX_SCORE			(6)					// 最大描画枚数
+#define ADDSCORE_FORMER		(100)				// 追加スコアの掛ける元スコア
 
 //---------------------------------------------------------------
 // スコアクラス(シーンの派生)
@@ -31,7 +31,7 @@ public:
 	void Update(void);									// 更新
 	void Draw(void);									// 描画
 
-	static CScore	*Create(D3DXVECTOR3 pos, D3DXVECTOR3 fsize);			// スコアの生成
+	static CScore	*Create(D3DXVECTOR3 pos, D3DXVECTOR3 size);			// スコアの生成
 	void			AddScore(int AddScore) { m_nScore += AddScore; };		// スコアの加算
 
 	//---------------------------------

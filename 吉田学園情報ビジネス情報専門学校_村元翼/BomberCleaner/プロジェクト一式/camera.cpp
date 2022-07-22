@@ -236,22 +236,22 @@ void CCamera::MoveCamera(void)
 	//++++++++++++++++++++++++++++//
 	//		カメラ移動限界		  //
 	//++++++++++++++++++++++++++++//
-	if (m_posV.x > MOVELIMIT)
-	{
-		m_posV.x = MOVELIMIT;
-	}
-	else if (m_posV.x < -MOVELIMIT)
-	{
-		m_posV.x = -MOVELIMIT;
-	}
-	if (m_posV.z > MOVELIMIT)
-	{
-		m_posV.z = MOVELIMIT;
-	}
-	else if (m_posV.z < -MOVELIMIT)
-	{
-		m_posV.z = -MOVELIMIT;
-	}
+	//if (m_posV.x > MOVELIMIT)
+	//{
+	//	m_posV.x = MOVELIMIT;
+	//}
+	//else if (m_posV.x < -MOVELIMIT)
+	//{
+	//	m_posV.x = -MOVELIMIT;
+	//}
+	//if (m_posV.z > MOVELIMIT)
+	//{
+	//	m_posV.z = MOVELIMIT;
+	//}
+	//else if (m_posV.z < -MOVELIMIT)
+	//{
+	//	m_posV.z = -MOVELIMIT;
+	//}
 
 	//****************************//
 	//	　	マウスでの回転		  //

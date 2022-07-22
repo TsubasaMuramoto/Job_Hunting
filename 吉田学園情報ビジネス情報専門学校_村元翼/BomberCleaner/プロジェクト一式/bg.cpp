@@ -7,8 +7,6 @@
 #include "renderer.h"
 #include "scene.h"
 #include "scene2D.h"
-#include "keyboard.h"
-#include "game.h"
 
 //===================================================
 // コンストラクタ

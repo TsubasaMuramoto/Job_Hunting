@@ -29,6 +29,7 @@ CSound::PARAM const CSound::m_aParam[SOUND_LABEL_MAX] =
 	{ "data/SE/GameStart_SE.wav"	,	XAUDIO2_NO_LOOP_REGION },		// ƒQ[ƒ€ŠJn‰¹
 	{ "data/SE/CarryUp_SE.wav"		,	XAUDIO2_NO_LOOP_REGION },		// ‚¿ã‚°‚é‰¹
 	{ "data/SE/Throw_SE.wav"		,	XAUDIO2_NO_LOOP_REGION },		// “Š‚°‚é‰¹
+	{ "data/SE/Fall_SE.wav"			,	XAUDIO2_NO_LOOP_REGION },		// —‚¿‚é‰¹
 
 };
 

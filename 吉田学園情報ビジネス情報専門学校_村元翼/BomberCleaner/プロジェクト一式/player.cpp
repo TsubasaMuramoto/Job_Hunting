@@ -28,6 +28,7 @@
 #define CARRY_RANGE_DIST	(10000.0f)											// 持ち運べる範囲(2点間の距離と比較する)
 #define MARK_SIZE			(D3DXVECTOR3(10.0f,40.0f,0.0f))						// 目印のサイズ
 #define MAX_PATTERN			(5)													// 目印のテクスチャパターンの数
+#define DEATH_POSY			(-200.0f)											// 死亡Y座標
 
 //=============================================================================
 // コンストラクタ
@@ -74,6 +75,7 @@ CPlayer *CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nType)
 		pPlayer = new CPlayer;
 		if (pPlayer)
 		{
+			pPlayer->m_posInit = pos;		// 初期位置保存
 			pPlayer->m_nType = nType;		// プレイヤータイプ
 			pPlayer->Init(pos, rot);		// 初期化
 		}
@@ -436,7 +438,7 @@ bool CPlayer::Carry(void)
 	// プレイヤーから一番近い爆弾を取得する
 	//--------------------------------------------------------------
 	CScene *pSaveScene = nullptr;
-	CScene *pScene = CScene::GetScene(OBJTYPE_MODEL);
+	CScene *pScene = CScene::GetScene(OBJTYPE_BOMB);
 
 	float fSaveDist;		// プレイヤーと爆弾の距離を保存する変数
 	while (pScene)
@@ -579,11 +581,15 @@ void CPlayer::Gravity(D3DXVECTOR3& pos, float& fGravity, const float& fGravitySp
 		pos.y += m_fGravity;
 	}
 
-	// 床についたかどうか
-	if (pos.y <= 0.0f)
+	// 死亡判定についたかどうか
+	if (pos.y <= DEATH_POSY)
 	{
-		// 位置を固定する
-		pos.y = 0.0f;
+		// サウンドクラスの取得
+		CSound *pSound = CManager::GetInstance()->GetSound();
+		pSound->PlaySound(CSound::SOUND_LABEL_SE_FALL);
+
+		// 位置を初期位置に戻す
+		pos = m_posInit;
 		fGravity = 0.0f;
 		bJump = false;
 	}

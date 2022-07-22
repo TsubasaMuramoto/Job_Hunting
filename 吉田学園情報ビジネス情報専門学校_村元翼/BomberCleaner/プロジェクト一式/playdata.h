@@ -21,6 +21,7 @@ public:
 	HRESULT Init(void);		// 初期化
 	void Uninit(void);		// 終了
 
+	static void AddScore(int nScore);		// スコアの加算
 	static void SetScore(int nScore);		// スコアの設定
 	static int	GetScore(void);				// スコアの取得
 	static void SetWinNum(int nWinNum);		// 勝った個体識別番号の設定

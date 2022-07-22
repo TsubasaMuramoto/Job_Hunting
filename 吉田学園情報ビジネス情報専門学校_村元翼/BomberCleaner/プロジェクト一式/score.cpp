@@ -16,7 +16,7 @@ CScore::CScore(OBJTYPE nPriority) : CScene(nPriority)
 {
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 位置
 	m_size = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// サイズ
-	m_nAddScore = ADD_SCORE;				// 加算するスコアの初期化
+	m_nAddScore = ADDSCORE_FORMER;			// 加算するスコアの初期化
 	m_nScore = 0;							// スコアの初期化
 }
 
@@ -37,9 +37,7 @@ CScore *CScore::Create(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	CScore *pScore = nullptr;
 	if (!pScore)
 	{
-		pScore = new CScore;
-
-		if (pScore)
+		if (pScore = new CScore)
 		{
 			pScore->Init(pos, size);	// 初期化
 		}
@@ -56,7 +54,7 @@ HRESULT CScore::Init(D3DXVECTOR3 pos, D3DXVECTOR3 size)
 	// 数字生成
 	for (int nCnt = 0; nCnt < MAX_SCORE; nCnt++)
 	{
-		m_apNumber[nCnt] = CNumber::Create(D3DXVECTOR3(pos.x + nCnt * 50, pos.y, pos.z), size);
+		m_apNumber[nCnt] = CNumber::Create(D3DXVECTOR3(pos.x + nCnt * size.x, pos.y, pos.z), size);
 		m_apNumber[nCnt]->BindTexture(CManager::GetInstance()->GetTexture()->GetTexture("TEX_TYPE_NUMBER"));
 		m_apNumber[nCnt]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 		m_nAll++;
@@ -86,7 +84,7 @@ void CScore::Uninit()
 		}
 	}
 
-	CManager::GetPlayData()->SetScore(m_nScore);	// プレイデータにスコアを設定
+	CManager::GetPlayData()->AddScore(m_nScore);	// プレイデータにスコアを設定
 	m_nAll = 0;
 	Release();
 }

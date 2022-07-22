@@ -108,24 +108,6 @@ void CBomb::Update(void)
 	{
 		m_pModel->Update();
 
-		// 移動限界
-		if (m_pos.x > MOVELIMIT)
-		{
-			m_pos.x = MOVELIMIT;
-		}
-		if (m_pos.x < -MOVELIMIT)
-		{
-			m_pos.x = -MOVELIMIT;
-		}
-		if (m_pos.z > MOVELIMIT)
-		{
-			m_pos.z = MOVELIMIT;
-		}
-		if (m_pos.z < -MOVELIMIT)
-		{
-			m_pos.z = -MOVELIMIT;
-		}
-
 		// 着火状態処理
 		if (m_bIgnition)
 		{
@@ -141,29 +123,6 @@ void CBomb::Update(void)
 			if (m_pControl)
 			{
 				m_pControl->Update(this);
-			}
-
-			// プレイヤーのシーン取得
-			CScene *pScene = CScene::GetScene(CScene::OBJTYPE_MESH);
-
-			// 地面との当たり判定に使う変数
-			float fHitTime = 0.0f;
-			D3DXVECTOR3 Hitpos = {0.0f,0.0f,0.0f};	
-
-			// シーンがnullになるまで通る
-			while (pScene)
-			{
-				// 次のシーンを取得
-				CScene *pSceneNext = CScene::GetSceneNext(pScene);
-
-				// 当たり判定
-				if (m_pModel->PlaneCollision(0.0f, &CScene::GetPosOld(), &CScene::GetPos(), &D3DXVECTOR3(0.0f, 1.0f, 0.0f), &pScene->GetPos(), &fHitTime, &Hitpos))
-				{
-					m_bThrow = false;
-				}
-
-				// 次のシーンを現在のシーンにする
-				pScene = pSceneNext;
 			}
 		}
 

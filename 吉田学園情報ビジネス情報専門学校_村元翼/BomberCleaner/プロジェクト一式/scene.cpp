@@ -161,7 +161,7 @@ void CScene::UpdateAll()
 			// ポーズ中に更新するオブジェクト
 			else
 			{
-				if (nObj == OBJTYPE_PAUSE || nObj == OBJTYPE_UI || nObj == OBJTYPE_FADE)	// オブジェクトがフェードorUIorポーズなら
+				if (nObj == OBJTYPE_PAUSE || nObj == OBJTYPE_UI || nObj == OBJTYPE_FADE || nObj == OBJTYPE_NUMBER)	// オブジェクトがフェードorUIorポーズなら
 				{
 					if (m_pTop[nObj])
 					{

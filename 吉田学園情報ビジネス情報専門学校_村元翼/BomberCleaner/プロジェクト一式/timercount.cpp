@@ -9,6 +9,7 @@
 #include "timercount.h"
 #include "number.h"
 #include "fade.h"
+#include "score.h" 
 
 //=============================================================================
 // コンストラクタ

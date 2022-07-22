@@ -48,7 +48,7 @@ bool			CManager::m_bPause					= false;		// ポーズ判定
 HWND			CManager::m_hWnd					= nullptr;		// ウィンドウハンドル
 
 #ifdef _DEBUG
-CManager::MODE	CManager::m_mode					= MODE::TITLE;	// デバッグ時初期モード
+CManager::MODE	CManager::m_mode					= MODE::GAME;	// デバッグ時初期モード
 #else
 CManager::MODE	CManager::m_mode					= MODE::TITLE;	// リリース時初期モード
 #endif
@@ -508,6 +508,7 @@ void CManager::SetMode(MODE mode)
 	// 全てのオブジェクトの破棄
 	//----------------------------------
 	CScene::ReleaseAll();
+
 
 	//----------------------------------
 	// 次のモードにする

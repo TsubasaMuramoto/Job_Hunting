@@ -24,7 +24,7 @@ CBombSpawner::CBombSpawner(OBJTYPE nPriority) : CScene(nPriority)
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 位置
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 回転
 	m_scale = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// スケール
-	m_nSpawnTime = SPAWN_TIME;					// スポーンタイム
+	m_nSpawnTime = 0;							// スポーンタイム
 	m_bIsThere = false;
 }
 
@@ -92,7 +92,7 @@ void CBombSpawner::Update(void)
 		{
 			if (m_pBomb)
 			{
-				if (m_pBomb->GetDeath())	// 爆弾の死亡判定を取得
+				if (m_pBomb->GetThrow())	// 爆弾を投げた判定を取得
 				{
 					m_pBomb = nullptr;		// 爆弾破棄
 					m_bIsThere = false;		// 爆弾がスポナーの場所にいない状態にする

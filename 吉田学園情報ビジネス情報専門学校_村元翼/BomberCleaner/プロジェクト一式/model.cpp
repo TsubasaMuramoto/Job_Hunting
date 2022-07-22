@@ -11,6 +11,7 @@
 #include "player.h"
 #include "LoadX.h"
 #include "shadow.h"
+#include "Bomb.h"
 #include <assert.h>
 
 //=============================================================================
@@ -204,7 +205,7 @@ void CModel::Update(void)
 			CScene::OBJTYPE objtype;
 			CScene *pScene = nullptr;
 			HIT_TYPE hitType;
-			for (int nCnt = 0; nCnt < 2; nCnt++)
+			for (int nCnt = 0; nCnt < 3; nCnt++)
 			{
 				// プレイヤーのシーン取得
 				switch (nCnt)
@@ -215,6 +216,10 @@ void CModel::Update(void)
 					break;
 				case 1:
 					objtype = CScene::OBJTYPE_SHADOW;
+					hitType = TYPE_SPHERE;
+					break;
+				case 2:
+					objtype = CScene::OBJTYPE_BOMB;
 					hitType = TYPE_LINE;
 					break;
 				}
@@ -389,50 +394,7 @@ void CModel::Draw(void)
 	}
 }
 
-// モデルと平面当たり判定
-bool CModel::PlaneCollision(FLOAT r,D3DXVECTOR3 *pPre_pos, D3DXVECTOR3 *pPos,D3DXVECTOR3 *pNormal, D3DXVECTOR3 *pPlane_pos,FLOAT *t,D3DXVECTOR3 *pOut_colli)
-{
-	D3DXVECTOR3 C0 = *pPre_pos - *pPlane_pos;	// 平面上の一点から現在位置へのベクトル
-	D3DXVECTOR3 D = *pPos - *pPre_pos;			// 現在位置から予定位置までのベクトル
-	D3DXVECTOR3 N;								// 法線
-	D3DXVec3Normalize(&N, pNormal);				// 法線を標準化
 
-	// 平面と中心点の距離を算出
-	FLOAT Dot_C0 = D3DXVec3Dot(&C0, &N);
-	FLOAT dist_plane_to_point = fabs(Dot_C0);
-
-	// 進行方向と法線の関係をチェック
-	FLOAT Dot = D3DXVec3Dot(&D, &N);
-
-	// 平面と平行に移動してめり込んでいるスペシャルケース
-	if ((IKD_EPSIRON - fabs(Dot) > 0.0f) && (dist_plane_to_point < r)) {
-		// 一生抜け出せないので最大時刻を返す
-		*t = FLT_MAX;
-		// 衝突位置は仕方ないので今の位置を指定
-		*pOut_colli = *pPre_pos;
-		return true;
-	}
-
-	// 交差時間の算出
-	*t = (r - Dot_C0) / Dot;
-
-	// 衝突位置の算出
-	*pOut_colli = *pPre_pos + (*t) * D;
-
-	// めり込んでいたら衝突として処理終了
-	if (dist_plane_to_point < r)
-		return true;
-
-	// 壁に対して移動が逆向きなら衝突していない
-	if (Dot >= 0)
-		return false;
-
-	// 時間が0～1の間にあれば衝突
-	if ((0 <= *t) && (*t <= 1))
-		return true;
-
-	return false;
-}
 
 //=============================================================================
 // モデルの当たり判定(球と球)
@@ -514,8 +476,8 @@ bool CModel::DotCollisionCube(CScene *pScene, const HIT_TYPE &hit_type)
 		fDot[nCnt] = D3DXVec3Dot(&normalVec[nCnt], &vecPos[nCnt]);
 	}
 
+	// 半径
 	float Radius = 0.0f;
-
 	switch (hit_type)
 	{
 	case TYPE_DOT:
@@ -635,23 +597,7 @@ bool CModel::LineCollisionCube(CScene *pScene,const HIT_TYPE &hit_type)
 		pos.y = m_vtx[0].vtxWorld.y - (1 / normalVec[0].y * (normalVec[0].x * (pos.x - m_vtx[0].vtxWorld.x) + normalVec[0].z * (pos.z - m_vtx[0].vtxWorld.z)));
 		pos.y += Radius;
 
-		CScene::OBJTYPE objtype = pScene->GetObjType();
-		CPlayer *pPlayer = nullptr;
-		CShadow *pShadow = nullptr;
-		switch (objtype)
-		{
-		case CScene::OBJTYPE_PLAYER:
-			pPlayer = (CPlayer*)pScene;
-			pPlayer->SetGravity(0.0f, false);
-			break;
-
-		case CScene::OBJTYPE_SHADOW:
-			pShadow = (CShadow*)pScene;
-			pShadow->SetHeight(pos.y);
-			break;
-		}
-
-		pScene->SetPos(pos);	// SetPosをすることで、最初に当たったオブジェクトのみを判定とする
+		ProcessByObjtype(pScene, pos);
 		return true;
 	}
 
@@ -720,6 +666,37 @@ D3DXVECTOR3 CModel::PushDistanceSide(const D3DXVECTOR3 &moveVec, const D3DXVECTO
 	const D3DXVECTOR3 Push = D3DXVECTOR3(vecNor.x * fDotMoveVec, vecNor.y * fDotMoveVec, vecNor.z * fDotMoveVec);
 
 	return Push;
+}
+
+//===================================
+// オブジェクトタイプ別処理
+//===================================
+void CModel::ProcessByObjtype(CScene *pScene, D3DXVECTOR3 &pos)
+{
+	CScene::OBJTYPE objtype = pScene->GetObjType();
+	CPlayer *pPlayer = nullptr;
+	CShadow *pShadow = nullptr;
+	CBomb *pBomb = nullptr;
+
+	switch (objtype)
+	{
+	case CScene::OBJTYPE_PLAYER:			// プレイヤー当たり判定
+		pPlayer = (CPlayer*)pScene;
+		pPlayer->SetGravity(0.0f, false);	// 重力を0にする
+		break;
+
+	case CScene::OBJTYPE_SHADOW:			// 影当たり判定
+		pShadow = (CShadow*)pScene;
+		pShadow->SetHeight(pos.y);
+		break;
+
+	case CScene::OBJTYPE_BOMB:				// 爆弾当たり判定
+		pBomb = (CBomb*)pScene;
+		pBomb->SetThrow(false);
+		break;
+	}
+
+	pScene->SetPos(pos);
 }
 
 //===================================

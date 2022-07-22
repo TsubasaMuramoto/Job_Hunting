@@ -18,6 +18,14 @@ class CPlayer;
 class CStage
 {
 public:
+	enum ModelType
+	{
+		TypeBomb = 6,
+		TypeBombspawner = 2,
+		TypeTargetBag = 3,
+		TypeTargetWoodBox = 4,
+
+	};
 	CStage();				// コンストラクタ
 	~CStage();				// デストラクタ
 

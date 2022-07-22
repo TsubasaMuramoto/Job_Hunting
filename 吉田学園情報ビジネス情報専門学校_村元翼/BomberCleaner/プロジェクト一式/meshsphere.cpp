@@ -204,9 +204,12 @@ void CMeshSphere::Draw(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();	// デバイスのポインタ
 
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);										// ライティング有効
-	CManager::GetInstance()->GetRenderer()->SetZTest(true, pDevice);					// Ztest
-	CManager::GetInstance()->GetRenderer()->SetAddSynthesis(true, pDevice);				// 加算合成
+	if (GetObjType() == OBJTYPE_EFFECTMESH)
+	{
+		pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);										// ライティング有効
+		CManager::GetInstance()->GetRenderer()->SetZTest(true, pDevice);					// Ztest
+		CManager::GetInstance()->GetRenderer()->SetAddSynthesis(true, pDevice);				// 加算合成
+	}
 
 	D3DXMATRIX mtxRot, mtxTrans, mtxScale;	// 計算用マトリックス
 	D3DXMatrixIdentity(&m_mtxWorld);		// ワールドマトリックスの初期化
@@ -246,10 +249,13 @@ void CMeshSphere::Draw(void)
 		2 * m_nLine * m_nVertical + (m_nVertical * 4) - 4		// 描画するプリミティブ数
 																// ↑1フィールドに2プリミティブ	↑縮退ポリゴンの分(Z方向に1フィールド伸ばす分4つ生成するから)
 	);
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);						// ライティング有効
-	CManager::GetInstance()->GetRenderer()->SetAddSynthesis(false, pDevice);// 加算合成
-	CManager::GetInstance()->GetRenderer()->SetZTest(false, pDevice);		// Ztest
 
+	if (GetObjType() == OBJTYPE_EFFECTMESH)
+	{
+		pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);						// ライティング有効
+		CManager::GetInstance()->GetRenderer()->SetAddSynthesis(false, pDevice);// 加算合成
+		CManager::GetInstance()->GetRenderer()->SetZTest(false, pDevice);		// Ztest
+	}
 
 	//*****************************************************************************
 	// 頂点のワールドマトリックス

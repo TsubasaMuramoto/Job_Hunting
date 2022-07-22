@@ -71,6 +71,7 @@ public:
 	static CPlayData		*GetPlayData()			{ return m_pPlayData; }			// プレイデータの取得
 	static CPause			*GetPause(void)			{ return m_pPause; }			// ポーズの取得
 	static CFade			*GetFade()				{ return m_pFade; }				// フェードの取得
+	static CGame			*GetGame()				{ return m_pGame; }				// ゲームクラスの取得
 	static MODE				Getmode()				{ return m_mode; }				// モードの取得
 	static CMouse			*GetMouse()				{ return m_pMouse; }			// マウスの取得
 	static CSound			*GetSound()				{ return m_pSound; }			// サウンドの取得

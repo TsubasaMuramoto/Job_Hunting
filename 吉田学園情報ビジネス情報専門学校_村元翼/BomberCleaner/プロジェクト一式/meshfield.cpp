@@ -11,6 +11,11 @@
 #include "shadow.h"
 
 //=============================================================================
+// マクロ定義
+//=============================================================================
+#define RANGE_COLLISION_MESH (10000000.0f)
+
+//=============================================================================
 // コンストラクタ
 //=============================================================================
 CMeshField::CMeshField(OBJTYPE nPriority) :CScene(nPriority)
@@ -302,7 +307,7 @@ void CMeshField::Draw(void)
 void CMeshField::AllCollision(void)
 {
 	// シーン取得
-	for (int nCnt = 0; nCnt < 2; nCnt++)
+	for (int nCnt = 0; nCnt < 3; nCnt++)
 	{
 		CScene *pScene = nullptr;
 		switch (nCnt)
@@ -313,6 +318,10 @@ void CMeshField::AllCollision(void)
 
 		case 1:
 			pScene = CScene::GetScene(OBJTYPE_SHADOW);
+			break;
+
+		case 2:
+			pScene = CScene::GetScene(OBJTYPE_BOMB);
 			break;
 		}
 
@@ -330,7 +339,7 @@ void CMeshField::AllCollision(void)
 			// 三平方の定理を使い距離を測る
 			fDist = ((ObjectPos.x - PlayerPos.x) * (ObjectPos.x - PlayerPos.x)) + ((ObjectPos.y - PlayerPos.y) * (ObjectPos.y - PlayerPos.y)) + ((ObjectPos.z - PlayerPos.z) * (ObjectPos.z - PlayerPos.z));
 
-			if (fDist < 10000000.0f)
+			if (fDist < RANGE_COLLISION_MESH)
 			{
 				// 4頂点の番号割り当て
 				int nID[4];
@@ -408,8 +417,12 @@ bool CMeshField::LineCollisionMesh(CScene *pScene,const int *pnVtx)
 	crossXZ[2] = vecDC.x * vecDP.z - vecDP.x * vecDC.z;
 	crossXZ[3] = vecCA.x * vecCP.z - vecCP.x * vecCA.z;
 
-	// プレイヤーのサイズXを半径として取得
-	float Radius = pScene->GetSize().y / 2;
+	float Radius = 0.0f;
+	OBJTYPE objtype = pScene->GetObjType();
+	if (objtype != OBJTYPE_BOMB)
+	{
+		Radius = pScene->GetSize().y / 2;
+	}
 
 	//***************************************************************************************
 	// 床の当たり判定
@@ -436,12 +449,9 @@ bool CMeshField::LineCollisionMesh(CScene *pScene,const int *pnVtx)
 			// 上からあたる
 			if ((Dot <= Radius && DotOld >= -ALLOWABLE_ERROR + Radius))
 			{
-				m_pos.y;
-
 				// 板ポリゴンの高さを計算し、代入
 				D3DXVECTOR3 &pos = pScene->GetPos();
 				pos.y = m_vtxWorld[pnVtx[0]].y -(1 / normalVec.y * (normalVec.x * (pos.x - m_vtxWorld[pnVtx[0]].x) + normalVec.z * (pos.z - m_vtxWorld[pnVtx[0]].z)));
-				pos.y += Radius;
 
 				ProcessByObjtype(pScene,pos);
 
@@ -548,17 +558,32 @@ void CMeshField::ProcessByObjtype(CScene *pScene,D3DXVECTOR3 &pos)
 	OBJTYPE objtype = pScene->GetObjType();
 	CPlayer *pPlayer = nullptr;
 	CShadow *pShadow = nullptr;
+	CBomb *pBomb = nullptr;
+
+	float Radius = 0.0f;
+
 	switch(objtype)
 	{
 	case OBJTYPE_PLAYER:					// プレイヤー当たり判定
 		pPlayer = (CPlayer*)pScene;
 		pPlayer->SetGravity(0.0f, false);	// 重力を0にする
 
+		// プレイヤーのサイズXを半径として取得
+		Radius = pPlayer->GetSize().y / 2;
+		pos.y += Radius;
 		break;
 		
 	case OBJTYPE_SHADOW:					// 影当たり判定
 		pShadow = (CShadow*)pScene;
 		pShadow->SetHeight(m_pos.y);
+
+		Radius = pShadow->GetSize().y / 2;
+		pos.y += Radius;
+		break;
+
+	case OBJTYPE_BOMB:
+		pBomb = (CBomb*)pScene;
+		pBomb->SetThrow(false);
 		break;
 	}
 	pScene->SetPos(pos);

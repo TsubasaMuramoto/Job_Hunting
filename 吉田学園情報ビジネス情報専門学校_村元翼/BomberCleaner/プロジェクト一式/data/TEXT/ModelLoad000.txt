@@ -4,7 +4,7 @@
 //-------------------
 // モデル数
 //-------------------
-NUM_MODEL = 12
+NUM_MODEL = 10
 
 	//-------------------
 	// プレイヤー
@@ -18,34 +18,28 @@ NUM_MODEL = 12
 	PAS = data/MODEL/Belt_Conveyor001.x		# [1]ベルトコンベア
 	NAME = MODTYPE_BELTCONVEYOR
 	
-	PAS = data/MODEL/Belt001.x				# [2]ベルト
-	NAME = MODTYPE_BELT_ONE
-	
-	PAS = data/MODEL/Belt002.x				# [3]ベルト2
-	NAME = MODTYPE_BELT_TWO
-	
-	PAS = data/MODEL/Bomb001.x				# [4]爆弾
-	NAME = MODTYPE_BOMB
-	
-	PAS = data/MODEL/Bomb_Spawner.x			# [5]爆弾スポナー
+	PAS = data/MODEL/Bomb_Spawner.x			# [2]爆弾スポナー
 	NAME = MODTYPE_BOMB_SPN
 	
-	PAS = data/MODEL/Conveyor.x				# [6]コンベア
-	NAME = MODTYPE_CONVEYOR
-	
-	PAS = data/MODEL/Conveyor_Spawner.x		# [7]コンベアスポナー
-	NAME = MODTYPE_CONVEYOR_SPN
-	
-	PAS = data/MODEL/Garbage_Bag.x			# [8]ゴミ袋
+	PAS = data/MODEL/Garbage_Bag.x			# [3]ゴミ袋
 	NAME = MODTYPE_GARBAGE
 	
-	PAS = data/MODEL/Wood_Box.x				# [9]木箱
+	PAS = data/MODEL/Wood_Box.x				# [4]木箱
 	NAME = MODTYPE_WOODBOX
 	
-	PAS = data/MODEL/Field.x				# [10]床
+	PAS = data/MODEL/Field.x				# [5]床
 	NAME = MODTYPE_FIELD
 	
-	PAS = data/MODEL/Move_Floor.x			# [11]移動床
+	PAS = data/MODEL/Bomb001.x				# [6]爆弾
+	NAME = MODTYPE_BOMB
+	
+	PAS = data/MODEL/Conveyor.x				# [7]コンベア
+	NAME = MODTYPE_CONVEYOR
+	
+	PAS = data/MODEL/Conveyor_Spawner.x		# [8]コンベアスポナー
+	NAME = MODTYPE_CONVEYOR_SPN
+	
+	PAS = data/MODEL/Move_Floor.x			# [9]移動床
 	NAME = MODTYPE_MOVE_FLOOR
 	
 END_SCRIPT		// 読み込み終了

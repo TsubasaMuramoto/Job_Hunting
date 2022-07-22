@@ -96,6 +96,7 @@ private:
 	CBomb			*m_pBomb;						// 爆弾クラス
 	CModel			*m_pModel;						// モデルクラス
 	D3DXVECTOR3		m_pos,m_Oldpos;					// 位置・最後の位置
+	D3DXVECTOR3		m_posInit;						// 初期位置
 	D3DXVECTOR3		m_rot;							// 回転
 	D3DXVECTOR3		m_size;							// サイズ
 	D3DXVECTOR3		m_Speed, m_Direction;			// 速度・向き			
