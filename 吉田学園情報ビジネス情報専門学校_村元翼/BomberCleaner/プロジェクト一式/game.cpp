@@ -19,6 +19,7 @@
 #include "LoadX.h"
 #include "Ui.h"
 #include "sound.h"
+#include "playdata.h"
 #include "StringManager.h"
 
 //=========================================================
@@ -126,6 +127,8 @@ HRESULT CGame::Init(void)
 //=========================================================
 void CGame::Uninit(void)
 {
+	CManager::GetPlayData()->SetScore(m_pScore->GetScore());	// プレイデータにスコアを設定
+
 	// ストップ解除
 	if (CManager::GetInstance()->GetStop())
 	{
